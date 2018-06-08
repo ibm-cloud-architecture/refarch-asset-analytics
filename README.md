@@ -1,3 +1,22 @@
-# Asset Monitoring Proof Of Technology
+# Manufacturing Asset Analytics
 
-![](docs/)
+
+This project is part of the 'IBM Hybrid Analytics and Big Data Architecture' solution, available at https://github.com/ibm-cloud-architecture/refarch-analytics. This project presents an end to end solution to enable predictive maintenance capabilities on manufacturing assets.
+The problem space is related to continuous operation and service on manufacturing asset like [Electrical Submersible Pump](), but any assets with sensors can be on-boarded.
+
+The use case is also adaptable and the architecture, solution components can be used for a security treat analysis on a park of devices or assets connected to a company intranet: real time events come from device that need to be aggregated and correlated and analytics run can be performed on historical data to assess security risk. Alert can be published to dashboard user interface.      
+
+## Table of content
+* [Use case](#use-case)
+* [System Context](#system-context) to present the solution components
+
+## Use Case
+## System Context
+
+![](docs/system-ctx.png)
+
+### ICP Deployment
+
+![](docs/icp-deployment.png)
+
+* Asset event consumer
