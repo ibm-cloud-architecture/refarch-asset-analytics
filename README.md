@@ -9,9 +9,11 @@ The use case is also adaptable and the architecture, solution components can be 
 ## Table of content
 * [Use case](#use-case)
 * [System Context](#system-context) to present the solution components
+* [Future reading](#compendium)
 
 ## Use Case
 ## System Context
+The processing starts by the continuous event flow emitted by a set of monitored devices. The event platform offers pub-subs capabilities and flow processing to aggregate and correlate events
 
 ![](docs/system-ctx.png)
 
@@ -20,3 +22,8 @@ The use case is also adaptable and the architecture, solution components can be 
 ![](docs/icp-deployment.png)
 
 * Asset event consumer
+
+
+
+# Compendium
+https://blog.griddynamics.com/in-stream-processing-service-blueprint/

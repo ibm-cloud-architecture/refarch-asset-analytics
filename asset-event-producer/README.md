@@ -1,7 +1,11 @@
-# Asset Manager Microservice
-SpringBoot app to support operation for Asset management.
+# Event Producer
+SpringBoot app to support creating different event to be port to Kafka Topics.
 
-### Features:
-* Read assets from Cassandra
-* Search asset 
-* Expose REST api 
+## What you will learn
+
+## Features:
+* Publish asset creation event: an event to identify a new asset added to the scope of the monitoring platform
+*
+
+## kafka
+You can run kafka locally using docker-compose. See the note [here]() 
