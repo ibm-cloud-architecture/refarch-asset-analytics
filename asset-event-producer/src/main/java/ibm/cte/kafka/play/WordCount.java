@@ -16,27 +16,27 @@
  */
 package ibm.cte.kafka.play;
 
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
+import java.util.regex.Pattern;
+
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.ValueMapper;
 import org.apache.kafka.streams.state.KeyValueStore;
 
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.concurrent.CountDownLatch;
-
 /**
- * In this example, we implement a simple WordCount program using the high-level Streams DSL
- * that reads from a source topic "streams-plaintext-input", where the values of messages represent lines of text,
- * split each text line into words and then compute the word occurrence histogram, write the continuous updated histogram
+ * Count word occurrence in a text sent to a topic.
+ * It is using the high-level Streams DSL which reads from a source topic "test-topic", where the values of messages represent lines of text,
+ * split each text line into words and then computes the word occurrence histogram, write the continuous updated histogram
  * into a topic "streams-wordcount-output" where each record is an updated count of a single word.
  */
 public class WordCount {
@@ -46,19 +46,21 @@ public class WordCount {
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-wordcount");
         // props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "broker1:9092,broker2:9092,broker3:9092");
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "green-kafka-cluster:32688");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.1.89:30092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
         final StreamsBuilder builder = new StreamsBuilder();
-
-        builder.<String, String>stream("streams-plaintext-input")
-               .flatMapValues(new ValueMapper<String, Iterable<String>>() {
-                    @Override
-                    public Iterable<String> apply(String value) {
-                        return Arrays.asList(value.toLowerCase(Locale.getDefault()).split("\\W+"));
-                    }
-                })
+        final Pattern pattern = Pattern.compile("\\W+");
+        builder.<String, String>stream("test-topic")
+        .flatMapValues(value -> Arrays.asList(pattern.split(value.toLowerCase())))
+        .map((key, value) -> new KeyValue<Object, Object>(value, value))
+        .filter((key, value) -> (!value.equals("the")))
+        .groupByKey()
+        .count("CountStore").mapValues(value->Long.toString(value)).toStream();
+        
+        builder.<String, String>stream("test-topic")
+              
                .groupBy(new KeyValueMapper<String, String, String>() {
                    @Override
                    public String apply(String key, String value) {
