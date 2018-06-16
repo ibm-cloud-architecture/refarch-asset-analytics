@@ -27,8 +27,11 @@ public class CassandraWriter {
 		   session = cluster.connect("assetmonitoring"); 
 		   CassandraOperations cassandraOps = new CassandraTemplate(session); 
 		   cassandraOps.insert(new Asset(1,"IOS", "iphone" )); 
+		   cassandraOps.insert(new Asset(2,"raspbian", "raspberry Pi 3" )); 
+		   cassandraOps.insert(new Asset(3,"raspbian", "raspberry Pi 3" )); 
+		   cassandraOps.insert(new Asset(4,"raspbian", "raspberry Pi 3" )); 
 		   Select s = QueryBuilder.select().from("assets"); 
-		   s.where(QueryBuilder.eq("id", 1)); 
+		   s.where(QueryBuilder.eq("id", 4)); 
 		   Asset a = cassandraOps.selectOne(s, Asset.class);
 		   System.out.println("Asset read:"+ a.getOs()); 
 	 

@@ -1,0 +1,10 @@
+apiVersion: skaffold/v1alpha2
+kind: Config
+build:
+  artifacts:
+  - imageName: ibmcase/asset-mgr-ms
+    workspace: .
+deploy:
+  kubectl:
+    manifests:
+    - ./chart/asset-mgr-ms/*

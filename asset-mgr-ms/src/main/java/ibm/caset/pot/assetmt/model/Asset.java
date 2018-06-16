@@ -7,6 +7,7 @@ public class Asset {
   @PrimaryKey
   public long id;
   public String os;
+  public String version;
   public String type;
   public int unsuccessfulLogin = 0;
   public String ipAddress;
@@ -53,5 +54,13 @@ public class Asset {
 	}
 	public void setAntivirus(String antivirus) {
 		this.antivirus = antivirus;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 }

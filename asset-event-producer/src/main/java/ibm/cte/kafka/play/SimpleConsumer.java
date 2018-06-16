@@ -16,9 +16,10 @@ import application.kafka.Consumer;
  *
  */
 public class SimpleConsumer {
-	private static String BOOTSTRAP_SERVERS = "green-kafka-cluster:32688;192.168.1.89:30092";
+	private static String BOOTSTRAP_SERVERS = "docker.for.mac.host.internal:30092";
 	private static String TOPICNAME = "streams-wordcount-output";
-     
+	// private static String TOPICNAME = "test-topic";
+	
 	public static void main(String[] args) throws InstantiationException, ConnectException, InterruptedException, ExecutionException {
 		String brokers = BOOTSTRAP_SERVERS;
 		String topic = TOPICNAME;
@@ -31,8 +32,7 @@ public class SimpleConsumer {
 		 
 		Consumer consumer = new Consumer(brokers,topic);
         for (ConsumerRecord<String, String> record : consumer.consume()) {
-         
-        	 System.out.println(record.toString());
+        	 System.out.println("Received :"+ record.toString());
         }
         consumer.shutdown();
 	}

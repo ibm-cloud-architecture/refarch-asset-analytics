@@ -10,10 +10,15 @@ import ibm.caset.pot.assetmt.model.Asset;
 
 @RestController
 public class AssetResource {
-	@Autowired
+	
 	private AssetRepository repository;
 	
-	@RequestMapping("/")
+	@Autowired
+	public AssetResource(AssetRepository rep) {
+		this.repository = rep;
+	}
+	
+	@RequestMapping("/health")
     public String index() {
         return "Greetings from Asset Manager v0.0.1 !";
     }

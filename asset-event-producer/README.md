@@ -8,4 +8,5 @@ SpringBoot app to support creating different event to be port to Kafka Topics.
 *
 
 ## kafka
-You can run kafka locally using docker-compose. See the note [here]() 
+You can run kafka locally using docker-compose or by deploying it to Kubernetes on docker desktop. See the note [here]() 
+

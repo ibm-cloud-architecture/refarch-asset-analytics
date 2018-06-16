@@ -15,12 +15,12 @@ public class SimpleProducer {
 	private static String[] textToSend = { "this is the first line",
 	                                      "and we like the second line too",
 	                                      "no at least the bye bye. line" };
-	private static String TOPICNAME = "streams-plaintext-input";
-	private static String BOOTSTRAP_SERVER = "green-kafka-cluster:32688";
+	private static String POSTTOPICNAME = "test-topic";
+	private static String BOOTSTRAP_SERVER = "docker.for.mac.host.internal:30092";
 
      
 	public static void main(String[] args) throws InstantiationException, ConnectException, InterruptedException, ExecutionException {
-		String topic = TOPICNAME;
+		String topic = POSTTOPICNAME;
 		String broker = BOOTSTRAP_SERVER;
 		if(args.length == 2) {
 			topic = args[0].toString();

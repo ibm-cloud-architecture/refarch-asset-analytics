@@ -16,7 +16,7 @@ import application.kafka.Consumer;
  *
  */
 public class WordCountConsumer {
-	private static String BOOTSTRAP_SERVERS = "green-kafka-cluster:32688,192.168.1.89:30092";
+	private static String BOOTSTRAP_SERVERS = "docker.for.mac.host.internal:30092";
 	private static String TOPICNAME = "streams-wordcount-output";
      
 	public static void main(String[] args) throws InstantiationException, ConnectException, InterruptedException, ExecutionException {
