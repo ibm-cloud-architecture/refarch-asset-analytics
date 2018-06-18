@@ -1,11 +1,16 @@
 package ibm.caset.pot.assetmt.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 @Table("assets")
 public class Asset {
   @PrimaryKey
-  public long id;
+  public String id;
+  @NotBlank
+  @Size(max = 15)
   public String os;
   public String version;
   public String type;
@@ -13,16 +18,25 @@ public class Asset {
   public String ipAddress;
   public String antivirus;
   
-    public Asset(long id,String os,String type) {
+    public Asset(String id,String os,String type) {
     	this.id = id;
     	this.os= os;
     	this.type = type;
     }
     
-	public long getId() {
+    public Asset(String id, String type, String os, String antivirus, String ipAddress, String unsuccessfulLogin, String version) {
+        this.id = id;
+        this.type = type;
+        this.os = os;
+        this.antivirus = antivirus;
+        this.ipAddress = ipAddress;
+        this.version = "unknown";
+    }
+    
+	public String getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getOs() {

@@ -12,17 +12,19 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.client.RestClientException;
 
 import ibm.caset.pot.assetmt.model.Asset;
+import ibm.caset.pot.assetmt.repository.AssetRepository;
+import reactor.core.publisher.Flux;
 
 @ActiveProfiles("test")
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TestAssetResource {
 
@@ -31,8 +33,8 @@ public class TestAssetResource {
 
     private URL base;
 
-    @Autowired
-    private TestRestTemplate template;
+	@Autowired
+	private WebTestClient webTestClient;
     
     @Autowired 
     private AssetRepository assetRepository;
@@ -44,16 +46,15 @@ public class TestAssetResource {
     
 	@Test
 	public void testHello() {
-		ResponseEntity<String> response = template.getForEntity(base.toString(),
-                String.class);
+		ResponseEntity<String> response = webTestClient.get().uri("/health");
         Assert.assertTrue(response.getBody().startsWith("Greetings from Asset Manager"));
 	}
 
 	@Test
 	public void testGetAssets() throws RestClientException, MalformedURLException {
-		 List<Asset> li = new ArrayList<Asset>();
-		 li.add(new Asset(1,"Android","Sam"));
-		 Mockito.when(assetRepository.getAssets()).thenReturn(li);
+		 Flux<Asset> li = new ArrayList<Asset>();
+		 li.add(new Asset("1","Android","Sam"));
+		 Mockito.when(assetRepository.findAll()).thenReturn(li);
 		 List<Asset> l = assetRepository.getAssets();
 		 Assert.assertNotNull(l);
 		 Assert.assertTrue(l.size() == 1);
