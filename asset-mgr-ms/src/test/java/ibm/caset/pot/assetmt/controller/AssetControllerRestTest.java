@@ -59,12 +59,7 @@ public class AssetControllerRestTest {
 	
 	@Test
 	public void shouldHave3Assets() throws RestClientException, MalformedURLException {
-		 Flux<Asset> li =  Flux.create(sink -> {
-			 sink.next(new Asset("1","Android","Sam"));
-			 sink.next(new Asset("2","IOS","Ipho"));
-			 sink.next(new Asset("3","Android","Moto"));
-			 sink.complete();
-		 });
+		
 		 Mono<Long> m = Mono.just(new Long(3));
 		 Mockito.doReturn(m).when(assetRepository).count();
 		 
@@ -74,5 +69,22 @@ public class AssetControllerRestTest {
          .expectStatus().isOk()
          .expectBody()
          .consumeWith( rep -> assertThat(rep.getResponseBody()).isNotNull());
+	}
+	
+	@Test
+	public void shouldGetAnAssetById() {
+		 Mono<Asset> a =  Mono.just(new Asset("3","Android","Sam"));
+			
+		 Mockito.doReturn(a).when(assetRepository).findById("3");
+		 
+		 webTestClient.get().uri("/assets/3")
+         .accept(MediaType.APPLICATION_JSON_UTF8)
+         .exchange()
+         .expectStatus().isOk()
+         .expectBody()
+         .consumeWith( rep -> {
+        	 assertThat(rep.getResponseBody()).isNotNull();
+        	 System.out.println(rep.toString());
+         });
 	}
 }
