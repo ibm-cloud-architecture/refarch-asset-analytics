@@ -17,9 +17,18 @@ The processing starts by the continuous event flow emitted by a set of monitored
 
 ![](docs/system-ctx.png)
 
-### ICP Deployment
+The following diagram illustrates the IBM Cloud Private, kubernetes deployment we are doing in this solution:
 
 ![](docs/icp-deployment.png)
+
+# Deployment
+## Deploying Cassandra
+There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the instructions are [here](./docs/cassandra.md)
+
+
+## ICP Deployment
+
+
 
 * Asset event consumer
 

@@ -6,6 +6,10 @@ SpringBoot app to support operation for Asset management.
 * Search asset
 * Expose REST api
 
+## Preparation
+The Cassandra configuration is described in [this note](./docs/cassandra.md)
+
+## Code explanations
 
 ## Build
 We use [Google Container Tool skaffold](https://github.com/GoogleContainerTools/skaffold) tool and docker build pipeline. The image we use is the bare minimum and includes:
@@ -25,6 +29,17 @@ Here is the dockerfile for building
 By default the Maven local repository, for official Maven images, is placed inside a Docker data volume. As we do not want to download dependencies at each build, we choose to mount maven repository into docker container.
 ```
 ```
+## run
+
+## Unit tests
+
+
+## Some issues
+* Unsatisfied dependency expressed through field 'mockMvc'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.springframework.test.web.servlet.MockMvc' available
+  Read this http://www.baeldung.com/spring-nosuchbeandefinitionexception.
+  Can also be linked to the missing   <artifactId>spring-boot-starter-web</artifactId> in pom.xml 
+
+* Mokito misusing.MissingMethodInvocationException
 
 ## Java memory investigation
 Here is a set of things you can do to investigate a java memory consumption in the context of docker container:

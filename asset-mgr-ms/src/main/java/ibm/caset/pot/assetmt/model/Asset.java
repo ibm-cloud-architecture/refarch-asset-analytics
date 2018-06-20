@@ -18,6 +18,8 @@ public class Asset {
   public String ipAddress;
   public String antivirus;
   
+  public Asset() {}
+  
     public Asset(String id,String os,String type) {
     	this.id = id;
     	this.os= os;
