@@ -1,7 +1,7 @@
-# Asset Manager Microservice
-SpringBoot app to support operation for Asset management.
+# Asset Consumer and Ingestor
+SpringBoot app to support consuming events from Kafka topics and doing different things.
 
 ### Features:
-* Read assets from Cassandra
-* Search asset 
+* Consume Asset from Kafka topic
+* Persist asset to Cassandra
 * Expose REST api 
