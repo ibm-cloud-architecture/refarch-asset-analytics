@@ -1,0 +1,1 @@
+cp ../asset-dashboard-ui/dist/asset-dashboard-ui/* ./src/main/resources/static

@@ -1,0 +1,7 @@
+<div class="col-md-4 roundRect" [ngStyle]="{ 'box-shadow': style, 'border-color': color }">
+      <h3>{{title}}</h3>
+      <p>{{description}}</p>
+
+      <button id="button" *ngIf="!externalUrl" mat-button (click)="submit()" style="color: white;background-color: {{color}};" class="btn btn-primary">{{buttonName}}</button>
+      <a *ngIf="externalUrl" href={{urlPath}}>{{buttonName}}</a>
+</div>

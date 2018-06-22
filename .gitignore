@@ -1,2 +1,4 @@
 asset-event-producer/target/
 asset-consumer/target/
+asset-dashboard-bff/target/
+asset-dashboard-ui/node_module

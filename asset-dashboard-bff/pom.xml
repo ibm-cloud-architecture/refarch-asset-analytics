@@ -5,7 +5,7 @@
   <version>0.0.1</version>
   <packaging>jar</packaging>
   <name>asset-dashboard-bff</name>
-  <description>BFF with static angular page</description>
+  <description>BFF with static angular single page app</description>
   <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -21,28 +21,40 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-		    <groupId>org.mockito</groupId>
-		    <artifactId>mockito-core</artifactId>
-		    <version>2.15.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
   </dependencies>
    <properties>
         <java.version>1.8</java.version>
     </properties>
 
   <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.7.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+		  <executions>
+		    <execution>
+		        <id>app</id>
+		        <goals>
+		            <goal>java</goal>
+		        </goals>
+		        <configuration>
+		            <mainClass>ibm.cte.pot.BffApplication</mainClass>
+		        </configuration>
+		    </execution>
+		</executions>
+</plugin>
+    </plugins>
+  </build>
+
+
+
 </project>
