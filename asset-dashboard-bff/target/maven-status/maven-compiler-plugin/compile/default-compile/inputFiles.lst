@@ -1,5 +1,8 @@
 /Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-dashboard-bff/src/main/java/ibm/cte/pot/BffApplication.java
 /Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-dashboard-bff/src/main/java/ibm/cte/esp/model/Asset.java
+/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-dashboard-bff/src/main/java/ibm/cte/pot/msg/KafkaAssetConsumer.java
+/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-dashboard-bff/src/main/java/ibm/cte/pot/BffSocketConfig.java
 /Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-dashboard-bff/src/main/java/ibm/cte/pot/AssetController.java
 /Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-dashboard-bff/src/main/java/ibm/cte/pot/BffConfig.java
+/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-dashboard-bff/src/main/java/ibm/cte/pot/BffSocketHandler.java
 /Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-dashboard-bff/src/main/java/ibm/cte/pot/HomeController.java

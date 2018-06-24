@@ -53,7 +53,7 @@ public class AssetSerializer implements Serializer<Asset> {}
 	}
 }
 ```
-The alternate is to use a Java to JSON serializer and send a String.
+The alternate is to use a Java to JSON serializer and send a String. We prefer to use this method as it is simpler.
 ```
 GsonBuilder builder = new GsonBuilder();
 Gson gson = builder.create();

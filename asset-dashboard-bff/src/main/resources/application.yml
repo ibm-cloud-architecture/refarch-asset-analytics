@@ -1,0 +1,7 @@
+spring:
+  kafka:
+    bootstrap-servers: docker.for.mac.host.internal:30092
+
+app:
+  topic:
+    test: test-topic

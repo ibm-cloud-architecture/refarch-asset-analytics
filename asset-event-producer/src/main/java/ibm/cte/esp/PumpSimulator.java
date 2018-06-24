@@ -32,7 +32,7 @@ public class PumpSimulator {
 	private String brokers = BOOTSTRAP_SERVERS;
 	private String topic = TOPICNAME;
 	private int numberOfAsset = 5;
-	private int timeGap = 30;
+	private int timeGap = 10000;
 	private boolean event = false;
 	
 	private KafkaProducer<String, Object> kafkaProducer;
@@ -47,12 +47,15 @@ public class PumpSimulator {
 			simulator.generateEvents();
 		} else {
 			simulator.generateAssets();
+			
 			simulator.shutdown();
 		}
 	}
 	
 	
-	
+	/**
+	 * Generate pump event every n seconds
+	 */
 	public void generateEvents() {
 	    
 		
@@ -73,7 +76,13 @@ public class PumpSimulator {
         properties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432); //total amount of memory available to the producer for buffering
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        this.kafkaProducer = new KafkaProducer<>(properties);		
+        this.kafkaProducer = new KafkaProducer<>(properties);
+        
+		if (event) {
+			logger.info("Pump Simulator sending pump event to "+ brokers +" every " + timeGap + " ms");
+		} else {
+			logger.info("Pump Simulator sending " + numberOfAsset + " new asset event to "+ brokers +" every " + timeGap + " ms");
+		}
 	}
 
 	public void processArgument(String[] args) {
@@ -112,10 +121,10 @@ public class PumpSimulator {
 		GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String s = gson.toJson(a);
-		 logger.info("Send Asset with id: "+a.getId());
+		 logger.info("Send Asset: " + s);
 		 ProducerRecord<String, Object> record = new ProducerRecord<>(topic, a.getId(), s);
 	     RecordMetadata recordMetadata = kafkaProducer.send(record).get();
-	     logger.info("Receive partition id= " + recordMetadata.partition());
+	     logger.info("Receive partition id= " + recordMetadata.partition() + " offset= " + recordMetadata.offset());
 	}
 
 	public String getBrokers() {
