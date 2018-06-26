@@ -112,7 +112,8 @@ public class PumpSimulator {
 			a.setType("ESP");
 			a.setRotation((long)(360*Math.random()));
 			a.setVersion("0.0.1");
-			
+			a.setLatitude(30.307182);
+			a.setLongitude(-97.755996);
 			publishAsset(a,topic);
 		}
 	} // generateAssets

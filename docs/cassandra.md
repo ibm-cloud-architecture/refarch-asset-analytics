@@ -77,8 +77,8 @@ You are now in cqlsh shell and you can define assets table under keyspace `asset
 ```
 sqlsh>  create keyspace assetmonitoring with replication={'class':'SimpleStrategy', 'replication_factor':1};
 sqlsh> use assetmonitoring;
-sqlsh:assetmonitoring> create TABLE assets(id int PRIMARY KEY, os text, type text, unsuccessfulLogin int, ip text, antivirus text);
-
+sqlsh:assetmonitoring> create TABLE assets(id text PRIMARY KEY, os text, type text, ipaddress text, version text, antivirus text, current int, rotation int, pressure int, temperature int);
+describe
 ```
 Add an index on the asset operating system field and one on type.
 ```
@@ -89,4 +89,15 @@ CREATE INDEX ON assetmonitoring.assets (type);
 If you reconnect to the pod using cqlsh you can assess the table using
 ```
 describe tables
+
+describe assets
+```
+
+### Some useful CQL command
+```
+# modify a table structure adding a column
+cqlsh> alter table assets add flowRate bigint;
+
+# change column type
+cqlsh> alter table assets alter name type text;
 ```

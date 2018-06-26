@@ -37,7 +37,8 @@ public class AssetIngestor {
 	
 	private static KafkaConsumer<String, String> kafkaConsumer;
     private static final long POLL_DURATION = 1000;
-	 
+	
+    
 	public static void main(String[] args) {
 		String brokers = BOOTSTRAP_SERVERS;
 		String topic = TOPICNAME;

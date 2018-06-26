@@ -1,1 +1,1 @@
-mvn exec:java -Dexec.mainClass="ibm.cte.esp.AssetIngestor"
+mvn exec:java -Dexec.mainClass="ibm.cte.esp.KafkaInjectorApplication"

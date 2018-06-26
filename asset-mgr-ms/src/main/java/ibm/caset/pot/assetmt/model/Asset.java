@@ -5,6 +5,8 @@ import javax.validation.constraints.Size;
 
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
+
+
 @Table("assets")
 public class Asset {
   @PrimaryKey
@@ -14,9 +16,15 @@ public class Asset {
   public String os;
   public String version;
   public String type;
-  public int unsuccessfulLogin = 0;
   public String ipAddress;
   public String antivirus;
+  protected long rotation;
+  protected long current;
+  protected long pressure;
+  protected long flowRate;
+  protected long temperature;
+  protected double latitude;
+  protected double longitude;
   
   public Asset() {}
   
@@ -53,12 +61,7 @@ public class Asset {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public int getUnsuccessfulLogin() {
-		return unsuccessfulLogin;
-	}
-	public void setUnsuccessfulLogin(int unsuccessfulLogin) {
-		this.unsuccessfulLogin = unsuccessfulLogin;
-	}
+
 	public String getIpAddress() {
 		return ipAddress;
 	}
@@ -78,5 +81,70 @@ public class Asset {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public long getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(long rotation) {
+		this.rotation = rotation;
+	}
+
+	public long getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(long current) {
+		this.current = current;
+	}
+
+	public long getPressure() {
+		return pressure;
+	}
+
+	public void setPressure(long pressure) {
+		this.pressure = pressure;
+	}
+
+	public long getFlowRate() {
+		return flowRate;
+	}
+
+	public void setFlowRate(long flowRate) {
+		this.flowRate = flowRate;
+	}
+
+	public long getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(long temperature) {
+		this.temperature = temperature;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Asset ) {
+			Asset oa = (Asset) o;
+			return (oa.latitude == this.latitude) && (oa.longitude == this.longitude);
+		}
+		return false;
 	}
 }

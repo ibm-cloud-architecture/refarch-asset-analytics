@@ -19,4 +19,11 @@ public class AssetController {
 		a.setId("Asset_01");		
 		return Arrays.asList(a);
 	}
+	
+	
+	@RequestMapping("/assetstream")
+    public void webSocket() {
+    	// delegate to a kafka consumer to get new asset
+		// push new asset to UI / session web socket session.
+    }
 }

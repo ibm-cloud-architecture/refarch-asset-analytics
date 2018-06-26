@@ -33,4 +33,6 @@ export class AssetsService {
    	          temperature:  60}
               ];
   }
+
+  getAssetEvent() {}
 }

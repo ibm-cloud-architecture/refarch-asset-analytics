@@ -2,6 +2,7 @@ package ibm.cte.esp.model;
 
 import java.io.Serializable;
 
+
 public class Asset implements Serializable {
 	/**
 	 * 
@@ -18,6 +19,8 @@ public class Asset implements Serializable {
 	protected long pressure;
 	protected long flowRate;
 	protected long temperature;
+	protected double latitude;
+	protected double longitude;
 	  
 	public Asset() {}
 
@@ -107,5 +110,21 @@ public class Asset implements Serializable {
 
 	public void setTemperature(long temperature) {
 		this.temperature = temperature;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 }

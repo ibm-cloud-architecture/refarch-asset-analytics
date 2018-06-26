@@ -2,11 +2,16 @@ package ibm.cte.esp.model;
 
 import java.io.Serializable;
 
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
+
+@Table("assets")
 public class Asset implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	 @PrimaryKey
 	protected String id;
 	protected String os;
 	protected String version;
@@ -18,8 +23,12 @@ public class Asset implements Serializable {
 	protected long pressure;
 	protected long flowRate;
 	protected long temperature;
+	protected double latitude;
+	protected double longitude;
 	  
 	public Asset() {}
+	
+	 
 
 	public String getId() {
 		return id;
@@ -107,5 +116,30 @@ public class Asset implements Serializable {
 
 	public void setTemperature(long temperature) {
 		this.temperature = temperature;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Asset ) {
+			Asset oa = (Asset) o;
+			return (oa.latitude == this.latitude) && (oa.longitude == this.longitude);
+		}
+		return false;
 	}
 }
