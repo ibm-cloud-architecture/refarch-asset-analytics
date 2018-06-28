@@ -19,7 +19,8 @@ import com.google.gson.Gson;
 import ibm.cte.esp.model.Asset;
 
 /**
- * This class listen all events from input topic in the form of Asset.
+ * listen all events coming from input topic in the form of Asset and persist
+ * them into Cassandra
  * 
  * @author jeromeboyer
  *
@@ -52,6 +53,7 @@ public class KafkaInjectorApplication implements CommandLineRunner  {
 	        public void onMessage(ConsumerRecord<String, String> message) {
 	            logger.info("received: " + message);
 	            Asset a = gson.fromJson(message.value(),Asset.class);
+	            
 	            cassandra.save(a);
 	        }
 

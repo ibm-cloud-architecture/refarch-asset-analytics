@@ -1,7 +1,7 @@
-# Manufacturing Asset Analytics
+# Manufacturing Asset Predictive Maintenance
 
 This project is part of the 'IBM Hybrid Analytics and Big Data Architecture' solution, available at https://github.com/ibm-cloud-architecture/refarch-analytics. This project presents an end to end solution to enable predictive maintenance capabilities on manufacturing assets.
-The problem space is related to continuous operation and service on manufacturing asset like [Electrical Submersible Pump](), but any assets with sensors can be on-boarded.
+The problem space is related to continuous operation and service on manufacturing asset like [Electrical Submersible Pump](https://en.wikipedia.org/wiki/Submersible_pump), but any assets with sensors can be considered with the same of solution.
 
 The use case is also adaptable and the architecture, solution components can be used for a security treat analysis on a park of devices or assets connected to a company intranet: real time events come from device that need to be aggregated and correlated and analytics run can be performed on historical data to assess security risk. Alert can be published to dashboard user interface.      
 
@@ -14,7 +14,7 @@ The use case is also adaptable and the architecture, solution components can be 
   * [Dashboard BFF](asset-dashboard-bff/README.md)
   * [Asset manager microservice](asset-mgr-ms/README.md)
 * **Future readings**
-  * [Kafka related]()
+  * [Kafka related](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka)
 
 ## Use Case
 A set of geographically distributed electrical submersible pumps (can apply to any manufacturing IoT equipments) send stream of data about important measurements.
@@ -35,8 +35,12 @@ The following diagram illustrates the IBM Cloud Private, kubernetes deployment w
 ## Deploying Cassandra
 There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the instructions are [here](./docs/cassandra.md)
 
+## Deploying Kafka
+We use different deployment model, all based on container: with docker, docker edge with local kubernetes, IBM Cloud Private. See details [in this note](
+  https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka#run-kafka-in-docker)
 
 ## ICP Deployment
+Each component of the solution is compiled and packaged as container. 
 
 
 

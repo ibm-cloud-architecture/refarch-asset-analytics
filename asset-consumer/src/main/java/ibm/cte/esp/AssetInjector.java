@@ -28,7 +28,7 @@ import ibm.cte.esp.model.Asset;
  * @author jerome boyer
  *
  */
-public class AssetIngestor {
+public class AssetInjector {
 
 	private static Logger logger = Logger.getLogger("AssetIngestor");
 	private static String TOPICNAME = "test-topic";

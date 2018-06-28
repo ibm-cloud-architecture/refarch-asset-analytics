@@ -1,5 +1,6 @@
 # Kafka Consumers
-This project includes a set of standalone code, to consume records from a Kafka Topics. Most of the running java classes are for testing purpose. One of the class is used in the proposed asset analytics solution by listening to two types of record: a new asset is added, a new measurement event comes from an known asset and and persists those records into Cassandra for historical persistence and do analytics modeling.
+This project includes a set of standalone code, to consume records from a Kafka Topics. Most of the running java classes are for testing purpose. 
+The AssetInjector class is executable as a standalone tool and its goal is  One of the class is used in the proposed asset analytics solution by listening to two types of record: a new asset is added, a new measurement event comes from an known asset and and persists those records into Cassandra for historical persistence and do analytics modeling.
 
 This application is done using SpringBoot Kafka api.
 

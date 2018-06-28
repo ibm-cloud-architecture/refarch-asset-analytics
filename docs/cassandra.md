@@ -19,7 +19,8 @@ $ kubectl exec -ti  cassandra-0 -- nodetool status
 ```
 
 ## Deployment on ICP
-You need a Kubernetes ICP cluster. Then use the yaml config files under charts folder to configure a Service to cassandra is exposed externally, create static persistence volume and statefulSet to deploy cassandra images.
+You need a Kubernetes ICP cluster. Then use the yaml config files under `deployment` folder to configure a Service to expose cassandra externally, create static persistence volume and statefulSet to deploy cassandra images.
+The service is using 
 * Connect to ICP.
 We are using one namespace called 'greencompute'
 * create cassandra service
@@ -77,7 +78,7 @@ You are now in cqlsh shell and you can define assets table under keyspace `asset
 ```
 sqlsh>  create keyspace assetmonitoring with replication={'class':'SimpleStrategy', 'replication_factor':1};
 sqlsh> use assetmonitoring;
-sqlsh:assetmonitoring> create TABLE assets(id text PRIMARY KEY, os text, type text, ipaddress text, version text, antivirus text, current int, rotation int, pressure int, temperature int);
+sqlsh:assetmonitoring> create TABLE assets(id text PRIMARY KEY, os text, type text, ipaddress text, version text, antivirus text, current double, rotation int, pressure int, temperature int, latitude double, longitude double);
 describe
 ```
 Add an index on the asset operating system field and one on type.
@@ -100,4 +101,10 @@ cqlsh> alter table assets add flowRate bigint;
 
 # change column type
 cqlsh> alter table assets alter name type text;
+
+# list content of a a table  
+cqlsh> select id,ipaddress,latitude,longitude from assets;
+
+# delete a table
+cqlsh> drop table if exists assets;
 ```
