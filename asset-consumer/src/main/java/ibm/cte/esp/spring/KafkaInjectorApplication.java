@@ -1,4 +1,4 @@
-package ibm.cte.esp;
+package ibm.cte.esp.spring;
 
 import java.util.Map;
 import java.util.logging.Logger;

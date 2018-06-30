@@ -18,7 +18,7 @@ import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
-import ibm.cte.esp.AppConfig;
+import ibm.cte.esp.spring.AppConfig;
 
 public class TestSimpleSpringProducerConsumer {
 

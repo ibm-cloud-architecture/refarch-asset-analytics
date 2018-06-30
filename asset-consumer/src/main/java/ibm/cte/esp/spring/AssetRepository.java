@@ -1,4 +1,4 @@
-package ibm.cte.esp;
+package ibm.cte.esp.spring;
 
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;

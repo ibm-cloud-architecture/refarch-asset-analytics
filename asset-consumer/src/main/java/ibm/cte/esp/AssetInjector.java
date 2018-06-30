@@ -37,55 +37,90 @@ public class AssetInjector {
 	
 	private static KafkaConsumer<String, String> kafkaConsumer;
     private static final long POLL_DURATION = 1000;
-	
+    
+	private String brokers = BOOTSTRAP_SERVERS;
+	private String topic = TOPICNAME;
+    private String groupid = GROUPID;
+    private int minBatchSize = 2;
+    
+    private CassandraRepo cassandra;
     
 	public static void main(String[] args) {
-		String brokers = BOOTSTRAP_SERVERS;
-		String topic = TOPICNAME;
-		String groupid = GROUPID;
-		int minBatchSize = 2;
+		AssetInjector consumer = new AssetInjector();
+		consumer.processArgument(args);
+		consumer.prepareConsumer();
+		consumer.run();
+	}
+	
+	/* Arguments are optional */
+	public void processArgument(String[] args) {
 		if (args.length == 4) {
 			topic = args[0];
 			brokers = args[1];
 			groupid = args[2];
 			minBatchSize = Integer.parseInt(args[3]);
 		}
-		
+		if (args.length == 2) {
+			topic = args[0];
+			brokers = args[1];
+		}
+	}
+	
+	public void prepareConsumer() {
 		Properties properties = new Properties();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, groupid);
         // offsets are committed automatically with a frequency controlled by the config auto.commit.interval.ms
-        properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"true");
+        // here we want to use manual commit 
+        properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"false");
         properties.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG,"1000");
+        properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
  
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         
-        
         kafkaConsumer = new KafkaConsumer<>(properties);
         kafkaConsumer.subscribe(Arrays.asList(topic));
+	}
+	
+
+	public void run() {
+		cassandra = new CassandraRepo();
         Gson gson = new Gson();
-        List<ConsumerRecord<String, String>> buffer = new ArrayList<>();
-        
-        
-        // commit offset only when persisted in DB.
-	    ConsumerRecords<String, String> records = kafkaConsumer.poll(POLL_DURATION);
-	    for (ConsumerRecord<String, String> record : records) {
-	    		Asset a = gson.fromJson(record.value(), Asset.class);
-	    		logger.info("Received :" + a.getId() + " offset "+record.offset());
-	    		logger.info(record.key() + " => " + record.value());
-	            buffer.add(record);
-	    }
-	    if (buffer.size() >= minBatchSize) {
-	    	insertIntoDb(buffer);
-	    	kafkaConsumer.commitSync();
-            buffer.clear();	 
-	    } 
+        List<Asset> buffer = new ArrayList<>();
+        boolean runAgain = true;
+        while (runAgain) {
+	        // commit offset only when persisted in DB.
+		    ConsumerRecords<String, String> records = kafkaConsumer.poll(POLL_DURATION);
+		    for (ConsumerRecord<String, String> record : records) {
+		    		Asset a = gson.fromJson(record.value(), Asset.class);
+		    		logger.info("Received :" + a.getId() + " offset "+record.offset());
+		    		logger.info(record.key() + " => " + record.value());
+		            buffer.add(a);
+		    }
+		    if (buffer.size() >= minBatchSize) {
+		    	try {
+		    		insertIntoDb(buffer);
+			    	kafkaConsumer.commitSync();
+		            buffer.clear();	 
+		    	} catch (Exception e) {
+		    		e.printStackTrace();
+		    		runAgain = false;
+		    	}
+		    	
+		    } 
+        }
         kafkaConsumer.close();
 	}
 
-	private static void insertIntoDb( List<ConsumerRecord<String, String>> buffer) {
-		// TODO use web client to send data to Data Access Layer. 
+
+
+	
+	
+	private void insertIntoDb( List<Asset> buffer) throws Exception{
+		for (Asset a  : buffer) {			
+			cassandra.persistAsset(a);
+		}
 	}
 }

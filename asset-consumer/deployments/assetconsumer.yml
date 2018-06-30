@@ -1,0 +1,23 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: asset-consumer
+  name: asset-consumer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: asset-consumer
+    spec:
+      containers:
+      - image: ibmcase/asset-consumer:latest
+        name: asset-consumer
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8080
+          protocol: TCP
+        

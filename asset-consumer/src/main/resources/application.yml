@@ -7,5 +7,6 @@ cassandra:
  basepackages: 
 kafka:
   bootstrap-servers: docker.for.mac.host.internal:30092
+  groupid: assetconsumers
   topic:
     test: test.topic

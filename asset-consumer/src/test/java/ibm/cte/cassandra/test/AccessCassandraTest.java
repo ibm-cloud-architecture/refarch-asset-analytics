@@ -10,7 +10,7 @@ import com.datastax.driver.core.Session;
 public class AccessCassandraTest {
 	
 	@Test
-	public void testAccess() {
+	public void testCassandraAccess() {
 		Cluster cluster = null;
 		try {
 			// cluster holds metadata about cassandra cluster - create one instance of this class per app.

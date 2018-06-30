@@ -1,0 +1,5 @@
+cassandra:
+ contactpoints: localhost,10.1.0.67
+ native_transport_port: 9042
+ keyspace: assetmonitoring
+ basepackages: 
