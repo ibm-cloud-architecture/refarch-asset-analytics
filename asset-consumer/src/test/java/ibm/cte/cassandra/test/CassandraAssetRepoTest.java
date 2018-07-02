@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ibm.cte.esp.AssetDAO;
 import ibm.cte.esp.CassandraRepo;
 import ibm.cte.esp.model.Asset;
 
@@ -47,7 +48,7 @@ public class CassandraAssetRepoTest {
 	}
 	
 	@Test
-	public void shouldGetAllAssets() {
+	public void shouldGetAllAssets() throws Exception {
 		List<Asset> l=repo.getAllAssets();
 		Assert.assertTrue(l.size() >= 1);
 		for (Asset a : l) {

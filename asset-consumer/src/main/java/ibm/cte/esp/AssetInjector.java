@@ -43,7 +43,7 @@ public class AssetInjector {
     private String groupid = GROUPID;
     private int minBatchSize = 2;
     
-    private CassandraRepo cassandra;
+    private AssetDAO assetDAO;
     
 	public static void main(String[] args) {
 		AssetInjector consumer = new AssetInjector();
@@ -86,7 +86,7 @@ public class AssetInjector {
 	
 
 	public void run() {
-		cassandra = new CassandraRepo();
+		assetDAO = new CassandraRepo();
         Gson gson = new Gson();
         List<Asset> buffer = new ArrayList<>();
         boolean runAgain = true;
@@ -120,7 +120,7 @@ public class AssetInjector {
 	
 	private void insertIntoDb( List<Asset> buffer) throws Exception{
 		for (Asset a  : buffer) {			
-			cassandra.persistAsset(a);
+			assetDAO.persistAsset(a);
 		}
 	}
 }

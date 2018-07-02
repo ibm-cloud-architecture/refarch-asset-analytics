@@ -14,7 +14,7 @@ import com.datastax.driver.core.Session;
 
 import ibm.cte.esp.model.Asset;
 
-public class CassandraRepo {
+public class CassandraRepo implements AssetDAO {
 	private static Logger logger = Logger.getLogger("CassandraRepo");
 	// can be reused as they are thread safe
 	public static  Cluster cluster = null;
@@ -102,7 +102,7 @@ public class CassandraRepo {
 		return a;
     }
 
-	public Asset getAssetById(String assetId) {
+	public Asset getAssetById(String assetId) throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
 			      .append(ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) + "." + TABLE_NAME)
@@ -118,7 +118,7 @@ public class CassandraRepo {
 		return a;
 	}
 
-	public List<Asset> getAllAssets() {
+	public List<Asset> getAllAssets() throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
 			      .append(ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) + "." + TABLE_NAME)

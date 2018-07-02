@@ -166,3 +166,7 @@ cqlsh> drop table if exists assets;
  ```
 
  * insert data: there is no update so if you want a strict insert you need to add "IF NOT EXISTS" condition in the query.
+
+
+## Future Readings
+[IBM Article: Scalable multi-node Cassandra deployment on Kubernetes Cluster](https://github.com/IBM/Scalable-Cassandra-deployment-on-Kubernetes)
