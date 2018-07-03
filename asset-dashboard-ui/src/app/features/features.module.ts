@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AssetsComponent } from './assets/assets.component';
 import { HomeComponent } from './home/home.component';
 import { SharedModule } from '../shared/shared.module';
+import { DashboardComponent } from './dashboard/dashboard.component'
 import { routes } from './routes';
 
 @NgModule({
@@ -16,7 +17,7 @@ import { routes } from './routes';
     enableTracing: false
     }),
   ],
-  declarations: [AssetsComponent, HomeComponent ],
+  declarations: [AssetsComponent, HomeComponent, DashboardComponent ],
   exports: [ RouterModule]
 })
 export class FeaturesModule { }

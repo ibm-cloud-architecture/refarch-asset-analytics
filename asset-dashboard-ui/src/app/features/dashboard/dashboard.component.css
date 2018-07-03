@@ -1,0 +1,24 @@
+.wrapper {
+width:100%;
+margin : 0;
+}
+
+.riskCategory{
+
+width:33%;
+margin : 0;
+float : left;
+padding: 10px
+}
+
+.summary{
+  width:50%;
+  margin : 0;
+  float: left
+}
+
+.split{
+  width:50%;
+  margin : 0;
+  float: left
+}
