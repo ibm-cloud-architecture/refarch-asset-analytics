@@ -4,18 +4,23 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import ibm.cte.esp.model.Asset;
+import ibm.cte.pot.msg.KafkaAssetConsumer;
+
 /**
- * records all the session once any websocket connection is established 
+ * records all the sessions once any websocket connection is established 
  * and broadcasts the message to all the sessions once any message is received
  * @author jerome boyer
  *
  */
 public class BffSocketHandler extends TextWebSocketHandler {
 	List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
+	KafkaAssetConsumer consumer = new KafkaAssetConsumer();
 
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
@@ -23,13 +28,30 @@ public class BffSocketHandler extends TextWebSocketHandler {
 		
 		for(WebSocketSession webSocketSession : sessions) {
 			//Map value = new Gson().fromJson(message.getPayload(), Map.class);
-			webSocketSession.sendMessage(new TextMessage("Hello  from BFF !"));
+			if (consumer != null) {
+				for (String assetAsString : consumer.getNext()) {
+					session.sendMessage(new TextMessage(assetAsString));
+				}
+			}
+			
 		}
 	}
 
+	/**
+	 * Start listening
+	 */
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		//the messages will be broadcasted to all connected users.
-		sessions.add(session);
+		consumer = new KafkaAssetConsumer();
+		sessions.add(session);	
+	}
+	
+	@Override
+	public void afterConnectionClosed(WebSocketSession session,
+            CloseStatus status)
+     throws java.lang.Exception {
+		if (consumer != null) {
+			consumer.close();
+		}
 	}
 }

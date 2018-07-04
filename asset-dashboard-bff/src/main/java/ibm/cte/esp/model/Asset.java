@@ -1,6 +1,7 @@
 package ibm.cte.esp.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class Asset implements Serializable {
 	/**
@@ -13,11 +14,13 @@ public class Asset implements Serializable {
 	protected String type;
 	protected String ipAddress;
 	protected String antivirus;
-	protected long rotation;
-	protected long current;
-	protected long pressure;
-	protected long flowRate;
-	protected long temperature;
+	protected BigDecimal rotation;
+	protected BigDecimal current;
+	protected BigDecimal pressure;
+	protected BigDecimal flowRate;
+	protected BigDecimal temperature;
+	protected Double latitude;
+	protected Double longitude;
 	  
 	public Asset() {}
 
@@ -69,43 +72,65 @@ public class Asset implements Serializable {
 		this.antivirus = antivirus;
 	}
 
-	public long getRotation() {
+	public BigDecimal getRotation() {
 		return rotation;
 	}
 
-	public void setRotation(long rotation) {
+	public void setRotation(BigDecimal rotation) {
 		this.rotation = rotation;
 	}
 
-	public long getCurrent() {
+	public BigDecimal getCurrent() {
 		return current;
 	}
 
-	public void setCurrent(long current) {
+	public void setCurrent(BigDecimal current) {
 		this.current = current;
 	}
 
-	public long getPressure() {
+	public BigDecimal getPressure() {
 		return pressure;
 	}
 
-	public void setPressure(long pressure) {
+	public void setPressure(BigDecimal pressure) {
 		this.pressure = pressure;
 	}
 
-	public long getFlowRate() {
+	public BigDecimal getFlowRate() {
 		return flowRate;
 	}
 
-	public void setFlowRate(long flowRate) {
+	public void setFlowRate(BigDecimal flowRate) {
 		this.flowRate = flowRate;
 	}
 
-	public long getTemperature() {
+	public BigDecimal getTemperature() {
 		return temperature;
 	}
 
-	public void setTemperature(long temperature) {
+	public void setTemperature(BigDecimal temperature) {
 		this.temperature = temperature;
 	}
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	
 }

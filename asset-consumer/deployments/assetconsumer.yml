@@ -20,4 +20,19 @@ spec:
           protocol: TCP
         - containerPort: 8080
           protocol: TCP
-        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: asset-consumer-svc
+  labels:
+    chart: asset-consumer
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: asset-consumer-svc
+  selector:
+    app: asset-consumer

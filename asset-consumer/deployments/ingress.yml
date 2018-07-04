@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: assetmanagement
+spec:
+  rules:
+    - host: assetmanagement.greencompute.ibmcase.com
+      http:
+        paths:
+          - path: /assetconsumer
+            backend:
+              serviceName: asset-consumer-svc
+              servicePort: 8080
+          - path: /assetdashboard
+            backend:
+              serviceName: asset-dashboard-bff-svc
+              servicePort: 8080
+          - path: /assetmgrms
+            backend:
+              serviceName: asset-mgr-ms-svc
+              servicePort: 8080

@@ -28,7 +28,7 @@ Then run it with matching the exposed port
 ```
 docker run -ti -p 9080:9080 ibmcase/asset-dashboard-bff
 ```
-We automate this process with the script `build.sh`
+We automate this process with the script `build.sh` which can be included in jenkins pipeline.
 
 ## Code Approach
 ### Springboot serving Angular
@@ -38,7 +38,7 @@ The alternate is to use NGINX and call the remote BFF server with Cross domain c
 
 The RestController for the assets is providing the classical CRUD verbs for a RESTful service. See class AssetController.
 
-The most interesting part is to be able to push new asset when assets are identified from the datasource.
+The most interesting part is to be able to push new asset when assets are identified from the datasource. For that we will use WebFlux.
 
 @@@@ to continue
 We also support continuous build with Google tool: "skaffold"
