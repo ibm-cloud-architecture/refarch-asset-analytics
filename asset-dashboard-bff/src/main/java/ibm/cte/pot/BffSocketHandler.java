@@ -10,7 +10,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import ibm.cte.esp.model.Asset;
 import ibm.cte.pot.msg.KafkaAssetConsumer;
 
 /**
@@ -60,16 +59,13 @@ public class BffSocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
-	public void broadcastMessages( List<String> messages) {
-		logger.info("should broadcast " + messages.size() + " messages");
+	public void broadcastMessage( String message) {
 		for(WebSocketSession webSocketSession : sessions) {
-			for (String assetAsString : messages) {
-				try {
-					webSocketSession.sendMessage(new TextMessage(assetAsString));
-				} catch (IOException e) {
-					// may be dropping message is not an issue
-					logger.severe("message not sent to " + webSocketSession.getRemoteAddress());
-				}
+			try {
+				webSocketSession.sendMessage(new TextMessage(message));
+			} catch (IOException e) {
+				// may be dropping message is not an issue
+				logger.severe("message not sent to " + webSocketSession.getRemoteAddress());
 			}
 		}
 	}

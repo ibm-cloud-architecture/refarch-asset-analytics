@@ -1,18 +1,18 @@
 package ibm.cte.pot.msg;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.KafkaMessageListenerContainer;
+import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
 import ibm.cte.pot.BffSocketHandler;
@@ -23,23 +23,22 @@ public class KafkaAssetConsumer {
 	private static String TOPICNAME = "test-topic";
 	private static String GROUPID = "BFFConsumers";
 	private static String BOOTSTRAP_SERVERS = "docker.for.mac.host.internal:30092";
-	
-	private static KafkaConsumer<String, String> kafkaConsumer;
     private static final long POLL_DURATION = 1000;
     
 	private String brokers = BOOTSTRAP_SERVERS;
 	private String topic = TOPICNAME;
     private String groupid = GROUPID;
-    private boolean finished = false;
+
     private BffSocketHandler broadcaster;
+    KafkaMessageListenerContainer<Integer, String> kafkaConsumer ;
 	   
     public KafkaAssetConsumer(){
     	prepareConsumer();
     }
     
     public KafkaAssetConsumer(BffSocketHandler broadcaster){
-    	prepareConsumer();
     	this.broadcaster= broadcaster;
+    	prepareConsumer();
     }
     
     
@@ -54,42 +53,33 @@ public class KafkaAssetConsumer {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
        
-
-
-        kafkaConsumer = new KafkaConsumer<>(properties);
-        kafkaConsumer.subscribe(Arrays.asList(topic));
+    	DefaultKafkaConsumerFactory<Integer, String> cf =
+                new DefaultKafkaConsumerFactory<Integer, String>(properties);
+    	
+    	ContainerProperties containerProps = new ContainerProperties(topic);
+    	containerProps.setPollTimeout(POLL_DURATION);
+    	containerProps.setMessageListener(new MessageListener<String, String>() {
+			@Override
+			public void onMessage(ConsumerRecord<String, String> record) {
+				 if ( record != null) {
+	     	    	logger.info("Received from kafka:" + record.key() + " offset "+record.offset() + " => " + record.value());
+	        		 broadcaster.broadcastMessage(record.value());
+	        	 }
+			}
+    	});
+    	kafkaConsumer =  new KafkaMessageListenerContainer<>(cf, containerProps);
 	}
     
     public List<String> getNext() {
-    	 List<String> buffer = new ArrayList<>();
-    	 ConsumerRecords<String, String> records = kafkaConsumer.poll(POLL_DURATION);
-    	 for (ConsumerRecord<String, String> record : records) {
-	    		logger.info("Received from kafka:" + record.key() + " offset "+record.offset() + " => " + record.value());
-	            buffer.add(record.value());
-	           // kafkaConsumer.commitSync();
-	    }
-    	 return buffer;
+    	return null;
     }
     
     public void start() {
     	 logger.info("Start Kafka Consumer ........");
-    	 while (! finished) {
-    		 List<String> buffer = new ArrayList<>();
-        	 ConsumerRecords<String, String> records = kafkaConsumer.poll(POLL_DURATION);
-        	 if (! records.isEmpty()) {
-        		 for (ConsumerRecord<String, String> record : records) {
-     	    		logger.info("Received from kafka:" + record.key() + " offset "+record.offset() + " => " + record.value());
-     	            buffer.add(record.value());
-        		 }
-        		 broadcaster.broadcastMessages(buffer);
-        	 }
-        	 
-    	 }
-    	 
+    	 kafkaConsumer.start(); 	 
     }
     
     public void close() {
-    	finished = true;
-    	kafkaConsumer.close();
+    	kafkaConsumer.stop();
     }
 }
