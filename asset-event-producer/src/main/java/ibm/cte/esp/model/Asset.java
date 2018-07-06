@@ -1,6 +1,7 @@
 package ibm.cte.esp.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 
 public class Asset implements Serializable {
@@ -21,8 +22,11 @@ public class Asset implements Serializable {
 	protected long temperature;
 	protected double latitude;
 	protected double longitude;
-	  
-	public Asset() {}
+	protected Date timestamp;
+	
+	public Asset() {
+		this.timestamp = new Date();
+	}
 
 	public String getId() {
 		return id;
@@ -126,5 +130,13 @@ public class Asset implements Serializable {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
 	}
 }

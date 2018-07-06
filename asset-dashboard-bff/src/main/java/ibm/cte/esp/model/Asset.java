@@ -2,6 +2,7 @@ package ibm.cte.esp.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class Asset implements Serializable {
 	/**
@@ -21,6 +22,7 @@ public class Asset implements Serializable {
 	protected BigDecimal temperature;
 	protected Double latitude;
 	protected Double longitude;
+	protected Date timestamp;
 	  
 	public Asset() {}
 
@@ -130,6 +132,14 @@ public class Asset implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	

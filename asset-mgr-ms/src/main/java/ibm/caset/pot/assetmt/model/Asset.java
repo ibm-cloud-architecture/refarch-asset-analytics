@@ -25,24 +25,27 @@ public class Asset {
   protected long temperature;
   protected double latitude;
   protected double longitude;
-  
+  protected Date timestamp;
+
   public Asset() {}
-  
-    public Asset(String id,String os,String type) {
-    	this.id = id;
-    	this.os= os;
-    	this.type = type;
-    }
-    
-    public Asset(String id, String type, String os, String antivirus, String ipAddress, String unsuccessfulLogin, String version) {
-        this.id = id;
-        this.type = type;
-        this.os = os;
-        this.antivirus = antivirus;
-        this.ipAddress = ipAddress;
-        this.version = "unknown";
-    }
-    
+
+  public Asset(String id,String os,String type) {
+  	this.id = id;
+  	this.os= os;
+  	this.type = type;
+    this.timestamp = new Date();
+  }
+
+  public Asset(String id, String type, String os, String antivirus, String ipAddress, String unsuccessfulLogin, String version) {
+      this.id = id;
+      this.type = type;
+      this.os = os;
+      this.antivirus = antivirus;
+      this.ipAddress = ipAddress;
+      this.version = "unknown";
+      this.timestamp = new Date();
+  }
+
 	public String getId() {
 		return id;
 	}
@@ -138,7 +141,7 @@ public class Asset {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Asset ) {

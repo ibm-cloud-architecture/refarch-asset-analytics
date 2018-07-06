@@ -23,30 +23,30 @@ import reactor.core.publisher.Mono;
 
 @RestController
 public class AssetController {
-	
+
 	private AssetRepository assetMgrRepository;
-	
+
 
 	public AssetController(AssetRepository rep) {
 		this.assetMgrRepository = rep;
 	}
-	
+
 	@RequestMapping("/")
     public @ResponseBody String index() {
         return "Greetings from Asset Manager v0.0.1 !";
     }
-	
+
 	@RequestMapping("/health")
     public @ResponseBody String health() {
         return "Pong";
     }
-	
-	
+
+
 	@RequestMapping("/assets")
     public Flux<Asset> getAllAssets() {
         return this.assetMgrRepository.findAll();
     }
-	
+
     @GetMapping("/assets/kpi/count")
     public Mono<Long> countAssets() {
         return this.assetMgrRepository.count();
@@ -101,5 +101,5 @@ public class AssetController {
     public Flux<Asset> streamAllAssets() {
         return this.assetMgrRepository.findAll();
     }
-    
+
 }

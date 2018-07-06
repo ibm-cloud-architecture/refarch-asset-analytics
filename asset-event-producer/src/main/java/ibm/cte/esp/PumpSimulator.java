@@ -114,7 +114,9 @@ public class PumpSimulator {
 			a.setVersion("0.0.1");
 			a.setLatitude(30.307182);
 			a.setLongitude(-97.755996);
+			
 			publishAsset(a,topic);
+			Thread.sleep(3000);
 		}
 	} // generateAssets
 
@@ -122,10 +124,10 @@ public class PumpSimulator {
 		GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String s = gson.toJson(a);
-		 logger.info("Send Asset: " + s);
-		 ProducerRecord<String, Object> record = new ProducerRecord<>(topic, a.getId(), s);
-	     RecordMetadata recordMetadata = kafkaProducer.send(record).get();
-	     logger.info("Receive partition id= " + recordMetadata.partition() + " offset= " + recordMetadata.offset());
+		logger.info("Send Asset: " + s);
+		ProducerRecord<String, Object> record = new ProducerRecord<>(topic, a.getId(), s);
+	    RecordMetadata recordMetadata = kafkaProducer.send(record).get();
+	    logger.info("Receive partition id= " + recordMetadata.partition() + " offset= " + recordMetadata.offset());
 	}
 
 	public String getBrokers() {

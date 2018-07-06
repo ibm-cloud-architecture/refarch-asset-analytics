@@ -3,6 +3,7 @@ package ibm.cte.pot;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
 
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -13,28 +14,29 @@ import ibm.cte.esp.model.Asset;
 import ibm.cte.pot.msg.KafkaAssetConsumer;
 
 /**
- * records all the sessions once any websocket connection is established 
- * and broadcasts the message to all the sessions once any message is received
+ * This is the socket handler to process websocket clients asking for 'new asset event'.
+ * We can assume they may have more then one client so it records all the sessions once any websocket connection is established 
+ *
+ * The code uses the kafka consumer to subscribe to 'new asset events'. 
+ * 
  * @author jerome boyer
  *
  */
 public class BffSocketHandler extends TextWebSocketHandler {
+	
+	Logger logger = Logger.getLogger(BffSocketHandler.class.getName());
+	
+	// keep the list of open sessions
 	List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-	KafkaAssetConsumer consumer = new KafkaAssetConsumer();
+	
+	KafkaAssetConsumer consumer = null;
 
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
-		
-		for(WebSocketSession webSocketSession : sessions) {
-			//Map value = new Gson().fromJson(message.getPayload(), Map.class);
-			if (consumer != null) {
-				for (String assetAsString : consumer.getNext()) {
-					session.sendMessage(new TextMessage(assetAsString));
-				}
-			}
-			
-		}
+		// the message has a time stamp from which we can load assets from topic
+		// TODO
+		logger.info("Receive a message from socket client:" + message.getPayload());
 	}
 
 	/**
@@ -42,8 +44,11 @@ public class BffSocketHandler extends TextWebSocketHandler {
 	 */
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		consumer = new KafkaAssetConsumer();
 		sessions.add(session);	
+		if (consumer == null) {
+			consumer = new KafkaAssetConsumer(this);
+			consumer.start();
+		}
 	}
 	
 	@Override
@@ -52,6 +57,20 @@ public class BffSocketHandler extends TextWebSocketHandler {
      throws java.lang.Exception {
 		if (consumer != null) {
 			consumer.close();
+		}
+	}
+	
+	public void broadcastMessages( List<String> messages) {
+		logger.info("should broadcast " + messages.size() + " messages");
+		for(WebSocketSession webSocketSession : sessions) {
+			for (String assetAsString : messages) {
+				try {
+					webSocketSession.sendMessage(new TextMessage(assetAsString));
+				} catch (IOException e) {
+					// may be dropping message is not an issue
+					logger.severe("message not sent to " + webSocketSession.getRemoteAddress());
+				}
+			}
 		}
 	}
 }
