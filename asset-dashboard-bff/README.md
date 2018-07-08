@@ -1,10 +1,8 @@
 # Asset Dashboard Back End For Front End
-This project includes a SpringBoot app to support monitoring of manufacturing assets. The code supports a set of REST verbs and direct WebSocket connection to get real time event propagation from the server to the user interface.
+This project includes a SpringBoot app to support the user interface business logic as a back end for front end pattern. The code supports a set of REST verbs and direct WebSocket connection to get real time event propagation from the server to the user interface. The Angular app is in this folder: [../asset-dashboard-ui](../asset-dashboard-ui).
 
 ### Features:
-* Read assets from Cassandra
-* Search asset
-* Expose REST api
+* [Serve the Angular](#springboot-serving-angular) single page application.
 * Consume event from Kafka and push them to User Interface
 
 ## Solution components
@@ -42,7 +40,7 @@ The alternate is to use NGINX and call the remote BFF server with Cross domain c
 
 The RestController for the assets is providing the classical CRUD verbs for a RESTful service. See class AssetController.
 
-The most interesting part is to be able to push new asset when assets are identified from the datasource. For that we will use WebFlux.
+The most interesting part is to be able to push new asset when assets are identified from the datasource.
 
 ### Consuming Kafka message
 The use case is simple: when a 'new asset event' is sent to a Kafka Topic, the BFF is one of the consumer and propagates the new asset data to the user interface (Angular) so a new row is added to the table of assets. The same applies for time based measurement events coming regularly from known assets.
@@ -51,7 +49,8 @@ There are different ways to support pushing data to user interface. In real appl
 
 With WebSocket we have to take into account any proxy can restrict the use of it. The `Upgrade` http header may not pass thru, or they may close idle connection. Internal application, within the firewall will work, while public to private applications will have challenges.
 
-The Kafka consumer code is based on the same type of code from [the kafka consumer project](../asset-consumer) but it is using kafka springboot support.  
+The Kafka consumer code is based on the same type of code from [the kafka consumer project](../asset-consumer) but it is using kafka springboot API instead.
+The code uses the MessageListener.   
 
 @@@@ to continue
 We also support continuous build with Google tool: "skaffold"

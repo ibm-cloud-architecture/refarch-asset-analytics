@@ -1,2 +1,6 @@
 ibm/cte/pot/HomeControllerTest.class
 ibm/cte/pot/AssetControllerTest.class
+ibm/cte/pot/TestWebSocket$1.class
+ibm/cte/pot/WebsocketClientEndpoint$MessageHandler.class
+ibm/cte/pot/WebsocketClientEndpoint.class
+ibm/cte/pot/TestWebSocket.class

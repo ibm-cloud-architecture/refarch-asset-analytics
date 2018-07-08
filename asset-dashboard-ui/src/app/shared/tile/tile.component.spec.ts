@@ -1,9 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import {Component} from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from "@angular/common";
 import { RouterTestingModule } from '@angular/router/testing';
 import { TileComponent } from './tile.component';
 import { By } from '@angular/platform-browser';
+
+@Component({
+  template: `Home`
+})
+export class HomeComponent {
+}
 
 @Component({
     template: '<app-tile id="firstTile" title="Some title" '
@@ -15,23 +22,23 @@ class HostComponent {}
 describe('TileComponent', () => {
   let component: HostComponent,
     router: Router;
+  let mockRouter = {navigate: jasmine.createSpy('navigate')};
   let fixture: ComponentFixture<HostComponent>;
 
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-          RouterTestingModule.withRoutes([])
       ],
-      declarations: [ TileComponent, HostComponent ]
+      declarations: [ TileComponent, HomeComponent, HostComponent ],
+      providers: [  { provide: Router, useValue: mockRouter }]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    // fixture = TestBed.createComponent(TileComponent);
+    // mockRouter = {navigate: jasmine.createSpy('navigate')};
     fixture = TestBed.createComponent(HostComponent);
-    router = TestBed.get(Router);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -77,12 +84,12 @@ describe('TileComponent', () => {
   });
 
   it('should route to the url when button clicked', () => {
-      const button = fixture.nativeElement.querySelector('button');
-      expect(button).toBeDefined();
-      button.click();
-      fixture.whenStable().then(() => {
-          const routerService = TestBed.get(Router);
-          expect(routerService.navigate.calls.any()).toBe(true, 'navigate called');
-      })
+    const tile = fixture.debugElement.query(By.css('#firstTile'));
+    expect(tile).toBeDefined();
+    expect(tile.componentInstance.urlPath).toContain('home');
+    tile.nativeElement.querySelector('#button').click();
+    fixture.whenStable().then(() => {
+        expect(mockRouter.navigate).toHaveBeenCalledWith(['home']);
+    })
   });
 });

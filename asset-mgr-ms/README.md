@@ -1,17 +1,19 @@
 # Asset Manager Microservice
-SpringBoot app to support operation for Asset management.
+This is a SpringBoot app to support CRUD operations and query to manage manufacturing asset. The persistence repository is Cassandra.
 
 ### Features:
-* Read assets from Cassandra
-* Search asset
-* Expose REST api
+* Asset management CRUD operations to Cassandra
+* Search asset API
+* Expose RESTful api
 
 ## Preparation
-The Cassandra configuration is described in [this note](./docs/cassandra.md)
+You need to have Cassandra deployed, we present multiple choices in [this note](../docs/cassandra.md) and the scripts to prepare the database (keyspace, tables...)
 
 ## Code explanations
+TBD
 
 ## Build
+To build 
 We use [Google Container Tool skaffold](https://github.com/GoogleContainerTools/skaffold) tool and docker build pipeline. The image we use is the bare minimum and includes:
 * OpenJDK JRE
 * Alpine linux layer
@@ -37,7 +39,7 @@ By default the Maven local repository, for official Maven images, is placed insi
 ## Some issues
 * Unsatisfied dependency expressed through field 'mockMvc'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.springframework.test.web.servlet.MockMvc' available
   Read this http://www.baeldung.com/spring-nosuchbeandefinitionexception.
-  Can also be linked to the missing   <artifactId>spring-boot-starter-web</artifactId> in pom.xml 
+  Can also be linked to the missing   <artifactId>spring-boot-starter-web</artifactId> in pom.xml
 
 * Mokito misusing.MissingMethodInvocationException
 

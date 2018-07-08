@@ -14,20 +14,20 @@ import ibm.cte.pot.msg.KafkaAssetConsumer;
 
 /**
  * This is the socket handler to process websocket clients asking for 'new asset event'.
- * We can assume they may have more then one client so it records all the sessions once any websocket connection is established 
+ * We can assume they may have more then one client so it records all the sessions once any websocket connection is established
  *
- * The code uses the kafka consumer to subscribe to 'new asset events'. 
- * 
+ * The code uses the kafka consumer to subscribe to 'new asset events'.
+ *
  * @author jerome boyer
  *
  */
 public class BffSocketHandler extends TextWebSocketHandler {
-	
+
 	Logger logger = Logger.getLogger(BffSocketHandler.class.getName());
-	
+
 	// keep the list of open sessions
 	List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-	
+
 	KafkaAssetConsumer consumer = null;
 
 	@Override
@@ -43,13 +43,14 @@ public class BffSocketHandler extends TextWebSocketHandler {
 	 */
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		sessions.add(session);	
+		sessions.add(session);
+		logger.info("Enter afterConnectionEstablished:");
 		if (consumer == null) {
 			consumer = new KafkaAssetConsumer(this);
 			consumer.start();
 		}
 	}
-	
+
 	@Override
 	public void afterConnectionClosed(WebSocketSession session,
             CloseStatus status)
@@ -58,7 +59,7 @@ public class BffSocketHandler extends TextWebSocketHandler {
 			consumer.close();
 		}
 	}
-	
+
 	public void broadcastMessage( String message) {
 		for(WebSocketSession webSocketSession : sessions) {
 			try {

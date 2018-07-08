@@ -67,6 +67,10 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+@angular/animations@6.0.6
+MIT
+MIT
+
 @angular/common@6.0.6
 MIT
 MIT
@@ -86,6 +90,18 @@ MIT
 @angular/platform-browser@6.0.6
 MIT
 MIT
+
+@angular/router@6.0.6
+MIT
+MIT
+
+queueing-subject@0.3.0
+ISC
+ISC
+
+rxjs-websockets@6.0.1
+ISC
+ISC
 
 rxjs@6.2.1
 Apache-2.0
@@ -291,7 +307,7 @@ Apache License
  See the License for the specific language governing permissions and
  limitations under the License.
 
-tslib@1.9.2
+tslib@1.9.3
 Apache-2.0
 Apache License
 

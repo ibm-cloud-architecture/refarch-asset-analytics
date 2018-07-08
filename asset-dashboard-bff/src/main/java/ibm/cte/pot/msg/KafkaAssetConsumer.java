@@ -1,6 +1,5 @@
 package ibm.cte.pot.msg;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.logging.Logger;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
@@ -17,7 +15,13 @@ import org.springframework.kafka.listener.config.ContainerProperties;
 
 import ibm.cte.pot.BffSocketHandler;
 
-
+/**
+ * Subscribe to kafka topic to get asset events. Two types of event:
+ * - new asset event
+ * - measurement
+ * @author jeromeboyer
+ *
+ */
 public class KafkaAssetConsumer {
 	 private static final Logger logger = Logger.getLogger(KafkaAssetConsumer.class.getName());
 	private static String TOPICNAME = "test-topic";
@@ -32,9 +36,6 @@ public class KafkaAssetConsumer {
     private BffSocketHandler broadcaster;
     KafkaMessageListenerContainer<Integer, String> kafkaConsumer ;
 	   
-    public KafkaAssetConsumer(){
-    	prepareConsumer();
-    }
     
     public KafkaAssetConsumer(BffSocketHandler broadcaster){
     	this.broadcaster= broadcaster;
@@ -70,12 +71,9 @@ public class KafkaAssetConsumer {
     	kafkaConsumer =  new KafkaMessageListenerContainer<>(cf, containerProps);
 	}
     
-    public List<String> getNext() {
-    	return null;
-    }
     
     public void start() {
-    	 logger.info("Start Kafka Consumer ........");
+    	 logger.info("Start Kafka Asset Event Consumer ........");
     	 kafkaConsumer.start(); 	 
     }
     

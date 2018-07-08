@@ -10,14 +10,15 @@ The use case is also adaptable and the architecture, solution components can be 
 * [System Context](#system-context) to present the solution components
 * **Sub projects**
   * [Event consumers](asset-consumer/README.md)
-  * [Event producers simulator](asset-event-producer/README.md)
-  * [Dashboard BFF](asset-dashboard-bff/README.md)
-  * [Asset manager microservice](asset-mgr-ms/README.md)
+  * [Event producers simulator](asset-event-producer/README.md) to simulate pump events for demonstration purpose.
+  * [Dashboard BFF](asset-dashboard-bff/README.md) to present a mix of static and real time data.
+  * [Asset manager microservice](asset-mgr-ms/README.md) to export RESTful API to manage Asset CRUD operations
+* **[Demonstration script](docs/demo.md)**
 * **Future readings**
   * [Kafka related](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka)
 
 ## Use Case
-A set of geographically distributed electrical submersible pumps (can apply to any manufacturing IoT equipments) send stream of data about important measurements.
+A set of geographically distributed electrical submersible pumps (can apply to any manufacturing IoT equipments) send stream of data about important measurements, the solution aggregates key performance indicators to present in real time to a dashboard. Data are continuously persisted in a document oriented database, we selected [Cassandra](http://cassandra.apache.org/). The event processing is supported by [Kafka](http://cassandra.apache.org/) and Kafka streaming.
 
 ## System Context
 The processing starts by the continuous event flow emitted by a set of monitored devices. The event platform offers pub-subs capabilities and flow processing to aggregate and correlate events so dash board monitoring can be implement on the stateful operators.
@@ -33,14 +34,15 @@ The following diagram illustrates the IBM Cloud Private, kubernetes deployment w
 
 # Deployment
 ## Deploying Cassandra
-There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the instructions are [here](./docs/cassandra.md)
+There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the instructions are [here](./docs/cassandra.md) as well as architecture discussions around deploying Cassandra for high availability.
 
 ## Deploying Kafka
 We use different deployment model, all based on container: with docker, docker edge with local kubernetes, IBM Cloud Private. See details [in this note](
   https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka#run-kafka-in-docker)
 
-## ICP Deployment
-Each component of the solution is compiled and packaged as container. 
+## Solution Deployment on ICP
+Each component of the solution is compiled and packaged as container. Here is the list of supported deployment:
+* [Asset management microservice deployment](asset-mgr-ms/README.md#deploy)
 
 
 
