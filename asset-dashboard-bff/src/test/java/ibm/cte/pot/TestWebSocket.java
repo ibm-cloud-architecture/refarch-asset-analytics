@@ -23,7 +23,7 @@ public class TestWebSocket {
             });
 
             // send message to websocket
-            clientEndPoint.sendMessage("hello");
+            clientEndPoint.sendMessage("hello I'm the test web socket client v0.0.1");
             while (true) {
 	            // wait 5 seconds for messages from websocket to come
 	            Thread.sleep(5000);

@@ -15,8 +15,10 @@ public class AssetController {
 	
 	@RequestMapping("") 
 	public @ResponseBody List<Asset> getAssets() {
+		// tODO http client to asset mgr microservice
 		Asset a = new Asset();
-		a.setId("Asset_01");		
+		a.setId("Asset_01");
+		
 		return Arrays.asList(a);
 	}
 	

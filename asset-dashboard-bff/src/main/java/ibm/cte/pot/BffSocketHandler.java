@@ -56,6 +56,7 @@ public class BffSocketHandler extends TextWebSocketHandler {
             CloseStatus status)
      throws java.lang.Exception {
 		if (consumer != null) {
+			// TODO to revisit to the last consumer 
 			consumer.close();
 		}
 	}
