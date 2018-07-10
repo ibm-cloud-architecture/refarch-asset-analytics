@@ -12,17 +12,17 @@ public class ApplicationConfig {
 	public static final String CASSANDRA_STRATEGY = "cassandra.strategy";
 	public static final String CASSANDRA_REPLICAS = "cassandra.replicas";
 	private static Properties p;
-	
+
 	public static Properties getConfig() {
 		if (p == null) {
 			loadProperties();
 		}
 		return p;
 	}
-	
+
 	private static void loadProperties() {
 		 p = new Properties();
-		 p.setProperty(CASSANDRA_ENDPOINTS, "localhost,cassandra-0.cassandra.default.svc.cluster.local");
+		 p.setProperty(CASSANDRA_ENDPOINTS, "localhost,cassandra-0.cassandra.greencompute.svc.cluster.local");
 		 p.setProperty(CASSANDRA_PORT, "9042");
 		 p.setProperty(CASSANDRA_KEYSPACE, "assetmonitoring");
 		 p.setProperty(CASSANDRA_STRATEGY, "SimpleStrategy");

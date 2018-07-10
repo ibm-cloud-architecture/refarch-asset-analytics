@@ -8,7 +8,7 @@ metadata:
     app: cassandra
 spec:
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
@@ -24,7 +24,7 @@ metadata:
     app: cassandra
 spec:
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
@@ -40,7 +40,7 @@ metadata:
     app: cassandra
 spec:
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteOnce
   hostPath:

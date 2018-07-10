@@ -4,7 +4,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class TestWebSocket {
-
+	private static final String SERVERNAME = "asset.bff.green";
+	private static final String PORT = "8080";
+	
 	public static void main(String[] args) {
 		System.out.println(
 				  "##################### \n"
@@ -13,7 +15,7 @@ public class TestWebSocket {
 		WebsocketClientEndpoint clientEndPoint;
 		try {
             // open websocket
-            clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:8080/assetstream"));
+            clientEndPoint = new WebsocketClientEndpoint(new URI("ws://" + SERVERNAME + ":" + PORT + "/assetstream"));
 
             // add listener
             clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {

@@ -8,6 +8,7 @@ The use case is also adaptable and the architecture, solution components can be 
 ## Table of content
 * [Use case](#use-case)
 * [System Context](#system-context) to present the solution components
+* [Deployment](#deployment)
 * **Sub projects**
   * [Event consumers](asset-consumer/README.md)
   * [Event producers simulator](asset-event-producer/README.md) to simulate pump events for demonstration purpose.
@@ -33,6 +34,20 @@ The following diagram illustrates the IBM Cloud Private, kubernetes deployment w
 ![](docs/icp-deployment.png)
 
 # Deployment
+## Pre-requisites
+You need to have access to a kubernetes cluster like IBM Cloud Private. We are providing scripts to help you validate the prerequisites.
+
+* If not done already create a namespace named `greencompute`
+* Get the admin security token and then use it in the set-credentials command below:
+
+```
+kubectl config set-cluster green-cluster --server=https://169.47.77.137:8001 --insecure-skip-tls-verify=true
+kubectl config set-context green-cluster-context --cluster=green-cluster
+kubectl config set-credentials admin --token=eyJ0...Ptg
+kubectl config set-context green-cluster-context --user=admin --namespace=greencompute
+kubectl config use-context green-cluster-context
+```
+
 ## Deploying Cassandra
 There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the instructions are [here](./docs/cassandra.md) as well as architecture discussions around deploying Cassandra for high availability.
 
@@ -43,6 +58,7 @@ We use different deployment model, all based on container: with docker, docker e
 ## Solution Deployment on ICP
 Each component of the solution is compiled and packaged as container. Here is the list of supported deployment:
 * [Asset management microservice deployment](asset-mgr-ms/README.md#deploy)
+* [Asset consumer and injector to Cassandra](asset-consumer/README.md#deploy)
 
 
 

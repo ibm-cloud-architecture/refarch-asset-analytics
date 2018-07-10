@@ -2,6 +2,7 @@ package ibm.cte.esp.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -26,6 +27,7 @@ public class Asset implements Serializable {
 	protected BigDecimal temperature;
 	protected Double latitude;
 	protected Double longitude;
+	protected Date creationDate;
 	  
 	public Asset() {}
 	
@@ -146,5 +148,16 @@ public class Asset implements Serializable {
 	
 	public String toString() {
 		return this.getId();
+	}
+
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 }

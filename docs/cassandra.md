@@ -10,39 +10,55 @@ Here are some key concepts of Cassandra to keep in mind for this implementation:
 
 ## Cassandra deployment
 ### Deploying on "Docker Edge for desktop" kubernetes
-As pre-requisite you need Docker Edge and enable kubernetes (see this [note](https://docs.docker.com/docker-for-mac/kubernetes/)).
+As pre-requisite you need Docker Edge and enable kubernetes (see this [note](https://docs.docker.com/docker-for-mac/kubernetes/)). Then you can use our script `deployCassandra.sh` under the `scripts` folder or run the following commands one by one:
+
 * create cassandra service
 ```
-$ kubectl create -f chart/cassandra-service.yaml
+$ kubectl create -f deployment/cassandra/cassandra-service.yaml --namespace greencompute
 ```
 * Create one persistence volume to keep data for cassandra
 ```
-$ kubectl create -f chart/local-volumes.yaml
+$ kubectl create -f deployment/cassandra/cassandra-volumes.yaml
 ```
 * Create the statefulSet
-```
-$ kubectl create -f chart/cassandra-statefulset.yaml
-# Verify the installation
-$ kubectl exec -ti  cassandra-0 -- nodetool status
-```
+ ```
+ $ kubectl create -f deployment/cassandra/cassandra-statefulset.yaml
+
+ # Verify the installation
+ $ kubectl exec -ti  cassandra-0 -- nodetool status
+ ```
 
 ### Deployment on ICP
-Deploying stateful distributed applications like Cassandra is not easy.
-You need a Kubernetes ICP cluster.
+Deploying stateful distributed applications like Cassandra is not easy. You can leverage the kubernetes cluster and deploy c7a to the worker nodes.
 
 ![](cassandra-k8s.png)
 
-The resource requirements for higher performance c7a node 
+The resource requirements for higher performance c7a node are:
+* a minimum of 32GB RAM (JVM + Linux memory buffers to cache SSTable) + `memory.available` defined in Kubernetes Eviction policy + Resources needed by k8s components that run on every worker node (e.g. proxy)
+* a minimum of 8 processor cores per Cassandra Node with 2 CPUs per core (16 vCPU in a VM)
+* 4-8 GB JVM heap, recommend trying to keep heaps limited to 4 GB to minimize garbage collection pauses caused by large heaps.
+
+#### Performance considerations
+Cassandra  nodes tend  to be IO bound  rather than CPU bound:
+* Upper limit of data per node <= 1.5 TB for spinning disk and <= 4 TB for SSD
+* Increase the number of nodes to keep the data per node at or below the recommended capacity
+* Actual data per node determined by data throughput, for high throughput need to limit the data per node.
+
+The use of Vnodes is generally  considered  to be a good practice as they eliminate the need to perform manual token assignment, distribute workload across all nodes in a cluster when nodes are added or removed. It helps rebuilding dead nodes faster.
+Vnode reduces the size of SSTables which can improve read performance. Cassandra best practices set the number of tokens per Cassandra node to 256.
+
+#### Using our configurations
 Then use the yaml config files under `deployment/cassandra` folder to configure a Service to expose Cassandra externally, create static persistence volume and statefulSet to deploy Cassandra image.
 
 We also recommend to be familiar with [this kubernetes tutorial on how to deploy Cassandra with Stateful Sets](https://kubernetes.io/docs/tutorials/stateful-application/cassandra/).
 
 * Connect to ICP.
-We are using one namespace called 'greencompute'
+We are using one namespace called 'greencompute'. You can use our script `deployCassandra.sh` under the `../scripts` folder
+
 * create Cassandra headless service
 
  ```
- $ kubectl create -f deployment/cassandra/cassandra-service.yaml -n greencompute
+$ kubectl create -f deployment/cassandra/cassandra-service.yaml -n greencompute
 $ kubectl get svc cassandra -n greencompute
 
  NAME        TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
@@ -51,13 +67,13 @@ cassandra   ClusterIP    None          <none>        9042/TCP   12h
 
 * Create persistence volumes to keep data for cassandra
 ```
-$ kubectl create -f chart/local-volumes.yaml -n greencompute
+$ kubectl create -f deployment/cassandra/cassandra-volumes.yaml -n greencompute
 $ kubectl get pv -n greencompute | grep cassandra
 cassandra-data-1  1Gi  RWO  Recycle   Bound       greencompute/cassandra-data-cassandra-0 12h
 cassandra-data-2  1Gi  RWO  Recycle   Available                                           12h
 cassandra-data-3  1Gi  RWO  Recycle   Available    
 ```
-* Create the statefulset:
+* Create the **statefulset**:
 Modify the namespace used in the yaml if you are using your own namespace name for the following element:
 ```yaml
    env:
@@ -67,7 +83,7 @@ Modify the namespace used in the yaml if you are using your own namespace name f
 
 
 ```
-$ kubectl create -f chart/cassandra-statefulset.yaml  -n greencompute
+$ kubectl create -f deployment/cassandra/cassandra-statefulset.yaml  -n greencompute
 $ kubectl get statefulset -n greencompute
 
 NAME                                        DESIRED   CURRENT   AGE
@@ -87,6 +103,11 @@ cassandra                                   1         1         12h
 UN  192.168.212.174  257.29 KiB  256          100.0%            ea8acc49-1336-4941-b122-a4ef711ca0e6  Rack1
  ```
 
+## High availability
+Within a cluster the number of replicas in the statefulset is at least 3 but can be increased to 5 when code maintenance is needed.
+The choice for persistence storage is important, and the backup and restore strategy of the storage area network used.
+
+When creating connection to persist data into a keyspace, you specify the persistence strategy and number of replicas. In   
 ## Code
 We have done two implementations for persisting asset data into Cassandra using Cassandra client API or SpringBoot data.
 ## Cassandra client

@@ -17,7 +17,7 @@ import ibm.cte.pot.BffSocketHandler;
 /**
  * Subscribe to kafka topic to get asset events. Two types of event:
  * - new asset event
- * - measurement
+ * - measurement from asset
  * @author jeromeboyer
  *
  */
