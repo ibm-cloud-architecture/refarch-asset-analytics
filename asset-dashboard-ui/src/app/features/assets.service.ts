@@ -62,7 +62,19 @@ export class AssetsService {
    	          pressure:  80,
    	          flowRate:  80,
    	          temperature:  60,
-              timestamp: '2'}
+              timestamp: '2'},
+              {id: "104",
+                os: 'raspbian',
+                type: 'pump',
+                version: '10.2',
+                ipAddress: '',
+                antivirus: '',
+                rotation:  0,
+                current:  220,
+                pressure:  55,
+                flowRate:  82,
+                temperature:  60,
+                timestamp: '2'}
               ];
   }
 }
