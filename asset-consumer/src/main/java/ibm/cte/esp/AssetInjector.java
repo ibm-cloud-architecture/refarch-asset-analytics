@@ -1,7 +1,9 @@
 package ibm.cte.esp;
 
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ibm.cte.esp.model.Asset;
 
@@ -18,8 +20,9 @@ import ibm.cte.esp.model.Asset;
  *
  */
 public class AssetInjector {
+	
+	final static Logger logger = LoggerFactory.getLogger("AssetIngestor");
 
-	private static Logger logger = Logger.getLogger("AssetIngestor");
 	private int minBatchSize = 2;
     private AssetTopicConsumer kafkaConsumer;
     private AssetDAO assetDAO;
@@ -36,6 +39,7 @@ public class AssetInjector {
 	}
 
 	public void run() {
+		logger.info("########### Asset Injector START ##########");
         boolean runAgain = true;
         while (runAgain) {
         	 List<Asset> buffer = kafkaConsumer.consume();

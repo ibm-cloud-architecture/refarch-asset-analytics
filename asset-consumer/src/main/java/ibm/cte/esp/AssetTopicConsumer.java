@@ -2,6 +2,7 @@ package ibm.cte.esp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -10,6 +11,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
@@ -21,9 +24,8 @@ import ibm.cte.esp.model.Asset;
  *
  */
 public class AssetTopicConsumer {
-
+	final static Logger logger = LoggerFactory.getLogger("AssetTopicConsumer");
 	private static KafkaConsumer<String, String> kafkaConsumer;
-    private static final long POLL_DURATION = 1000;
     
     private Gson gson = new Gson();
     public ApplicationConfig config;
@@ -55,9 +57,12 @@ public class AssetTopicConsumer {
     
     public List<Asset>  consume() {
     	List<Asset> buffer = new ArrayList<>();
-    	ConsumerRecords<String, String> records = kafkaConsumer.poll(POLL_DURATION);
+    	ConsumerRecords<String, String> records = kafkaConsumer.poll(
+    			Long.parseLong(config.getConfig().getProperty(ApplicationConfig.KAFKA_POLL_DURATION)));
+    	
 	    for (ConsumerRecord<String, String> record : records) {
 	    		Asset a = gson.fromJson(record.value(), Asset.class);
+	    		logger.info((new Date()).toString() + " " + a.toString());
 	            buffer.add(a);
 	    }
     	return buffer;

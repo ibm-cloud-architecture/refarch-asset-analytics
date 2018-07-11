@@ -23,7 +23,7 @@ import ibm.cte.pot.BffSocketHandler;
  */
 public class KafkaAssetConsumer {
 	 private static final Logger logger = Logger.getLogger(KafkaAssetConsumer.class.getName());
-	private static String TOPICNAME = "test-topic";
+	private static String TOPICNAME = "asset-topic";
 	private static String GROUPID = "BFFConsumers";
 	private static String BOOTSTRAP_SERVERS = "docker.for.mac.host.internal:30092";
     private static final long POLL_DURATION = 1000;

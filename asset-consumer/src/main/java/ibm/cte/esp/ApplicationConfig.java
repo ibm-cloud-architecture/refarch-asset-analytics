@@ -15,6 +15,7 @@ public class ApplicationConfig {
 	public static final String KAFKA_BOOTSTRAP_SERVER = "kafka.bootstrap.server";
 	public static final String KAFKA_ASSET_TOPIC_NAME = "kafka.asset.topic.name";
 	public static final String KAFKA_GROUPID = "kafka.groupid";
+	public static final String KAFKA_POLL_DURATION = "kafka.poll.duration";
 	
 	
 	private Properties p;
@@ -49,5 +50,10 @@ public class ApplicationConfig {
 		 p.setProperty(CASSANDRA_KEYSPACE, "assetmonitoring");
 		 p.setProperty(CASSANDRA_STRATEGY, "SimpleStrategy");
 		 p.setProperty(CASSANDRA_REPLICAS, "1");
+		 
+		 p.setProperty(KAFKA_BOOTSTRAP_SERVER, "docker.for.mac.host.internal:30092");
+		 p.setProperty(KAFKA_ASSET_TOPIC_NAME,"asset-topic");
+		 p.setProperty(KAFKA_GROUPID,"assetinjectors");
+		 p.setProperty(KAFKA_POLL_DURATION, "10000");
 	}
 }

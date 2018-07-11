@@ -2,13 +2,14 @@ package ibm.cte.esp;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,24 +26,23 @@ import ibm.cte.esp.model.Asset;
  *
  */
 public class PumpSimulator {
-	private static Logger logger = Logger.getLogger("PumpSimulator");
-	private static final String TOPICNAME = "test-topic";
-	private static final String BOOTSTRAP_SERVERS = "docker.for.mac.host.internal:30092";
-	
-	private String brokers = BOOTSTRAP_SERVERS;
-	private String topic = TOPICNAME;
-	private int numberOfAsset = 5;
+	final static Logger logger = LoggerFactory.getLogger("PumpSimulator");
+	private int numberOfAssets = 5;
 	private int timeGap = 10000;
 	private boolean event = false;
+	private ApplicationConfig config;
 	
 	private KafkaProducer<String, Object> kafkaProducer;
 	
-	public PumpSimulator() {}
+	public PumpSimulator() {
+		config = new ApplicationConfig();
+	}
 	
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		PumpSimulator simulator= new PumpSimulator();
 		simulator.processArgument(args);
 		simulator.prepareProducer();
+		logger.info("######### Pump Simulator Starting ############ ");
 		if (simulator.isEvent()) {
 			simulator.generateEvents();
 		} else {
@@ -67,7 +67,8 @@ public class PumpSimulator {
 
 	private void prepareProducer() {
 		Properties properties = new Properties();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, 
+        		config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER));
         properties.put(ProducerConfig.CONNECTIONS_MAX_IDLE_MS_CONFIG, 10000);
         properties.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 4000);
         properties.put(ProducerConfig.RETRIES_CONFIG, 3);  // retries in case of failure
@@ -79,26 +80,29 @@ public class PumpSimulator {
         this.kafkaProducer = new KafkaProducer<>(properties);
         
 		if (event) {
-			logger.info("Pump Simulator sending pump event to "+ brokers +" every " + timeGap + " ms");
+			logger.info("Pump Simulator sending pump event to " 
+		    + config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER) 
+		    + " every " + timeGap + " ms");
 		} else {
-			logger.info("Pump Simulator sending " + numberOfAsset + " new asset event to "+ brokers +" every " + timeGap + " ms");
+			logger.info("Pump Simulator sending " + numberOfAssets 
+					+ " new asset event to "+ config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER)  +" every " + timeGap + " ms");
 		}
 	}
 
 	public void processArgument(String[] args) {
 		if (args.length >= 3) {
-			topic = args[0];
-			brokers = args[1];
+			config.getConfig().setProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME, args[0]);
+			config.getConfig().setProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER, args[1]);
 			if (args[2].contains("event")) {
 				event = true;
 			} else {
-				numberOfAsset = Integer.parseInt(args[2]);
+				numberOfAssets = Integer.parseInt(args[2]);
 			}
 		}
 	}
 	
 	private  void generateAssets() throws InterruptedException, ExecutionException {
-		for (int i = 0; i < numberOfAsset; i++) {
+		for (int i = 0; i < numberOfAssets; i++) {
 			String uid= java.util.UUID.randomUUID().toString();
 			Asset a = new Asset();
 			a.setId(uid);
@@ -115,7 +119,7 @@ public class PumpSimulator {
 			a.setLatitude(30.307182);
 			a.setLongitude(-97.755996);
 			
-			publishAsset(a,topic);
+			publishAsset(a,config.getConfig().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME));
 			Thread.sleep(3000);
 		}
 	} // generateAssets
@@ -130,28 +134,13 @@ public class PumpSimulator {
 	    logger.info("Receive partition id= " + recordMetadata.partition() + " offset= " + recordMetadata.offset());
 	}
 
-	public String getBrokers() {
-		return brokers;
+
+	public int getNumberOfAssets() {
+		return numberOfAssets;
 	}
 
-	public void setBrokers(String brokers) {
-		this.brokers = brokers;
-	}
-
-	public String getTopic() {
-		return topic;
-	}
-
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
-
-	public int getNumberOfAsset() {
-		return numberOfAsset;
-	}
-
-	public void setNumberOfAsset(int numberOfAsset) {
-		this.numberOfAsset = numberOfAsset;
+	public void setNumberOfAssets(int numberOfAsset) {
+		this.numberOfAssets = numberOfAsset;
 	}
 
 	public int getTimeGap() {
