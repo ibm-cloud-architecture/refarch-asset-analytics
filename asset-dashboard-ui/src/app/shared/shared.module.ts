@@ -5,13 +5,13 @@ import { TileComponent } from './tile/tile.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { AssetRisk } from './assetRisk/assetRisk.component';
-
+import { AssetAnalysis } from './assetAnalysis/assetAnalysis.component';
 @NgModule({
   imports: [
     CommonModule,
     RouterModule
   ],
-  declarations: [TileComponent, HeaderComponent, FooterComponent, AssetRisk],
-  exports: [TileComponent, HeaderComponent, FooterComponent, AssetRisk]
+  declarations: [TileComponent, HeaderComponent, FooterComponent, AssetRisk, AssetAnalysis],
+  exports: [TileComponent, HeaderComponent, FooterComponent, AssetRisk, AssetAnalysis]
 })
 export class SharedModule { }
