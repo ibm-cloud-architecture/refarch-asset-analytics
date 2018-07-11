@@ -7,6 +7,16 @@ fi
 echo "Found cassandra service: " $svc " under namespace " $nspace
 
 
+pvs=$(kubectl get pv  --namespace $nspace | grep cassandra-data )
+if [ -z "$pvs" ]; then
+  echo "Cassandra Persistence volume not found... "
+  kubectl apply -f ../deployments/cassandra/cassandra-volumes.yaml --namespace $nspace
+  echo sleep to be sure PVs are created
+  sleep 200
+fi
+echo "Found cassandra PVs "
+echo $pvs
+
 
 sfs=$(kubectl get statefulset --namespace $nspace | grep cassandra)
 if [ -z "$sfs" ]; then
@@ -14,11 +24,6 @@ if [ -z "$sfs" ]; then
   kubectl apply -f ../deployments/cassandra/cassandra-statefulset.yaml --namespace $nspace
 fi
 echo "Found cassandra statefulset "
+kubectl get statefulsets
 
-pvs=$(kubectl get pv  --namespace $nspace | grep cassandra-data )
-if [ -z "$pvs" ]; then
-  echo "Cassandra Persistence volume not found... "
-  kubectl apply -f ../deployments/cassandra/cassandra-volumes.yaml --namespace $nspace
-fi
-echo "Found cassandra PVs "
-echo $pvs
+kubectl get pods -o wide -n $nspace

@@ -12,17 +12,17 @@ Here are some key concepts of Cassandra to keep in mind for this implementation:
 ### Deploying on "Docker Edge for desktop" kubernetes
 As pre-requisite you need Docker Edge and enable kubernetes (see this [note](https://docs.docker.com/docker-for-mac/kubernetes/)). Then you can use our script `deployCassandra.sh` under the `scripts` folder or run the following commands one by one:
 
-* create cassandra service
+* create cassandra headless service, so application access it via KubeDNS. If you do wish to connect an application to cassandra, use the KubeDNS value of `cassandra.default.svc.cluster.local`
 ```
-$ kubectl create -f deployment/cassandra/cassandra-service.yaml --namespace greencompute
+$ kubectl apply -f deployment/cassandra/cassandra-service.yaml --namespace greencompute
 ```
 * Create one persistence volume to keep data for cassandra
 ```
-$ kubectl create -f deployment/cassandra/cassandra-volumes.yaml
+$ kubectl apply -f deployment/cassandra/cassandra-volumes.yaml
 ```
-* Create the statefulSet
+* Create the statefulSet, which defines a cassandra ring of 3 nodes. See explanations in next section: [using our configurations](#using-our-configurations).
  ```
- $ kubectl create -f deployment/cassandra/cassandra-statefulset.yaml
+ $ kubectl apply -f deployment/cassandra/cassandra-statefulset.yaml
 
  # Verify the installation
  $ kubectl exec -ti  cassandra-0 -- nodetool status
@@ -48,7 +48,7 @@ The use of Vnodes is generally  considered  to be a good practice as they elimin
 Vnode reduces the size of SSTables which can improve read performance. Cassandra best practices set the number of tokens per Cassandra node to 256.
 
 #### Using our configurations
-Then use the yaml config files under `deployment/cassandra` folder to configure a Service to expose Cassandra externally, create static persistence volume and statefulSet to deploy Cassandra image.
+You can reuse the yaml config files under `deployment/cassandra` folder to configure a Service to expose Cassandra externally, create static persistence volumes, and statefulSet to deploy Cassandra image.
 
 We also recommend to be familiar with [this kubernetes tutorial on how to deploy Cassandra with Stateful Sets](https://kubernetes.io/docs/tutorials/stateful-application/cassandra/).
 
@@ -58,32 +58,39 @@ We are using one namespace called 'greencompute'. You can use our script `deploy
 * create Cassandra headless service
 
  ```
-$ kubectl create -f deployment/cassandra/cassandra-service.yaml -n greencompute
+$ kubectl apply -f deployment/cassandra/cassandra-service.yaml -n greencompute
 $ kubectl get svc cassandra -n greencompute
 
  NAME        TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
 cassandra   ClusterIP    None          <none>        9042/TCP   12h
  ```
 
-* Create persistence volumes to keep data for cassandra
+* Create static persistence volumes to keep data for cassandra: *you need the same number of PV as there are cassandra nodes (here 3 nodes)*
+
 ```
-$ kubectl create -f deployment/cassandra/cassandra-volumes.yaml -n greencompute
+$ kubectl apply -f deployment/cassandra/cassandra-volumes.yaml -n greencompute
 $ kubectl get pv -n greencompute | grep cassandra
 cassandra-data-1  1Gi  RWO  Recycle   Bound       greencompute/cassandra-data-cassandra-0 12h
 cassandra-data-2  1Gi  RWO  Recycle   Available                                           12h
 cassandra-data-3  1Gi  RWO  Recycle   Available    
 ```
 * Create the **statefulset**:
-Modify the namespace used in the yaml if you are using your own namespace name for the following element:
+The [cassandra image](https://hub.docker.com/_/cassandra/) used is coming from dockerhub public repository.
+
+Modify the service name and namespace used in the yaml if you are using your own namespace name or you change the service name:
 ```yaml
    env:
      - name: CASSANDRA_SEEDS
-       value: cassandra-0.cassandra.greencompute.svc.cluster.local
+       value: cassandra-0.cassandra-svc.greencompute.svc.cluster.local
 ```
+
+Cassandra seed is used for two purposes:
+* Node discovery: when a new cassandra node is added (which means when deployed on k8s, a new pod instance added by increasing the replica), it needs to find the cluster, so here it is set the svc
+* assist on gossip convergence: by having all of the nodes in the cluster gossip regularly with the same set of seeds. It ensures changes are propagated regularly.
 
 
 ```
-$ kubectl create -f deployment/cassandra/cassandra-statefulset.yaml  -n greencompute
+$ kubectl apply -f deployment/cassandra/cassandra-statefulset.yaml  -n greencompute
 $ kubectl get statefulset -n greencompute
 
 NAME                                        DESIRED   CURRENT   AGE
@@ -93,6 +100,9 @@ cassandra                                   1         1         12h
 
  ```
  $ kubectl get pods -o wide -n greencompute
+ NAME          READY     STATUS    RESTARTS   AGE       IP              NODE
+cassandra-0   0/1       Running   0          2m        192.168.35.93   169.61.151.164
+
  $ kubectl exec -tin greencompute cassandra-0 -- nodetool status
 
  Datacenter: DC1
@@ -102,16 +112,38 @@ cassandra                                   1         1         12h
 --  Address          Load       Tokens        Owns (effective)  Host ID                               Rack
 UN  192.168.212.174  257.29 KiB  256          100.0%            ea8acc49-1336-4941-b122-a4ef711ca0e6  Rack1
  ```
+ The  string UN, is for Up and Normal state.
+
+### Removing cassandra cluster
+We are providing a script for that `./scripts/deleteCassandra.sh` which remove the stateful, the pv, pvc and service
+```
+grace=$(kubectl get po cassandra-0 -o=jsonpath='{.spec.terminationGracePeriodSeconds}') \
+    && kubectl delete statefulset -l app=cassandra -n greencompute \
+    && echo "Sleeping $grace" \
+    && sleep $grace \
+    && kubectl delete pvc,pv,svc -l app=cassandra
+```
 
 ## High availability
 Within a cluster the number of replicas in the statefulset is at least 3 but can be increased to 5 when code maintenance is needed.
 The choice for persistence storage is important, and the backup and restore strategy of the storage area network used.
 
-When creating connection to persist data into a keyspace, you specify the persistence strategy and number of replicas. In   
+When creating connection to persist data into a keyspace, you specify the persistence strategy and number of replicas.
+```
+p.setProperty(CASSANDRA_STRATEGY, "SimpleStrategy");
+p.setProperty(CASSANDRA_REPLICAS, "1");
+```
+When deploying on Staging or test cluster, ring topology, SimpleStrategy is enough: additional replicas are placed on the next nodes in the ring moving clockwise without considering topology, such as rack or datacenter location.
+For HA and production deployment NetworkTopologyStrategy is needed: replicas are placed in the same datacenter but on distinct racks.
+
+For the number of replicas, it is recommended to use 3 per datacenter.
+
+The spec.env in the statefulset define the datacenter name and rack name too.
+
 ## Code
-We have done two implementations for persisting asset data into Cassandra using Cassandra client API or SpringBoot data.
-## Cassandra client
-The code is under asset-consumer folder. This component is deployed as container inside a kubernetes cluster like ICP.
+We have done two implementations for persisting `asset` data into Cassandra using Cassandra client API or SpringBoot cassandra repository API.
+## Cassandra client API
+The code is under asset-consumer project and can be loaded into Eclipse. This component is deployed as container inside a kubernetes cluster like ICP.
 
 In the pom.xml we added the following dependencies
 ```

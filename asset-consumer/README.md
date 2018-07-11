@@ -10,7 +10,13 @@ The AssetInjector is packaged as container and deployed to IBM Cloud private.
 * Persist assets data to Cassandra cluster
 * Expose REST api
 
+The following diagram illustrates how the 'Asset injector' consumes`new asset event` from kafka and persists data into the cassandra `Assets` table.
+
+![](docs/new-asset-event-cassandra.png)
+
 ## Code Explanation
+The AssetInjector.java is a POJO which uses Kafka consumer API and Cassandra persistence API.
+
 ### Using Kafka API
 
 ### Springboot kafka consumer

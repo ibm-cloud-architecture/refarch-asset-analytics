@@ -18,23 +18,30 @@ public class CassandraRepo implements AssetDAO {
 	private static Logger logger = Logger.getLogger("CassandraRepo");
 	// can be reused as they are thread safe
 	public static  Cluster cluster = null;
-	public static Session session ;
-	
+	public static Session session ;	
 	public static Integer port; 
-	public static final String TABLE_NAME = "assets";
+	public ApplicationConfig cfg;
 	
-	public CassandraRepo() {
-		Builder b = Cluster.builder().addContactPoints(ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_ENDPOINTS).split(","));
+	public CassandraRepo(ApplicationConfig cfg) {
+		this.cfg = cfg;
+		Builder b;
+		String ep = cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_ENDPOINTS);
+		if (ep.contains(",")) {
+			b = Cluster.builder().addContactPoints(ep.split(","));
+		} else {
+			b = Cluster.builder().addContactPoints(ep);
+		}
 		
-		port = new Integer(ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_PORT));
+		
+		port = new Integer(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_PORT));
 		if (port != null) {
             b.withPort(port);
         }
         cluster = b.build();
         session = cluster.connect();
-        createKeyspace(ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE),
-        		ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_STRATEGY),
-        		Integer.parseInt(ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_REPLICAS)));
+        createKeyspace(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE),
+        		cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_STRATEGY),
+        		Integer.parseInt(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_REPLICAS)));
         createTable();
 	}
 	
@@ -60,7 +67,9 @@ public class CassandraRepo implements AssetDAO {
     
     private void createTable() {
         StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
-          .append(ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) + "." + TABLE_NAME).append("(")
+          .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+        		  + "." 
+        		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME)).append("(")
           .append("id text PRIMARY KEY, ")
           .append("os text,")
           .append("version text,")
@@ -105,7 +114,9 @@ public class CassandraRepo implements AssetDAO {
 	public Asset getAssetById(String assetId) throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
-			      .append(ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) + "." + TABLE_NAME)
+			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			    		  + "." 
+			    		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
 			      .append(" WHERE id='")
 			      .append(assetId)
 			      .append("';");
@@ -121,7 +132,9 @@ public class CassandraRepo implements AssetDAO {
 	public List<Asset> getAllAssets() throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
-			      .append(ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) + "." + TABLE_NAME)
+			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			    		  + "." 
+			    		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
 			      .append(";");
 		String query = sb.toString();
 		ResultSet rs = session.execute(query);
@@ -134,7 +147,9 @@ public class CassandraRepo implements AssetDAO {
 	
 	public void persistAsset(Asset a) throws Exception {
 		StringBuilder sb = new StringBuilder("INSERT INTO ")
-			      .append(ApplicationConfig.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) + "." + TABLE_NAME)
+			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			    		  + "." 
+			    		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
 			      .append("(id, os, version, type, ipAddress, antivirus, rotation, current, pressure, flowRate, temperature,latitude,longitude ) ")
 			      .append("VALUES ('").append(a.getId())
 			      .append("','").append(a.getOs())

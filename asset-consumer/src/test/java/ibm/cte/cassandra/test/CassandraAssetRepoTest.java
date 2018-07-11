@@ -8,21 +8,22 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ibm.cte.esp.AssetDAO;
+import ibm.cte.esp.ApplicationConfig;
 import ibm.cte.esp.CassandraRepo;
 import ibm.cte.esp.model.Asset;
 
 public class CassandraAssetRepoTest {
 	
-	static CassandraRepo repo;
+	static CassandraRepo repo = null;
 	@BeforeClass
 	public static void init() {
-		repo = new CassandraRepo();
+		repo = new CassandraRepo(new ApplicationConfig());
 	}
 	
 	@AfterClass
 	public static void close() {
-		repo.close();
+		if (repo != null)
+			repo.close();
 	}
 
 	@Test
