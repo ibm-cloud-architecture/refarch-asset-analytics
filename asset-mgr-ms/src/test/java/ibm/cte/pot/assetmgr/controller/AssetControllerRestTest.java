@@ -1,4 +1,4 @@
-package ibm.caset.pot.assetmt.controller;
+package ibm.cte.pot.assetmgr.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,8 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.client.RestClientException;
 
-import ibm.caset.pot.assetmt.model.Asset;
-import ibm.caset.pot.assetmt.repository.AssetRepository;
+import ibm.cte.pot.assetmgr.model.Asset;
+import ibm.cte.pot.assetmgr.repository.AssetRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

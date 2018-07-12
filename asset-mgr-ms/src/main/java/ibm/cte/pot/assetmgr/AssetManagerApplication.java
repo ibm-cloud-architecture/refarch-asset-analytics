@@ -1,4 +1,4 @@
-package ibm.caset.pot.assetmt;
+package ibm.cte.pot.assetmgr;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

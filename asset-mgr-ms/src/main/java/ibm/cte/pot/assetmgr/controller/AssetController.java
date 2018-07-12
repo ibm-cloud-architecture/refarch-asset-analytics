@@ -1,4 +1,4 @@
-package ibm.caset.pot.assetmt.controller;
+package ibm.cte.pot.assetmgr.controller;
 
 import javax.validation.Valid;
 
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ibm.caset.pot.assetmt.model.Asset;
-import ibm.caset.pot.assetmt.repository.AssetRepository;
+import ibm.cte.pot.assetmgr.model.Asset;
+import ibm.cte.pot.assetmgr.repository.AssetRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -33,7 +33,7 @@ public class AssetController {
 
 	@RequestMapping("/")
     public @ResponseBody String index() {
-        return "Greetings from Asset Manager v0.0.1 !";
+        return "Greetings from Asset Manager v0.0.2 !";
     }
 
 	@RequestMapping("/health")
@@ -47,7 +47,7 @@ public class AssetController {
         return this.assetMgrRepository.findAll();
     }
 
-    @GetMapping("/assets/kpi/count")
+    @GetMapping("/assets/count")
     public Mono<Long> countAssets() {
         return this.assetMgrRepository.count();
     }

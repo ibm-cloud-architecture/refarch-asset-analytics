@@ -1,4 +1,4 @@
-package ibm.caset.pot.assetmt.controller;
+package ibm.cte.pot.assetmgr.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -17,7 +17,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import ibm.caset.pot.assetmt.repository.AssetRepository;
+import ibm.cte.pot.assetmgr.controller.AssetController;
+import ibm.cte.pot.assetmgr.repository.AssetRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

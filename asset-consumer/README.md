@@ -26,7 +26,8 @@ To externalize parameters, we use the `conf/config.properties` file which will b
 For logging, as most of the APIs used ware using [slf4j]() and the default implementation of [logback](https://logback.qos.ch/), we added into src/main/resource a logback.xml configuration file to control the logging level as the DEBUG level is too low.
 
 
-### Using Kafka API
+### Using Kafka client API
+The code is using the KafkaConsumer class and the ConsumerRecord to get the wrapper on the event. Our code implementation is exposing a consume method that is polling message every n ms.
 
 ### Deployment
 The code is packaged as docker container using the open jdk with Alpine linux image.

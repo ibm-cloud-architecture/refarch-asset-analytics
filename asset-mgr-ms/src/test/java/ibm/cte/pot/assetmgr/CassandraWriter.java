@@ -1,4 +1,4 @@
-package ibm.caset.pot.assetmt;
+package ibm.cte.pot.assetmgr;
 
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
@@ -8,7 +8,7 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
 
-import ibm.caset.pot.assetmt.model.Asset;
+import ibm.cte.pot.assetmgr.model.Asset;
 
 /**
  * Test writing and reading assets to cassandra

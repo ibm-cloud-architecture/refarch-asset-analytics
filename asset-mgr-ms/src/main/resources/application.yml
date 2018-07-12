@@ -1,0 +1,7 @@
+server:
+  port: 8080
+cassandra:
+ contactpoints: localhost,10.1.0.30
+ port: 9042
+ keyspace: assetmonitoring
+ basepackages: 

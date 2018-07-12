@@ -1,4 +1,6 @@
-package ibm.caset.pot.assetmt.model;
+package ibm.cte.pot.assetmgr.model;
+
+import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

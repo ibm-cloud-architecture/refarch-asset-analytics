@@ -10,7 +10,16 @@ This is a SpringBoot app to support CRUD operations and query to manage manufact
 You need to have Cassandra deployed, we present multiple choices in [this note](../docs/cassandra.md) and the scripts to prepare the database (keyspace, tables...)
 
 ## Code explanations
-TBD
+
+### Cassandra persistence using Spring Cassandra Data 
+We are using Reactive interface for the BFF which is also supported by [Spring data for cassandra](https://docs.spring.io/spring-data/cassandra/docs/current/reference/html/)
+
+The configuration class leverages annotation to inject parameters coming from cassandra.properties file
+There are three mandatory settings we have to configure to setup the connection for a Cassandra client: contactPoints, port, and keyspace name.
+
+#### More Readings
+
+* [Introduction to Spring Data Cassandra](http://www.baeldung.com/spring-data-cassandra-tutorial)
 
 ## Build
 To build 
