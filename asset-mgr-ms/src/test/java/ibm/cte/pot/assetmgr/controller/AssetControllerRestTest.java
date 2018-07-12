@@ -63,7 +63,7 @@ public class AssetControllerRestTest {
 		 Mono<Long> m = Mono.just(new Long(3));
 		 Mockito.doReturn(m).when(assetRepository).count();
 		 
-		 webTestClient.get().uri("/assets/kpi/count")
+		 webTestClient.get().uri("/assets/count")
          .accept(MediaType.APPLICATION_JSON_UTF8)
          .exchange()
          .expectStatus().isOk()

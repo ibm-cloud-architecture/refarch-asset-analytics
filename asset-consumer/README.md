@@ -1,6 +1,7 @@
 # Kafka Consumers
-This project includes a set of standalone executable java classes, to consume records from a Kafka Topics and do some specific processing, one of them is to persist to Cassandra.
-The AssetInjector class is executable as a standalone tool and its goal is to listen to Asset events and save them into Cassandra cluster. It is using Kafka api
+This project includes a set of standalone executable java classes, to consume records from a Kafka Topics and do some specific processing, one of them being to persist to Cassandra.
+The AssetInjector class is executable as a standalone tool and its goal is to listen to Asset events and save them into Cassandra cluster. It is using Kafka api and Cassandra API.
+
 Another class is used to compute asset analytics as part of a kafka streaming operator. It listens to a new measurement events coming from known assets and aggregate some metrics.
 
 The AssetInjector is packaged as container and deployed to IBM Cloud private.
@@ -27,10 +28,46 @@ For logging, as most of the APIs used ware using [slf4j]() and the default imple
 
 
 ### Using Kafka client API
-The code is using the KafkaConsumer class and the ConsumerRecord to get the wrapper on the event. Our code implementation is exposing a consume method that is polling message every n ms.
+The code is using the KafkaConsumer class and the ConsumerRecord to get the wrapper on the event. Our code implementation is exposing a `consume()`` method that is polling message every n ms.
 
-### Deployment
-The code is packaged as docker container using the open jdk with Alpine linux image.
+The approach is simple:
+* load properties
+* create a consumer using the properties
+```
+kafkaConsumer = new KafkaConsumer<>(properties);
+kafkaConsumer.subscribe(Arrays.asList(KAFKA_ASSET_TOPIC_NAME));
+```
+* expose a consume method to be used by the injector. This method poll data every n ms
+```
+ConsumerRecords<String, String> records = kafkaConsumer.poll(KAFKA_POLL_DURATION);
+```
+* the main class loop fore ever, and use the consume() method and process (save to cassandra) the n events received
+```
+public void run() {
+  logger.info("########### Asset Injector START ##########");
+      boolean runAgain = true;
+      while (runAgain) {
+         List<Asset> buffer = kafkaConsumer.consume();
+        // commit offset only when persisted in DB.
+        if (buffer.size() >= minBatchSize) {
+          try {
+            insertIntoDb(buffer);
+            kafkaConsumer.commitOffset();
+            buffer.clear();
+          } catch (Exception e) {
+            e.printStackTrace();
+            runAgain = false;
+          }
+        }
+      }
+      kafkaConsumer.close();
+}
+```
+
+### Build and deployment
+The code is packaged as docker container using the open jdk with Alpine linux image. The build.sh scripts uses maven and docker build. The `deployment/assetconsumer.yml` defines the kubernetes deployment, configMap, and service.
+
+The major trick is to externalize the config.properties to define kafka and cassandra parameters into the configmap.
 
 ### Springboot kafka consumer
 We also did a second implementation by using Springboot kafka. As you can see in the `pom.xml` we are using spring boot starter, and starter-test which add libraries for Junit, and Mockito.

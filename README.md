@@ -1,6 +1,6 @@
 # Manufacturing Asset Predictive Maintenance
 
-This project is part of the 'IBM Hybrid Analytics and Big Data Architecture' solution, available at https://github.com/ibm-cloud-architecture/refarch-analytics. This project presents an end to end solution to enable predictive maintenance capabilities on manufacturing assets.
+This project is part of the 'IBM Hybrid Analytics and Big Data Architecture' reference architecture implementation, available at https://github.com/ibm-cloud-architecture/refarch-analytics. This set of projects presents an end to end solution to enable predictive maintenance capabilities on manufacturing assets.
 The problem space is related to continuous operation and service on manufacturing asset like [Electrical Submersible Pump](https://en.wikipedia.org/wiki/Submersible_pump), but any assets with sensors can be considered with the same of solution.
 
 The use case is also adaptable and the architecture, solution components can be used for a security treat analysis on a park of devices or assets connected to a company intranet: real time events come from device that need to be aggregated and correlated and analytics run can be performed on historical data to assess security risk. Alert can be published to dashboard user interface.      
@@ -35,7 +35,7 @@ The following diagram illustrates the IBM Cloud Private, kubernetes deployment w
 
 # Deployment
 ## Pre-requisites
-You need to have access to a kubernetes cluster like IBM Cloud Private. We are providing scripts to help you validate the prerequisites.
+You need to have access to a kubernetes cluster like IBM Cloud Private. We are providing a script under ./scripts/validateConfig.sh to help you validate the prerequisites.
 
 * If not done already create a namespace named `greencompute`
 * Get the admin security token and then use it in the set-credentials command below:
@@ -49,10 +49,10 @@ kubectl config use-context green-cluster-context
 ```
 
 ## Deploying Cassandra
-There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the instructions are [here](./docs/cassandra.md) as well as architecture discussions around deploying Cassandra for high availability.
+There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the installation instructions are [here](./docs/cassandra/readme.md). We also describe the potential architecture decisions around deploying Cassandra for high availability.
 
 ## Deploying Kafka
-We use different deployment model, all based on container: with docker, docker edge with local kubernetes, IBM Cloud Private. See details [in this note](
+We are presenting different deployment models, all based on container: with docker, docker edge with local kubernetes for your development environment, IBM Cloud Private for dev or staging. See details [in this note](
   https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka#run-kafka-in-docker)
 
 ## Solution Deployment on ICP
@@ -60,6 +60,4 @@ Each component of the solution is compiled and packaged as container. Here is th
 * [Asset management microservice deployment](asset-mgr-ms/README.md#deploy)
 * [Asset consumer and injector to Cassandra](asset-consumer/README.md#deploy)
 
-
-
-* Asset event consumer
+Finally the pump simulator is a standalone java application used to produce different type of event. It does not need to be deployed to kubernetes.

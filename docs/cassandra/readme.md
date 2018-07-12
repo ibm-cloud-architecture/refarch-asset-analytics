@@ -53,10 +53,9 @@ You can reuse the yaml config files under `deployment/cassandra` folder to confi
 We also recommend to be familiar with [this kubernetes tutorial on how to deploy Cassandra with Stateful Sets](https://kubernetes.io/docs/tutorials/stateful-application/cassandra/).
 
 * Connect to ICP.
-We are using one namespace called 'greencompute'. You can use our script `deployCassandra.sh` under the `../scripts` folder
+We are using one namespace called 'greencompute'. You can use our script `deployCassandra.sh` under the `../scripts` folder to automate the deployment:
 
 * create Cassandra headless service
-
  ```
 $ kubectl apply -f deployment/cassandra/cassandra-service.yaml -n greencompute
 $ kubectl get svc cassandra -n greencompute
@@ -77,7 +76,7 @@ cassandra-data-3  1Gi  RWO  Recycle   Available
 * Create the **statefulset**:
 The [cassandra image](https://hub.docker.com/_/cassandra/) used is coming from dockerhub public repository.
 
-Modify the service name and namespace used in the yaml if you are using your own namespace name or you change the service name:
+if you are using your own namespace name or you change the service name, modify the service name and namespace used in the yaml :
 ```yaml
    env:
      - name: CASSANDRA_SEEDS
@@ -88,6 +87,7 @@ Cassandra seed is used for two purposes:
 * Node discovery: when a new cassandra node is added (which means when deployed on k8s, a new pod instance added by increasing the replica), it needs to find the cluster, so here it is set the svc
 * assist on gossip convergence: by having all of the nodes in the cluster gossip regularly with the same set of seeds. It ensures changes are propagated regularly.
 
+Here it needs to reference the headless service we defined for Cassandra deployment.
 
 ```
 $ kubectl apply -f deployment/cassandra/cassandra-statefulset.yaml  -n greencompute
@@ -96,8 +96,7 @@ $ kubectl get statefulset -n greencompute
 NAME                                        DESIRED   CURRENT   AGE
 cassandra                                   1         1         12h
 ```
-* Connect to the pod
-
+* Connect to the pod to assess the configuration is as expected.  
  ```
  $ kubectl get pods -o wide -n greencompute
  NAME          READY     STATUS    RESTARTS   AGE       IP              NODE
@@ -128,7 +127,7 @@ grace=$(kubectl get po cassandra-0 -o=jsonpath='{.spec.terminationGracePeriodSec
 Within a cluster the number of replicas in the statefulset is at least 3 but can be increased to 5 when code maintenance is needed.
 The choice for persistence storage is important, and the backup and restore strategy of the storage area network used.
 
-When creating connection to persist data into a keyspace, you specify the persistence strategy and number of replicas.
+When creating connection to persist data into a keyspace, you specify the persistence strategy and number of replicas at the client code level. Mostly using properties file.
 ```
 p.setProperty(CASSANDRA_STRATEGY, "SimpleStrategy");
 p.setProperty(CASSANDRA_REPLICAS, "1");
@@ -138,14 +137,15 @@ For HA and production deployment NetworkTopologyStrategy is needed: replicas are
 
 For the number of replicas, it is recommended to use 3 per datacenter.
 
-The spec.env in the statefulset define the datacenter name and rack name too.
+The `spec.env` parameters in the statefulset defines the datacenter name and rack name too.
 
 ## Code
-We have done two implementations for persisting `asset` data into Cassandra using Cassandra client API or SpringBoot cassandra repository API.
-## Cassandra client API
-The code is under asset-consumer project and can be loaded into Eclipse. This component is deployed as container inside a kubernetes cluster like ICP.
+We have done two implementations for persisting `asset` data into Cassandra, one using Cassandra client API and one with SpringBoot cassandra repository API.
 
-In the pom.xml we added the following dependencies
+## Cassandra client API
+The code is under `asset-consumer` project and can be loaded into Eclipse. This component is deployed as container inside a kubernetes cluster like ICP. See code explanation, how to build and run in [this note](../../asset-consumer/README.md)
+
+In the pom.xml we added the following dependencies to get access to the core driver API:
 ```
 <dependency>
   <groupId>com.datastax.cassandra</groupId>
@@ -155,7 +155,6 @@ In the pom.xml we added the following dependencies
 ```
 The code is CassandraRepo.java.
 To connect to Cassandra we need to use a Cluster.
-
 
 
 ## Define Assets Table Structure with CQL
@@ -169,7 +168,7 @@ You are now in cqlsh shell and you can define assets table under keyspace `asset
 sqlsh>  create keyspace assetmonitoring with replication={'class':'SimpleStrategy', 'replication_factor':1};
 sqlsh> use assetmonitoring;
 sqlsh:assetmonitoring> create TABLE assets(id text PRIMARY KEY, os text, type text, ipaddress text, version text, antivirus text, current double, rotation int, pressure int, temperature int, latitude double, longitude double);
-describe
+
 ```
 Add an index on the asset operating system field and one on type.
 ```
@@ -186,13 +185,16 @@ describe assets
 
 ### Some useful CQL commands
 ```
+# See the table schema
+cqlsh> describe table assets;
+
 # modify a table structure adding a column
 cqlsh> alter table assets add flowRate bigint;
 
-# change column type
+# change column type. example the name column:
 cqlsh> alter table assets alter name type text;
 
-# list content of a a table  
+# list content of a table  
 cqlsh> select id,ipaddress,latitude,longitude from assets;
 
 # delete a table

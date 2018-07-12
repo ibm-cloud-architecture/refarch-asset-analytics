@@ -14,12 +14,32 @@ spec:
     spec:
       containers:
       - image: ibmcase/asset-consumer:latest
+        imagePullPolicy: IfNotPresent
         name: asset-consumer
         ports:
         - containerPort: 8080
           protocol: TCP
         - containerPort: 8080
           protocol: TCP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: asset-consumer-cm
+  labels:
+    chart: asset-consumer
+data:
+  conf/config.properties
+    cassandra.contactpoints=localhost
+    cassandra.port=9042
+    cassandra.keyspace=assetmonitoring
+    cassandra.asset.table.name=assets
+    cassandra.strategy=SimpleStrategy
+    cassandra.replicas=1
+    kafka.bootstrap.server=docker.for.mac.host.internal:30092
+    kafka.asset.topic.name=asset-topic
+    kafka.groupid=assetinjectors
+    kafka.poll.duration=2000
 ---
 apiVersion: v1
 kind: Service
