@@ -27,7 +27,7 @@ public class Asset {
   protected long temperature;
   protected double latitude;
   protected double longitude;
-  protected Date timestamp;
+  protected Date creationDate;
 
   public Asset() {}
 
@@ -35,7 +35,7 @@ public class Asset {
   	this.id = id;
   	this.os= os;
   	this.type = type;
-    this.timestamp = new Date();
+    this.creationDate = new Date();
   }
 
   public Asset(String id, String type, String os, String antivirus, String ipAddress, String unsuccessfulLogin, String version) {
@@ -45,7 +45,7 @@ public class Asset {
       this.antivirus = antivirus;
       this.ipAddress = ipAddress;
       this.version = "unknown";
-      this.timestamp = new Date();
+      this.creationDate = new Date();
   }
 
 	public String getId() {
@@ -151,5 +151,13 @@ public class Asset {
 			return (oa.latitude == this.latitude) && (oa.longitude == this.longitude);
 		}
 		return false;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 }

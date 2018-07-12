@@ -24,7 +24,7 @@ The `ibm.cte.esp.AssetInjector.java` is a POJO which uses Kafka consumer API and
 
 To externalize parameters, we use the `conf/config.properties` file which will be mapped to a ConfigMap when deployed to kubernetes cluster.
 
-For logging, as most of the APIs used ware using [slf4j]() and the default implementation of [logback](https://logback.qos.ch/), we added into src/main/resource a logback.xml configuration file to control the logging level as the DEBUG level is too low.
+For logging, as most of the APIs used ware using [slf4j](https://www.slf4j.org) and the default implementation of [logback](https://logback.qos.ch/), we added into `src/main/resource` a logback.xml configuration file to control the logging level as the DEBUG level is too low.
 
 
 ### Using Kafka client API

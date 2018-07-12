@@ -8,13 +8,15 @@ The use case is also adaptable and the architecture, solution components can be 
 ## Table of content
 * [Use case](#use-case)
 * [System Context](#system-context) to present the solution components
-* [Deployment](#deployment)
+* [Deployment to kubernetes cluster like IBM Cloud Private](#deployment)
 * **Sub projects**
   * [Event consumers](asset-consumer/README.md)
   * [Event producers simulator](asset-event-producer/README.md) to simulate pump events for demonstration purpose.
   * [Dashboard BFF](asset-dashboard-bff/README.md) to present a mix of static and real time data.
   * [Asset manager microservice](asset-mgr-ms/README.md) to export RESTful API to manage Asset CRUD operations
+  * [Angular 6 user interface to present dashboard](asset-dashboard-ui/README.md)
 * **[Demonstration script](docs/demo.md)**
+* **[Analytics model](docs/analytics/README.md)
 * **Future readings**
   * [Kafka related](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka)
 
@@ -50,6 +52,8 @@ kubectl config use-context green-cluster-context
 
 ## Deploying Cassandra
 There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the installation instructions are [here](./docs/cassandra/readme.md). We also describe the potential architecture decisions around deploying Cassandra for high availability.
+
+When the pods are up and running use the following commands to create the keyspace and tables.
 
 ## Deploying Kafka
 We are presenting different deployment models, all based on container: with docker, docker edge with local kubernetes for your development environment, IBM Cloud Private for dev or staging. See details [in this note](
