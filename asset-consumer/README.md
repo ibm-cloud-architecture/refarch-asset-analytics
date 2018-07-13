@@ -20,7 +20,7 @@ For the BFF layer to Web browser real time push pattern see [the asset dashboard
 The `ibm.cte.esp.AssetInjector.java` is a POJO which uses Kafka consumer API and Cassandra persistence API. It does three things:
 1. read configuration from external properties file
 1. create a cassandra DAO to persist assets to cassandra
-1. start a kafka consumer to get new asset event.
+1. start a kafka consumer to get new asset event. Loop for ever.
 
 To externalize parameters, we use the `conf/config.properties` file which will be mapped to a ConfigMap when deployed to kubernetes cluster.
 
@@ -65,10 +65,15 @@ public void run() {
 ```
 
 ### Build and deployment
-The code is packaged as docker container using the open jdk with Alpine linux image. The build.sh scripts uses maven and docker build. The `deployment/assetconsumer.yml` defines the kubernetes deployment, configMap, and service.
+The code is packaged as docker container using the open jdk with Alpine linux image. The `scripts/build.sh` scripts uses maven and docker build. The `deployment/assetconsumer.yml` defines the kubernetes deployment, configMap, and service.
 
 The major trick is to externalize the config.properties to define kafka and cassandra parameters into the configmap.
+```
+```
 
+To deploy to your connected kubernetes platform:
+```
+```
 ### Springboot kafka consumer
 We also did a second implementation by using Springboot kafka. As you can see in the `pom.xml` we are using spring boot starter, and starter-test which add libraries for Junit, and Mockito.
 
