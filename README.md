@@ -53,7 +53,7 @@ kubectl config use-context green-cluster-context
 ## Deploying Cassandra
 There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the installation instructions are [here](./docs/cassandra/readme.md). We also describe the potential architecture decisions around deploying Cassandra for high availability.
 
-When the pods are up and running use the following commands to create the keyspace and tables.
+When the pods are up and running use the [following commands](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/blob/master/docs/cassandra/readme.md#define-assets-table-structure-with-cql) to create the keyspace and tables.
 
 ## Deploying Kafka
 We are presenting different deployment models, all based on container: with docker, docker edge with local kubernetes for your development environment, IBM Cloud Private for dev or staging. See details [in this note](

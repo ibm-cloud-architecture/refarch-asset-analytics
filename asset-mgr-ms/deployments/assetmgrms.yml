@@ -3,41 +3,33 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: asset-consumer
-  name: asset-consumer
+    app: asset-mgr-ms
+  name: asset-mgr-ms
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: asset-consumer
+        app: asset-mgr-ms
     spec:
       containers:
-      - image: ibmcase/asset-consumer:latest
+      - image: ibmcase/asset-mgr-ms
         imagePullPolicy: IfNotPresent
-        name: asset-consumer
+        name: asset-mgr-ms
         ports:
         - containerPort: 8080
           protocol: TCP
         - containerPort: 8080
           protocol: TCP
-        volumeMounts:
-        - name: config-volume
-          mountPath: conf
-      volumes:
-      - name: config-volume
-        configMap:
-          name: asset-consumer-cm
-
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: asset-consumer-cm
+  name: asset-mgr-ms-cm
   labels:
-    chart: asset-consumer
+    chart: asset-mgr-ms
 data:
-  config.properties: /
+  conf/config.properties: /
     cassandra.contactpoints=localhost
     cassandra.port=9042
     cassandra.keyspace=assetmonitoring
@@ -52,15 +44,15 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: asset-consumer-svc
+  name: asset-mgr-ms-svc
   labels:
-    chart: asset-consumer
+    chart: asset-mgr-ms
 spec:
   type: ClusterIP
   ports:
   - port: 8080
     targetPort: 8080
     protocol: TCP
-    name: asset-consumer-svc
+    name: asset-mgr-ms-svc
   selector:
-    app: asset-consumer
+    app: asset-mgr-ms

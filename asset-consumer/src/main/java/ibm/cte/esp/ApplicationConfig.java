@@ -16,6 +16,7 @@ public class ApplicationConfig {
 	public static final String KAFKA_ASSET_TOPIC_NAME = "kafka.asset.topic.name";
 	public static final String KAFKA_GROUPID = "kafka.groupid";
 	public static final String KAFKA_POLL_DURATION = "kafka.poll.duration";
+	public static final String VERSION = "version";
 	
 	
 	private Properties p;
@@ -55,5 +56,6 @@ public class ApplicationConfig {
 		 p.setProperty(KAFKA_ASSET_TOPIC_NAME,"asset-topic");
 		 p.setProperty(KAFKA_GROUPID,"assetinjectors");
 		 p.setProperty(KAFKA_POLL_DURATION, "10000");
+		 p.setProperty(VERSION, "v0.0.0");
 	}
 }

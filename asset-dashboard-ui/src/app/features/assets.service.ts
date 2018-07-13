@@ -25,7 +25,7 @@ export class AssetsService {
     // observer subscribes. This socket is shared with subsequent observers
     // and closed when the observer count falls to zero.
     this.assetEvents = websocketConnect(
-      'ws://asset.bff.green:8080/asserstream',
+      'ws://asset.bff.green:8080/assetstream',
       this.inputStream = new QueueingSubject<string>()
     ).messages
   }

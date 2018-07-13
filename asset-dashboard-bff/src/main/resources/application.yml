@@ -4,4 +4,4 @@ spring:
 
 app:
   topic:
-    assets: test-topic
+    assets: asset-topic

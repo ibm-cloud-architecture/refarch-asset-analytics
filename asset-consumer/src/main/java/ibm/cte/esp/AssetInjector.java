@@ -29,6 +29,9 @@ public class AssetInjector {
 
     public AssetInjector() {
     	ApplicationConfig cfg = new ApplicationConfig();
+		logger.info("########### Asset Injector START ##########");
+		logger.info("  Version:" + cfg.getConfig().getProperty(ApplicationConfig.VERSION));
+    	
     	assetDAO = new CassandraRepo(cfg);
     	kafkaConsumer = new AssetTopicConsumer(cfg);
     }
@@ -39,7 +42,7 @@ public class AssetInjector {
 	}
 
 	public void run() {
-		logger.info("########### Asset Injector START ##########");
+
         boolean runAgain = true;
         while (runAgain) {
         	 List<Asset> buffer = kafkaConsumer.consume();
