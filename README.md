@@ -3,7 +3,9 @@
 This project is part of the 'IBM Hybrid Analytics and Big Data Architecture' reference architecture implementation, available at https://github.com/ibm-cloud-architecture/refarch-analytics. This set of projects presents an end to end solution to enable predictive maintenance capabilities on manufacturing assets.
 The problem space is related to continuous operation and service on manufacturing asset like [Electrical Submersible Pump](https://en.wikipedia.org/wiki/Submersible_pump), but any assets with sensors can be considered with the same of solution.
 
-The use case is also adaptable and the architecture, solution components can be used for a security treat analysis on a park of devices or assets connected to a company intranet: real time events come from device that need to be aggregated and correlated and analytics run can be performed on historical data to assess security risk. Alert can be published to dashboard user interface.      
+The use case is also adaptable and the architecture, solution components can be used for a security treat analysis on a park of devices or assets connected to a company intranet: real time events come from device that need to be aggregated and correlated and analytics run can be performed on historical data to assess security risk. Alert can be published to dashboard user interface.  
+
+We are presenting best practices around data management, real team streaming, cassandra high availabiliy    
 
 ## Table of content
 * [Use case](#use-case)
@@ -24,14 +26,14 @@ The use case is also adaptable and the architecture, solution components can be 
 
 ## Use Case
 ### The challenge
-The adoption of IoT, smart devices, in manufacturing industry brings opportunity to predict future maintenance on high cost equipment before failure. The cost control for maintenance operation combined with optimizing device utilization are continuous challenges engineers are facing.
+The adoption of IoT, smart devices, in manufacturing industry brings opportunity to predict future maintenance on high-cost equipment before failure. The cost control for maintenance operation combined with optimizing device utilization are continuous challenges engineers are facing.  For IT architects, the challenge is to address how to prepare to support adopting artificial intelligence capacity to support new business opportunities? How to support real-time data analytics at scale combined with big data and microservice architecture?
+
 ### The solution
-A set of geographically distributed electrical submersible pumps (can apply to any manufacturing IoT equipments) are sending stream of data about important physical measurements that needs to be processed in real time, and persisted in big data storage. By adding traditional analytics combined with unstructured data as field engineer's reports, it is possible to build a solution that delivers a risk of failure ratio, in real time, from measurements received.
+A set of geographically distributed electrical submersible pumps (can apply to any manufacturing IoT equipment) are sending a data stream about important physical measurements that need to be processed in real-time and persisted in big data storage. By adding traditional analytics combined with unstructured data as field engineer's reports, it is possible to build a solution that delivers a risk of failure ratio, in real time, from measurements received.
 
-The solution combines key performance indicators aggregation, real time reporting to a web based dashboard user interface component, risk scoring microservice, and big data sink used by data scientists to develop and tune analytics and machine learning models.  
+The solution combines key performance indicators aggregation, real-time reporting to a web-based dashboard user interface component, risk scoring microservice, and big data sink used by data scientists to develop and tune analytics and machine learning models.  
 
-
-Data are continuously persisted in a document oriented database, we selected [Cassandra](http://cassandra.apache.org/) as a data sink. The real time event processing is supported by [Kafka](http://cassandra.apache.org/) and Kafka streaming. The microservices are done in Java, one in microprofile and one in Java.
+Data are continuously persisted in a document oriented database, we selected [Cassandra](http://cassandra.apache.org/) as a data sink. The real time event processing is supported by [Kafka](http://cassandra.apache.org/) and Kafka streaming. The microservices are done in Java, one in microprofile and one in Java. The data science work is done using ICP for data and data science experience.
 
 ### The Benefits
 The solution gives visibility to analysts and executive about the real time status of the devices in the grids, with an aggregate view of the ones at risk. The device operation was increased by 15% and the unpredictable failure rate decreased by 85%. The model added diagnostic capabilities to help field engineers to deliver better maintenance.
@@ -65,6 +67,7 @@ kubectl config set-credentials admin --token=eyJ0...Ptg
 kubectl config set-context green-cluster-context --user=admin --namespace=greencompute
 kubectl config use-context green-cluster-context
 ```
+* Clone this project to get the different kubernetes deployment files and source code of the different component.
 
 ### Deploying Cassandra
 There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the installation instructions are [here](./docs/cassandra/readme.md). We also describe the potential architecture decisions around deploying Cassandra for high availability.
@@ -74,10 +77,12 @@ When the pods are up and running use the [following commands](https://github.com
 ### Deploying Kafka
 We are presenting different deployment models, all based on container: with docker, docker edge with local kubernetes for your development environment, IBM Cloud Private for dev or staging. See details [in this note](
   https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka#run-kafka-in-docker)
+For ICP, the new IBM Event Stream product is used as it is built on top of Kafka and brings some nice capabilities.
 
 ### Solution Deployment on ICP
 Each component of the solution is compiled and packaged as container. Here is the list of supported deployment:
 * [Asset management microservice deployment](asset-mgr-ms/README.md#deploy)
 * [Asset consumer and injector to Cassandra](asset-consumer/README.md#deploy)
+* [Dashboard backend for frontend](asset-dashboard-bff/README.md#deploy)
 
-Finally the pump simulator is a standalone java application used to produce different type of event. It does not need to be deployed to kubernetes.
+Finally the [pump simulator](asset-event-producer/readme.md) is a standalone java application used to produce different type of event. It does not need to be deployed to kubernetes.
