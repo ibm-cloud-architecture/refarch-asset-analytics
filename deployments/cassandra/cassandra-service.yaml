@@ -6,7 +6,7 @@ metadata:
     app: cassandra
   name: cassandra-svc
 spec:
-  clusterIP: None
+  type: ClusterIP
   ports:
     - port: 9042
   selector:

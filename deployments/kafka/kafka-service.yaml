@@ -5,11 +5,10 @@ metadata:
     app: kafka-service
   name: kafka-service
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
   - name: kafka-port
     port: 9092
-    nodePort: 30092
     targetPort: 9092
   selector:
     app: kafka
