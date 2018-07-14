@@ -23,7 +23,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - name: config-volume
-          mountPath: conf
+          mountPath: /conf
       volumes:
       - name: config-volume
         configMap:
@@ -38,16 +38,17 @@ metadata:
     chart: asset-consumer
 data:
   config.properties: /
-    cassandra.contactpoints=localhost
+    cassandra.contactpoints=cassandra.green.case
     cassandra.port=9042
     cassandra.keyspace=assetmonitoring
     cassandra.asset.table.name=assets
     cassandra.strategy=SimpleStrategy
     cassandra.replicas=1
-    kafka.bootstrap.server=docker.for.mac.host.internal:30092
+    kafka.bootstrap.server=kafka.green.case:9092
     kafka.asset.topic.name=asset-topic
     kafka.groupid=assetinjectors
     kafka.poll.duration=2000
+    version=v0.0.3
 ---
 apiVersion: v1
 kind: Service

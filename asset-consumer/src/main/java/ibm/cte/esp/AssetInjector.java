@@ -31,7 +31,11 @@ public class AssetInjector {
     	ApplicationConfig cfg = new ApplicationConfig();
 		logger.info("########### Asset Injector START ##########");
 		logger.info("  Version:" + cfg.getConfig().getProperty(ApplicationConfig.VERSION));
+		logger.info("  Kafka:" + cfg.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER));
+		logger.info("  Cassandra:" + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_ENDPOINTS));
     	
+    	
+		
     	assetDAO = new CassandraRepo(cfg);
     	kafkaConsumer = new AssetTopicConsumer(cfg);
     }
