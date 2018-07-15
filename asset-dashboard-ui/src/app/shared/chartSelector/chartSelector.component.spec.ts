@@ -2,16 +2,16 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { LeafletMap } from './leafletMap.component';
+import { ChartSelector } from './chartSelector.component';
 import { By } from '@angular/platform-browser';
 
 @Component({
-    template: '<leafletMap id="firstTile">'
-    +'</leafletMap>'
+    template: '<chartSelector id="firstTile" color="green" riskName ="Some title">'
+    +'</chartSelector>'
 })
 class HostComponent {}
 
-describe('leafLetMapComponent', () => {
+describe('chartSelector', () => {
   let component: HostComponent,
     router: Router;
   let fixture: ComponentFixture<HostComponent>;
@@ -22,7 +22,7 @@ describe('leafLetMapComponent', () => {
       imports: [
           RouterTestingModule.withRoutes([])
       ],
-      declarations: [ LeafletMap, HostComponent ]
+      declarations: [ ChartSelector, HostComponent ]
     })
     .compileComponents();
   }));

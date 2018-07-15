@@ -10,5 +10,9 @@ export class Asset {
 	 pressure?: number = 0;
 	 flowRate?: number = 0;
 	 temperature?: number = 0;
+	 riskRating?: string = '';
+	 riskColor?: string = '';
+	 longitude?: string = '';
+	 latitude?: string = '';
    timestamp?: any; 
 }

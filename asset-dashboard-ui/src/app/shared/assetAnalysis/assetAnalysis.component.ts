@@ -8,6 +8,8 @@ import { DomSanitizer, SafeStyle }  from '@angular/platform-browser';
   styleUrls: ['./assetAnalysis.component.css']
 })
 export class AssetAnalysis implements OnInit {
+
+  
   @Input()
   id: string = 'id';
   @Input()
@@ -26,6 +28,10 @@ export class AssetAnalysis implements OnInit {
   temperature: number = 0;
   @Input()
   riskColor : string = 'green';
+  @Input()
+  longitude : string = '';
+  @Input ()
+  latitude : string = '';
 
 
 

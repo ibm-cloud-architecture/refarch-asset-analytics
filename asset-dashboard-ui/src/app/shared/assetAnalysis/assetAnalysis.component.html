@@ -1,17 +1,21 @@
 <div class='assetAnalysis'>
      <div [ngStyle] = "{'text-align':'center', 'background':'lightgrey', 'box-shadow': '3px 3px 3px 3px'}">
 
-            <h4 [ngStyle] = "{'border-bottom':'2px solid', 'background-color':riskColor}">Selected Asset</h4>
+            <h4 [ngStyle] = "{'border-bottom':'2px solid', 'background-color':riskColor}">Asset {{id}}</h4>
           
       
-            <p > Name : {{id}}</p>  
-            
+           
+           <p> 
+               Type : {{type}} 
+           </p>
+           
 
-           
-           <p> Type : {{type}} </p>
-           
            <p>
            Rotation : {{rotation}}
+           </p>
+
+           <p>
+            Version : {{version}}
            </p>
 
             <p>
@@ -29,6 +33,16 @@
             <p>
            Temperature : {{temperature}}
            </p>
+
+           <p>
+                Latitude : {{latitude}}
+             </p>
+
+             <p>
+               Longitude : {{longitude}}
+            </p>
+
+
 
             </div>
 

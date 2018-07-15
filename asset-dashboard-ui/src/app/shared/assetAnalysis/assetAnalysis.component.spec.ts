@@ -2,12 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AssetRisk } from './assetRisk.component';
+import { AssetAnalysis } from './assetAnalysis.component';
 import { By } from '@angular/platform-browser';
 
 @Component({
-    template: '<assetRisk id="firstTile" color="green" riskName ="Some title">'
-    +'</assetRisk>'
+    template: '<assetAnalysis id="firstTile" color="green" riskName ="Some title">'
+    +'</assetAnalysis>'
 })
 class HostComponent {}
 
@@ -22,7 +22,7 @@ describe('AssetRiskComponent', () => {
       imports: [
           RouterTestingModule.withRoutes([])
       ],
-      declarations: [ AssetRisk, HostComponent ]
+      declarations: [ AssetAnalysis, HostComponent ]
     })
     .compileComponents();
   }));

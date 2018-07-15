@@ -21,7 +21,7 @@
      <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
     </div>
 
-    <table class="table table-striped table-condensed"  >
+    <table class="table table-striped table-condensed"   style = 'box-shadow: 1px 1px 1px 1px' >
       <thead>
         <tr>
           <th>Risk</th>
@@ -61,7 +61,7 @@
 <div id = 'bottom' class = 'wrapper' style ='background-color: lightgreen'>
 
   <div class = 'bottomsplit'>
-    <assetAnalysis id = {{selectedAssetAnalysis.id}} type = {{selectedAssetAnalysis.type}} version = {{selectedAssetAnalysis.version}} rotation = {{selectedAssetAnalysis.rotation}} current = {{selectedAssetAnalysis.current}} pressure = {{selectedAssetAnalysis.pressure}} flowRate = {{selectedAssetAnalysis.flowRate}} temperature = {{selectedAssetAnalysis.temperature}} riskColor = {{selectedAssetAnalysis.riskColor}}> </assetAnalysis>
+    <assetAnalysis id = {{selectedAssetAnalysis.id}} type = {{selectedAssetAnalysis.type}} version = {{selectedAssetAnalysis.version}} rotation = {{selectedAssetAnalysis.rotation}} current = {{selectedAssetAnalysis.current}} pressure = {{selectedAssetAnalysis.pressure}} flowRate = {{selectedAssetAnalysis.flowRate}} temperature = {{selectedAssetAnalysis.temperature}} riskColor = {{selectedAssetAnalysis.riskColor}} longitude = {{selectedAssetAnalysis.longitude}} latitude = {{selectedAssetAnalysis.latitude}} > </assetAnalysis>
   </div>
 
   <div id = 'chartSelector' class = 'bottomsplit'>
