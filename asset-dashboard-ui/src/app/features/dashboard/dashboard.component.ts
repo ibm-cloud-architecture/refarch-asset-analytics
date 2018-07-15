@@ -7,6 +7,10 @@ import { Asset } from '../assets/asset'
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+
+
+
+
 export class DashboardComponent implements OnInit {
 
   assets : Asset[];
@@ -26,20 +30,33 @@ export class DashboardComponent implements OnInit {
     this.riskAnalysis.lowRiskCount = 0;
     this.riskAnalysis.mediumRiskCount = 0;
     this.riskAnalysis.highRiskCount = 0;
+    this.selectedAssetAnalysis = {};
+    this.tableClick = function()
+
     //Risk Rating
     for(var i = 0; i<this.assets.length;i++){
        if(this.assets[i].pressure >= 100 || this.assets[i].pressure <50){
-          this.riskAnalysis.highRiskCount++;
+           this.riskAnalysis.highRiskCount++;
+          this.assets[i].riskRating = 'High';
+          this.assets[i].riskColor = 'red'
+         
         }
         else if((this.assets[i].pressure >= 50 && this.assets[i].pressure <60 )|| (this.assets[i].pressure <100 && this.assets[i].pressure >=90)){
           this.riskAnalysis.mediumRiskCount++;
+          this.assets[i].riskRating = 'Medium';
+          this.assets[i].riskColor = 'yellow';
         }
         else{
         this.riskAnalysis.lowRiskCount++;
+        this.assets[i].riskRating = 'Low';
+        this.assets[i].riskColor = 'green';
        }
 
     }
-  //
+    //Table Click
+    this.tableClick = function (index){
+      this.selectedAssetAnalysis = this.assets[index];
+    }
 
 
 console.log(this);
@@ -50,3 +67,4 @@ console.log(this);
 
 
 }
+

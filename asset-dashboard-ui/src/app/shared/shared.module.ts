@@ -6,12 +6,14 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { AssetRisk } from './assetRisk/assetRisk.component';
 import { AssetAnalysis } from './assetAnalysis/assetAnalysis.component';
+import { leafletMap } from './leafletMap/leafletMap.component';
+
 @NgModule({
   imports: [
     CommonModule,
     RouterModule
   ],
-  declarations: [TileComponent, HeaderComponent, FooterComponent, AssetRisk, AssetAnalysis],
-  exports: [TileComponent, HeaderComponent, FooterComponent, AssetRisk, AssetAnalysis]
+  declarations: [TileComponent, HeaderComponent, FooterComponent, AssetRisk, AssetAnalysis, leafletMap],
+  exports: [TileComponent, HeaderComponent, FooterComponent, AssetRisk, AssetAnalysis, leafletMap]
 })
 export class SharedModule { }

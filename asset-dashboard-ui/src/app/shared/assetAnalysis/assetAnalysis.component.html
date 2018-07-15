@@ -1,18 +1,19 @@
 <div class='assetAnalysis'>
-     <h4 style ='text-align:center;'>
-     Pump Summary
-     </h4>
-     <div>
+     <div [ngStyle] = "{'text-align':'center', 'background':'lightgrey', 'box-shadow': '3px 3px 3px 3px'}">
 
+            <h4 [ngStyle] = "{'border-bottom':'2px solid', 'background-color':riskColor}">Selected Asset</h4>
+          
+      
+            <p > Name : {{id}}</p>  
+            
 
-           <p>
-            Name : {{id}}
-           <p>
-           Type : {{type}}
-           </p>
+           
+           <p> Type : {{type}} </p>
+           
            <p>
            Rotation : {{rotation}}
            </p>
+
             <p>
            Current : {{current}}
            </p>

@@ -24,6 +24,8 @@ export class AssetAnalysis implements OnInit {
   flowRate: number = 0;
   @Input()
   temperature: number = 0;
+  @Input()
+  riskColor : string = 'green';
 
 
 
