@@ -1,10 +1,10 @@
 # Kafka Consumers
 This project includes a set of standalone executable java classes, to consume records from a Kafka Topics and do some specific processing, one of them being to persist to Cassandra.
-The AssetInjector class is executable as a standalone tool and its goal is to listen to Asset events and save them into Cassandra cluster. It is using Kafka api and Cassandra API.
+The `AssetInjector` class is executable as a standalone tool and its main goal is to listen to Asset events and save them into Cassandra cluster. It is using Kafka api and Cassandra API.
 
-Another class is used to compute asset analytics as part of a kafka streaming operator. It listens to a new measurement events coming from known assets and aggregate some metrics.
+Another class is used to compute asset analytics as part of a Kafka streaming operator. It listens to a new measurement events coming from known assets and aggregate some metrics.
 
-The AssetInjector is packaged as container and deployed to IBM Cloud private.
+The AssetInjector is packaged as container (See [Dockerfile in this project](./Dockerfile) and deployed to IBM Cloud private.
 
 ### Features:
 * Consume Asset event (new asset events, and measurement events) from Kafka topic
@@ -14,7 +14,9 @@ The following diagram illustrates how the 'Asset injector' consumes `new asset e
 
 ![](docs/new-asset-event-cassandra.png)
 
-For the BFF layer to Web browser real time push pattern see [the asset dashboard BFF project)(../asset-dashboard-bff)
+For the BFF layer to Web browser real time push pattern see [the asset dashboard BFF project]
+
+(../asset-dashboard-bff)
 
 ## Code Explanation
 The `ibm.cte.esp.AssetInjector.java` is a POJO which uses Kafka consumer API and Cassandra persistence API. It does three things:
@@ -64,16 +66,26 @@ public void run() {
 }
 ```
 
-### Build and deployment
-The code is packaged as docker container using the open jdk with Alpine linux image. The `scripts/build.sh` scripts uses maven and docker build. The `deployment/assetconsumer.yml` defines the kubernetes deployment, configMap, and service.
+## Build and deployment
+The code is packaged as docker container using the open jdk with Alpine linux image. The `scripts/build.sh` script uses maven and docker build. The `deployments/assetconsumer.yml` defines the Kubernetes deployment, configMap, and service.
 
-The major trick is to externalize the config.properties to define kafka and cassandra parameters into the configmap.
+The major trick is to externalize the config.properties to define kafka and cassandra parameters into a ConfigMap.
+
+To deploy to your connected kubernetes cluster use the following steps:
 ```
+#1: Tag the docker image with the name of the remote docker repository, the target namespace and the name and version of the image. For example for a remote repository running in IBM Cloud Private, use something like:
+greencluster.icp:8500/ibmcase/asset-consumer:v0.0.1
+
+#2: log to docker remote repo:
+$ docker login greencluster.icp:8500
+
+#3: docker push the newly created image to the remote repository:
+$ docker push greencluster.icp:8500/ibmcase/casset-consumer:v0.0.1
+
+#4: Change the image versioning in the yaml file and apply the changes
+$ kubectl apply -f deployments/assetconsuner.yml 
 ```
 
-To deploy to your connected kubernetes platform:
-```
-```
 ### Springboot kafka consumer
 We also did a second implementation by using Springboot kafka. As you can see in the `pom.xml` we are using spring boot starter, and starter-test which add libraries for Junit, and Mockito.
 
@@ -107,4 +119,4 @@ $ kubectl describe pod cassandra-0 --namespace greencompute
 $  kubectl port-forward cassandra-0 9042:9042 --namespace greencompute
 ```
 
- See also the Cassandra [article for preparing the environment](../docs/cassandra.md) for the asset analytic.
+ See also the Cassandra [article for preparing the environment](../docs/cassandra/readme.md) for the asset analytic.

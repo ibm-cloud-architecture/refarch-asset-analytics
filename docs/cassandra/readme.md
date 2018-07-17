@@ -1,5 +1,5 @@
 # Cassandra Summary
-In this article we are presenting Cassandra integration within the solution, and how to support deployment to IBM Cloud private, addressing high availability and resiliency.
+In this article we are presenting Cassandra integration within the asset perdictive maintenance solution, and how to support deployment to IBM Cloud private, addressing high availability and resiliency.
 
 ## Concepts
 Here are some key concepts of Cassandra to keep in mind for this implementation:
@@ -12,7 +12,8 @@ Here are some key concepts of Cassandra to keep in mind for this implementation:
 ### Deploying on "Docker Edge for desktop" kubernetes
 As pre-requisite you need Docker Edge and enable kubernetes (see this [note](https://docs.docker.com/docker-for-mac/kubernetes/)). Then you can use our script `deployCassandra.sh` under the `scripts` folder or run the following commands one by one:
 
-* create cassandra headless service, so application access it via KubeDNS. If you do wish to connect an application to cassandra, use the KubeDNS value of `cassandra.default.svc.cluster.local`
+* create cassandra headless service, so application accesses it via KubeDNS. If you do wish to connect an application to cassandra, use the KubeDNS value of `cassandra.default.svc.cluster.local`, the alternate is to use Ingress rule and set a hostname as cassandra.green.case. The `casssandara-ingress.yml` file defines such Ingress.
+
 ```
 $ kubectl apply -f deployment/cassandra/cassandra-service.yaml --namespace greencompute
 ```
@@ -153,8 +154,15 @@ In the pom.xml we added the following dependencies to get access to the core dri
   <version>3.1.4</version>
 </dependency>
 ```
-The code is CassandraRepo.java.
-To connect to Cassandra we need to use a Cluster.
+The code is CassandraRepo.java and basically connect to the Cassandra cluster when the DAO class is created...
+```
+Builder b = Cluster.builder().addContactPoints(endpoints);
+cluster = b.build();
+session = cluster.connect();
+```
+it is possible also to create keyspace and tables by API if they do not exist by building CQL query string and use the session.execute(aquery) method. See [this section below](#use-cassandra-java-api-to-create-objects)
+
+then it offers a set operations to support Asset CRUD operations.
 
 
 ## Define Assets Table Structure with CQL

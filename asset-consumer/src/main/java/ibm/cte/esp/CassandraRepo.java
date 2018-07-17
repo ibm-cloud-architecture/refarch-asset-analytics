@@ -82,7 +82,9 @@ public class CassandraRepo implements AssetDAO {
           .append("flowRate decimal,")
           .append("temperature decimal,")
           .append("latitude double,")
-          .append("longitude double);");
+          .append("longitude double,")
+          .append("creationDate timestamp);");
+        
      
         String query = sb.toString();
         
@@ -103,6 +105,7 @@ public class CassandraRepo implements AssetDAO {
 		a.setTemperature(r.getDecimal("temperature"));
 		a.setLatitude(r.getDouble("latitude"));
 		a.setLongitude(r.getDouble("longitude"));
+		a.setCreationDate(r.getTimestamp("creationDate"));
     }
     
     private Asset rowToAsset(Row r) {
@@ -150,7 +153,7 @@ public class CassandraRepo implements AssetDAO {
 			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
 			    		  + "." 
 			    		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
-			      .append("(id, os, version, type, ipAddress, antivirus, rotation, current, pressure, flowRate, temperature,latitude,longitude ) ")
+			      .append("(id, os, version, type, ipAddress, antivirus, rotation, current, pressure, flowRate, temperature,latitude,longitude, creationDate ) ")
 			      .append("VALUES ('").append(a.getId())
 			      .append("','").append(a.getOs())
 			      .append("','").append(a.getVersion())
@@ -164,6 +167,7 @@ public class CassandraRepo implements AssetDAO {
 			      .append(",").append(a.getTemperature())
 			      .append(",").append(a.getLatitude())
 			      .append(",").append(a.getLongitude())
+			      .append(",").append(a.getCreationDate())
 			      .append(");");
 			 
 			    String query = sb.toString();

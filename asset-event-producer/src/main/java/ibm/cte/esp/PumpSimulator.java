@@ -39,10 +39,11 @@ public class PumpSimulator {
 	}
 	
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
+		logger.info("######### Pump Simulator Starting ############ ");
 		PumpSimulator simulator= new PumpSimulator();
 		simulator.processArgument(args);
 		simulator.prepareProducer();
-		logger.info("######### Pump Simulator Starting ############ ");
+		
 		if (simulator.isEvent()) {
 			simulator.generateEvents();
 		} else {

@@ -22,10 +22,10 @@ public class Asset implements Serializable {
 	protected long temperature;
 	protected double latitude;
 	protected double longitude;
-	protected Date timestamp;
+	protected Date creationDate;
 	
 	public Asset() {
-		this.timestamp = new Date();
+		this.creationDate = new Date();
 	}
 
 	public String getId() {
@@ -132,11 +132,14 @@ public class Asset implements Serializable {
 		this.longitude = longitude;
 	}
 
-	public Date getTimestamp() {
-		return timestamp;
+	
+	public Date getCreationDate() {
+		return creationDate;
 	}
 
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
+
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 }
