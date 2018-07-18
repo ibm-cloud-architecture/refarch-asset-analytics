@@ -14,6 +14,5 @@ spec:
     spec:
       containers:
       - image: ibmcase/asset-consumer:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: asset-consumer
-       
