@@ -5,9 +5,14 @@ metadata:
   labels:
     app: cassandra
   name: cassandra-svc
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
-  type: ClusterIP
+  clusterIP: None
   ports:
     - port: 9042
+      name: cassandra
+    - name: jmx
+      port: 7199
   selector:
     app: cassandra

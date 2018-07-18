@@ -1,5 +1,7 @@
 # Cassandra Summary
-In this article we are presenting Cassandra integration within the asset perdictive maintenance solution, and how to support deployment to IBM Cloud private, addressing high availability and resiliency.
+In this article we are presenting Cassandra integration within the asset predictive maintenance solution, and how to support deployment to IBM Cloud private, addressing high availability and resiliency.
+
+Cassandra addresses scalability and high availability to persist a huge data set. It uses replication to multiple nodes managed in cluster, even deployed cross data centers.
 
 ## Concepts
 Here are some key concepts of Cassandra to keep in mind for this implementation:
@@ -9,7 +11,8 @@ Here are some key concepts of Cassandra to keep in mind for this implementation:
 * **Column** – A column is a data structure which contains a column name, a value and a timestamp. The columns and the number of columns in each row may vary in contrast with a relational database where data are well structured.
 
 ## Cassandra deployment
-### Deploying on "Docker Edge for desktop" kubernetes
+
+### Deploying on "Docker Edge for desktop" kubernetes for development
 As pre-requisite you need Docker Edge and enable kubernetes (see this [note](https://docs.docker.com/docker-for-mac/kubernetes/)). Then you can use our script `deployCassandra.sh` under the `scripts` folder or run the following commands one by one:
 
 * create cassandra headless service, so application accesses it via KubeDNS. If you do wish to connect an application to cassandra, use the KubeDNS value of `cassandra.default.svc.cluster.local`, the alternate is to use Ingress rule and set a hostname as cassandra.green.case. The `casssandara-ingress.yml` file defines such Ingress.
@@ -38,6 +41,7 @@ The resource requirements for higher performance c7a node are:
 * a minimum of 32GB RAM (JVM + Linux memory buffers to cache SSTable) + `memory.available` defined in Kubernetes Eviction policy + Resources needed by k8s components that run on every worker node (e.g. proxy)
 * a minimum of 8 processor cores per Cassandra Node with 2 CPUs per core (16 vCPU in a VM)
 * 4-8 GB JVM heap, recommend trying to keep heaps limited to 4 GB to minimize garbage collection pauses caused by large heaps.
+* cassandra needs local storage to get best performance. Avoid to use distributed storage, and prefer hostPath or localstorage. With distributed storage like a Glusterfs cluster you may have 9 replicas (3x Cassandra replica factor which is usually 3)
 
 #### Performance considerations
 Cassandra  nodes tend  to be IO bound  rather than CPU bound:
@@ -47,6 +51,8 @@ Cassandra  nodes tend  to be IO bound  rather than CPU bound:
 
 The use of Vnodes is generally  considered  to be a good practice as they eliminate the need to perform manual token assignment, distribute workload across all nodes in a cluster when nodes are added or removed. It helps rebuilding dead nodes faster.
 Vnode reduces the size of SSTables which can improve read performance. Cassandra best practices set the number of tokens per Cassandra node to 256.
+
+Avoid getting multiple node instances on the same physical host, so use `podAntiAffinity`.
 
 #### Using our configurations
 You can reuse the yaml config files under `deployment/cassandra` folder to configure a Service to expose Cassandra externally, create static persistence volumes, and statefulSet to deploy Cassandra image.
@@ -242,3 +248,4 @@ cqlsh> drop table if exists assets;
 ## Future Readings
 * [10 steps to set up a multi-data center Cassandra cluster on a Kubernetes platform](https://www.ibm.com/developerworks/library/ba-multi-data-center-cassandra-cluster-kubernetes-platform/index.html)
 * [IBM Article: Scalable multi-node Cassandra deployment on Kubernetes Cluster](https://github.com/IBM/Scalable-Cassandra-deployment-on-Kubernetes)
+* [Running Cassandra on Kubernetes](https://blog.deimos.fr/2018/06/24/running-cassandra-on-kubernetes/)

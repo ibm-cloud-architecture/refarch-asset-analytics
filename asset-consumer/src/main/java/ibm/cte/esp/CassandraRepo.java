@@ -29,7 +29,7 @@ public class CassandraRepo implements AssetDAO {
 		if (ep.contains(",")) {
 			b = Cluster.builder().addContactPoints(ep.split(","));
 		} else {
-			b = Cluster.builder().addContactPoints(ep);
+			b = Cluster.builder().addContactPoint(ep);
 		}
 		
 		

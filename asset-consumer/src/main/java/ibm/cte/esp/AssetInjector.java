@@ -26,6 +26,7 @@ public class AssetInjector {
 	private int minBatchSize = 2;
     private AssetTopicConsumer kafkaConsumer;
     private AssetDAO assetDAO;
+    private boolean runAgain = true;
 
     public AssetInjector() {
     	ApplicationConfig cfg = new ApplicationConfig();
@@ -33,10 +34,13 @@ public class AssetInjector {
 		logger.info("  Version:" + cfg.getConfig().getProperty(ApplicationConfig.VERSION));
 		logger.info("  Kafka:" + cfg.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER));
 		logger.info("  Cassandra:" + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_ENDPOINTS));
-    	
-    	
-		
-    	assetDAO = new CassandraRepo(cfg);
+
+
+		try {
+			assetDAO = new CassandraRepo(cfg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     	kafkaConsumer = new AssetTopicConsumer(cfg);
     }
 
@@ -46,8 +50,6 @@ public class AssetInjector {
 	}
 
 	public void run() {
-
-        boolean runAgain = true;
         while (runAgain) {
         	 List<Asset> buffer = kafkaConsumer.consume();
 	        // commit offset only when persisted in DB.
@@ -55,14 +57,15 @@ public class AssetInjector {
 			    	try {
 			    		insertIntoDb(buffer);
 				    	kafkaConsumer.commitOffset();
-			            buffer.clear();
+			        buffer.clear();
 			    	} catch (Exception e) {
 			    		e.printStackTrace();
 			    		runAgain = false;
 			    	}
 			    }
         }
-        kafkaConsumer.close();
+        if (kafkaConsumer != null) kafkaConsumer.close();
+        logger.info("Stopping consumer gracefully !");
 	}
 
 
