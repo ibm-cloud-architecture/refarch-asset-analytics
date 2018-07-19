@@ -14,9 +14,7 @@ The following diagram illustrates how the 'Asset injector' consumes `new asset e
 
 ![](docs/new-asset-event-cassandra.png)
 
-For the BFF layer to Web browser real time push pattern see [the asset dashboard BFF project]
-
-(../asset-dashboard-bff)
+For the BFF layer to Web browser real time push pattern see [the asset dashboard BFF project](../asset-dashboard-bff)
 
 ## Code Explanation
 The `ibm.cte.esp.AssetInjector.java` is a POJO which uses Kafka consumer API and Cassandra persistence API. It does three things:
@@ -83,15 +81,8 @@ $ docker login greencluster.icp:8500
 $ docker push greencluster.icp:8500/ibmcase/casset-consumer:v0.0.1
 
 #4: Change the image versioning in the yaml file and apply the changes
-$ kubectl apply -f deployments/assetconsuner.yml 
+$ kubectl apply -f deployments/assetconsumer.yml
 ```
-
-### Springboot kafka consumer
-We also did a second implementation by using Springboot kafka. As you can see in the `pom.xml` we are using spring boot starter, and starter-test which add libraries for Junit, and Mockito.
-
-The consumer is packaged within container using the same open-jdk and alpine image, and can be all deployed to a kubernetes cluster like IBM Cloud Private.
-
-See [this article](https://docs.spring.io/spring-kafka/reference/htmlsingle/#_receiving_messages) for detail on how to use springboot kafka
 
 ### Offset management
 When dealing with heavy load storing offset in zookeeper is non advisable. To manage offset we use the [new consumer API](https://kafka.apache.org/090/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html).
@@ -103,10 +94,17 @@ When designing a consumer the following requirements need to be analyzed:
 * Do the solution is fine with at-least-once delivery or exactly-once is a must have? As the operation to store a message and the storage of offsets are two separate operations, and in case of failure between them, it is possible to have stale offsets, which will introduce duplicate messages when consumers restart to process from last known committed offset. "exactly-once" means grouping record and offset persistence in an atomic operation.
 * What are the criteria to consider a message as "consumed"?  
 
-### Cassandra persistence
+### Springboot kafka consumer
+We also did a second implementation by using Springboot kafka. As you can see in the `pom.xml` we are using spring boot starter, and starter-test which add libraries for Junit, and Mockito.
+
+The consumer is packaged within container using the same open-jdk and alpine image, and can be all deployed to a kubernetes cluster like IBM Cloud Private.
+
+See [this article](https://docs.spring.io/spring-kafka/reference/htmlsingle/#_receiving_messages) for detail on how to use springboot kafka
+
 
 #### Accessing remote cassandra deployed in kubernetes
- When running on you development machine you can use a remote cassandra to test your application. Use the port-forwarding command to map local port to remote cassandra deployed pod.
+
+When running on you development machine you can use a remote cassandra to test your application. Use the port-forwarding command to map local port to remote cassandra deployed pod.
 
 ```
 # first get cassandra pod name

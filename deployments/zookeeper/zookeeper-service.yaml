@@ -2,14 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: zookeeper-service
+    app: zookeeper
   name: zookeeper-service
 spec:
-  type: NodePort
+  clusterIP: None
   ports:
   - name: zookeeper-port
     port: 2181
-    nodePort: 30181
     targetPort: 2181
   selector:
     app: zookeeper

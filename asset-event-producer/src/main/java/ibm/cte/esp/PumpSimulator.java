@@ -43,7 +43,7 @@ public class PumpSimulator {
 		PumpSimulator simulator= new PumpSimulator();
 		simulator.processArgument(args);
 		simulator.prepareProducer();
-		
+		logger.info("Kafka server: " + simulator.config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER));
 		if (simulator.isEvent()) {
 			simulator.generateEvents();
 		} else {
@@ -75,7 +75,7 @@ public class PumpSimulator {
         properties.put(ProducerConfig.RETRIES_CONFIG, 3);  // retries in case of failure
         properties.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);  // size for the buffer
         properties.put(ProducerConfig.LINGER_MS_CONFIG,1); // milli seconds before sending the record. Help batching
-        properties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432); //total amount of memory available to the producer for buffering
+        properties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 16000000); //total amount of memory available to the producer for buffering
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         this.kafkaProducer = new KafkaProducer<>(properties);
@@ -121,7 +121,7 @@ public class PumpSimulator {
 			a.setLongitude(-97.755996);
 			
 			publishAsset(a,config.getConfig().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME));
-			Thread.sleep(3000);
+			Thread.sleep(1000);
 		}
 	} // generateAssets
 

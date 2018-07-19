@@ -13,39 +13,6 @@ spec:
         app: asset-consumer
     spec:
       containers:
-      - image: ibmcase/asset-consumer
+      - image: ibmcase/asset-consumer:latest
         imagePullPolicy: Always
         name: asset-consumer
-        ports:
-        - containerPort: 8080
-          protocol: TCP
-        - containerPort: 8080
-          protocol: TCP
-        volumeMounts:
-        - name: config-volume
-          mountPath: /conf
-      volumes:
-      - name: config-volume
-        configMap:
-          name: asset-consumer-cm
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: asset-consumer-cm
-  labels:
-    chart: asset-consumer
-data:
-  config.properties: /
-    cassandra.contactpoints=cassandra-svc.greencompute.svc.cluster.local
-    cassandra.port=9042
-    cassandra.keyspace=assetmonitoring
-    cassandra.asset.table.name=assets
-    cassandra.strategy=SimpleStrategy
-    cassandra.replicas=1
-    kafka.bootstrap.server=greenkafka-ibm-es-kafka-headless-svc.greencompute.svc.cluster.local:9092
-    kafka.asset.topic.name=asset-topic
-    kafka.groupid=assetinjectors
-    kafka.poll.duration=2000
-    version=v0.0.5
