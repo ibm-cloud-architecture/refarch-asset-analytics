@@ -2,57 +2,54 @@
     <script src="/js/angular-leaflet-directive.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css">
-
-
 </head>
 
 <div id ='top' class = 'wrapper' style= 'background-color:palegoldenrod'>
-
-  <div id = 'map' class ='split'>
-      <div id = 'mapSummary' class = 'split'>
-        <leafletMap></leafletMap>
+  <div class="row">
+      <div class="col-md-6">
+        <div id = 'map' class ='split'>
+            <div id = 'mapSummary' class = 'split'>
+              <leafletMap></leafletMap>
+              </div>
         </div>
+      </div>
+      <div class="col-md-6">
+        <div id = 'pumpSummary' class = 'split'>
+          <div id = 'riskCategories' style = 'display:inline-block; width:500px' class = 'wrapper'>
+            <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
+            <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
+            <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
+          </div>
+          <table class="table table-striped table-condensed"   style = 'box-shadow: 1px 1px 1px 1px' >
+            <thead>
+              <tr>
+                <th>Risk</th>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Version</th>
+                <th>Pressure</th>
+                <th>Flow</th>
+                <th>Temperature</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="asset" *ngFor="let asset of assets;let i = index" (click) = tableClick(i)>
+                <span class="dot" [ngStyle] = "{'background-color':asset.riskColor}"></span>
+                 <td>{{asset.id}}</td>
+                 <td>{{asset.type}}</td>
+                 <td>{{asset.version}}</td>
+                 <td>{{asset.pressure}}</td>
+                 <td>{{asset.flowRate}}</td>
+                <td>{{asset.temperature}}</td>
+            </tbody>
+          </table>
+        </div>
+      </div>
+       <div id ='pumpDetails'>
+
+        </div>
+
   </div>
-
-  <div id = 'pumpSummary' class = 'split'>
-   <div id = 'riskCategories' style = 'display:inline-block; width:500px' class = 'wrapper'>
-     <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
-     <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
-     <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
-    </div>
-
-    <table class="table table-striped table-condensed"   style = 'box-shadow: 1px 1px 1px 1px' >
-      <thead>
-        <tr>
-          <th>Risk</th>
-          <th>Id</th>
-          <th>Type</th>
-          <th>Version</th>
-          <th>Pressure</th>
-          <th>Flow</th>
-          <th>Temperature</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="asset" *ngFor="let asset of assets;let i = index" (click) = tableClick(i)>
-          <span class="dot" [ngStyle] = "{'background-color':asset.riskColor}"></span>
-           <td>{{asset.id}}</td>
-           <td>{{asset.type}}</td>
-           <td>{{asset.version}}</td>
-           <td>{{asset.pressure}}</td>
-           <td>{{asset.flowRate}}</td>
-          <td>{{asset.temperature}}</td>
-      </tbody>
-    </table>
-
-   <div id ='pumpDetails'>
-
-
-    </div>
-
- </div>
-
-
 </div>
 
 
@@ -73,6 +70,6 @@
    <div id ='PLACEHOLDER' style = 'width : 50px; height : 50px; background-color: lightblue'> Chart Summary</div>
  </div>
 
- 
+
 
 </div>
