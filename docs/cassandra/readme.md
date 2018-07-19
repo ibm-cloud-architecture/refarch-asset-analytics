@@ -12,38 +12,25 @@ Here are some key concepts of Cassandra to keep in mind for this implementation:
 
 ## Cassandra deployment
 
-### Deploying on "Docker Edge for desktop" kubernetes for development
-As pre-requisite you need Docker Edge and enable kubernetes (see this [note](https://docs.docker.com/docker-for-mac/kubernetes/)). Then you can use our script `deployCassandra.sh` under the `scripts` folder or run the following commands one by one:
+### Deploying on "Docker Edge for desktop" kubernetes
+For development work we use the **Docker Edge** version of Docker and enable Kubernetes (see this [note from docker web site](https://docs.docker.com/docker-for-mac/kubernetes/)).
 
-* create cassandra headless service, so application accesses it via KubeDNS. If you do wish to connect an application to cassandra, use the KubeDNS value of `cassandra.default.svc.cluster.local`, the alternate is to use Ingress rule and set a hostname as cassandra.green.case. The `casssandara-ingress.yml` file defines such Ingress.
-
-```
-$ kubectl apply -f deployment/cassandra/cassandra-service.yaml --namespace greencompute
-```
-* Create one persistence volume to keep data for cassandra
-```
-$ kubectl apply -f deployment/cassandra/cassandra-volumes.yaml
-```
-* Create the statefulSet, which defines a cassandra ring of 3 nodes. See explanations in next section: [using our configurations](#using-our-configurations).
- ```
- $ kubectl apply -f deployment/cassandra/cassandra-statefulset.yaml
-
- # Verify the installation
- $ kubectl exec -ti  cassandra-0 -- nodetool status
- ```
+Then you can use our script `deployCassandra.sh` under the `scripts` folder BUT be sure to adapt the yaml settings in the folder `deployments/cassandra` to limit the replicas for what you need. The steps are the same as for ICP deployment so see next section.
 
 ### Deployment on ICP
-Deploying stateful distributed applications like Cassandra is not easy. You can leverage the kubernetes cluster and deploy c7a to the worker nodes.
+Deploying stateful distributed applications like Cassandra is not easy. You will leverage the kubernetes cluster to support high availability and deploy c7a to the worker nodes.
 
 ![](cassandra-k8s.png)
 
+We also recommend to be familiar with [this kubernetes tutorial on how to deploy Cassandra with Stateful Sets](https://kubernetes.io/docs/tutorials/stateful-application/cassandra/).
+
+#### Performance considerations
 The resource requirements for higher performance c7a node are:
 * a minimum of 32GB RAM (JVM + Linux memory buffers to cache SSTable) + `memory.available` defined in Kubernetes Eviction policy + Resources needed by k8s components that run on every worker node (e.g. proxy)
 * a minimum of 8 processor cores per Cassandra Node with 2 CPUs per core (16 vCPU in a VM)
 * 4-8 GB JVM heap, recommend trying to keep heaps limited to 4 GB to minimize garbage collection pauses caused by large heaps.
-* cassandra needs local storage to get best performance. Avoid to use distributed storage, and prefer hostPath or localstorage. With distributed storage like a Glusterfs cluster you may have 9 replicas (3x Cassandra replica factor which is usually 3)
+* Cassandra needs local storage to get best performance. Avoid to use distributed storage, and prefer hostPath or localstorage. With distributed storage like a Glusterfs cluster you may have 9 replicas (3x Cassandra replica factor which is usually 3)
 
-#### Performance considerations
 Cassandra  nodes tend  to be IO bound  rather than CPU bound:
 * Upper limit of data per node <= 1.5 TB for spinning disk and <= 4 TB for SSD
 * Increase the number of nodes to keep the data per node at or below the recommended capacity
@@ -52,57 +39,67 @@ Cassandra  nodes tend  to be IO bound  rather than CPU bound:
 The use of Vnodes is generally  considered  to be a good practice as they eliminate the need to perform manual token assignment, distribute workload across all nodes in a cluster when nodes are added or removed. It helps rebuilding dead nodes faster.
 Vnode reduces the size of SSTables which can improve read performance. Cassandra best practices set the number of tokens per Cassandra node to 256.
 
-Avoid getting multiple node instances on the same physical host, so use `podAntiAffinity`.
-
-#### Using our configurations
-You can reuse the yaml config files under `deployment/cassandra` folder to configure a Service to expose Cassandra externally, create static persistence volumes, and statefulSet to deploy Cassandra image.
-
-We also recommend to be familiar with [this kubernetes tutorial on how to deploy Cassandra with Stateful Sets](https://kubernetes.io/docs/tutorials/stateful-application/cassandra/).
-
-* Connect to ICP.
-We are using one namespace called 'greencompute'. You can use our script `deployCassandra.sh` under the `../scripts` folder to automate the deployment:
-
-* create Cassandra headless service
- ```
-$ kubectl apply -f deployment/cassandra/cassandra-service.yaml -n greencompute
-$ kubectl get svc cassandra -n greencompute
-
- NAME        TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
-cassandra   ClusterIP    None          <none>        9042/TCP   12h
- ```
-
-* Create static persistence volumes to keep data for cassandra: *you need the same number of PV as there are cassandra nodes (here 3 nodes)*
-
+Avoid getting multiple node instances on the same physical host, so use `podAntiAffinity` in the StatefulSet spec.
 ```
-$ kubectl apply -f deployment/cassandra/cassandra-volumes.yaml -n greencompute
-$ kubectl get pv -n greencompute | grep cassandra
+spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            topologyKey: "kubernetes.io/hostname"
+```
+
+#### Using our yaml configurations
+You can reuse the yaml config files under `deployment/cassandra` folder to configure a Service to expose Cassandra externally, create static persistence volumes, and use the StatefulSet to deploy Cassandra image.
+
+The steps to deploy to ICP are:
+1. Connect to ICP. You may want to get the admin security token using the Admin console and the script: `scripts/connectToCluster.sh`.  
+
+ *We are using one namespace called 'greencompute'.*
+
+ You can also use our script `deployCassandra.sh` under the `../scripts` folder to automate this deployment.
+
+1. create Cassandra headless service, so application accesses it via KubeDNS. If you do wish to connect an application to cassandra, use the KubeDNS value of `cassandra-svc.greencompute.svc.cluster.local`, or `cassandra-svc` or `cassandra-0`. The alternate solution is to use *Ingress* rule and set a hostname as cassandra.green.case. The `casssandara-ingress.yml` file defines such Ingress.
+
+ ```
+ $ kubectl apply -f deployment/cassandra/cassandra-service.yaml --namespace greencompute
+ $ kubectl get svc cassandra-svc -n greencompute
+
+  NAME        TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
+ cassandra-svc   ClusterIP    None          <none>        9042/TCP   12h
+ ```
+
+1. Create Create static persistence volumes to keep data for cassandra: *you need the same number of PV as there are cassandra nodes (here 3 nodes)*
+ ```
+ $ kubectl apply -f deployment/cassandra/cassandra-volumes.yaml
+
+ $ kubectl get pv -n greencompute | grep cassandra
 cassandra-data-1  1Gi  RWO  Recycle   Bound       greencompute/cassandra-data-cassandra-0 12h
 cassandra-data-2  1Gi  RWO  Recycle   Available                                           12h
-cassandra-data-3  1Gi  RWO  Recycle   Available    
-```
-* Create the **statefulset**:
-The [cassandra image](https://hub.docker.com/_/cassandra/) used is coming from dockerhub public repository.
+cassandra-data-3  1Gi  RWO  Recycle   Available   
 
-if you are using your own namespace name or you change the service name, modify the service name and namespace used in the yaml :
-```yaml
+ ```
+1. Create the StatefulSet, which defines a cassandra ring of 3 nodes. The [cassandra image](https://hub.docker.com/_/cassandra/) used is coming from dockerhub public repository.
+
+ if you are using your own namespace name or you change the service name, modify the service name and namespace used in the yaml :
+ ```yaml
    env:
      - name: CASSANDRA_SEEDS
        value: cassandra-0.cassandra-svc.greencompute.svc.cluster.local
-```
+ ```
 
-Cassandra seed is used for two purposes:
-* Node discovery: when a new cassandra node is added (which means when deployed on k8s, a new pod instance added by increasing the replica), it needs to find the cluster, so here it is set the svc
-* assist on gossip convergence: by having all of the nodes in the cluster gossip regularly with the same set of seeds. It ensures changes are propagated regularly.
+ Cassandra seed is used for two purposes:
+ * Node discovery: when a new cassandra node is added (which means when deployed on k8s, a new pod instance added by increasing the replica), it needs to find the cluster, so here it is set the svc
+ * assist on gossip convergence: by having all of the nodes in the cluster gossip regularly with the same set of seeds. It ensures changes are propagated regularly.
 
-Here it needs to reference the headless service we defined for Cassandra deployment.
+ Here it needs to reference the headless service we defined for Cassandra deployment.
 
-```
-$ kubectl apply -f deployment/cassandra/cassandra-statefulset.yaml  -n greencompute
-$ kubectl get statefulset -n greencompute
+ ```
+ $ kubectl apply -f deployment/cassandra/cassandra-statefulset.yaml  -n greencompute
+ $ kubectl get statefulset -n greencompute
 
-NAME                                        DESIRED   CURRENT   AGE
-cassandra                                   1         1         12h
-```
+ NAME                                        DESIRED   CURRENT   AGE
+ cassandra                                   1         1         12h
+ ```
 * Connect to the pod to assess the configuration is as expected.  
  ```
  $ kubectl get pods -o wide -n greencompute
@@ -120,7 +117,7 @@ UN  192.168.212.174  257.29 KiB  256          100.0%            ea8acc49-1336-49
  ```
  The  string UN, is for Up and Normal state.
 
-### Removing cassandra cluster
+#### Removing cassandra cluster
 We are providing a script for that `./scripts/deleteCassandra.sh` which remove the stateful, the pv, pvc and service
 ```
 grace=$(kubectl get po cassandra-0 -o=jsonpath='{.spec.terminationGracePeriodSeconds}') \
@@ -160,16 +157,15 @@ In the pom.xml we added the following dependencies to get access to the core dri
   <version>3.1.4</version>
 </dependency>
 ```
-The code is CassandraRepo.java and basically connect to the Cassandra cluster when the DAO class is created...
+The DAO code is `CassandraRepo.java` and it basically connects to the Cassandra cluster when the DAO class is created...
 ```
 Builder b = Cluster.builder().addContactPoints(endpoints);
 cluster = b.build();
 session = cluster.connect();
 ```
-it is possible also to create keyspace and tables by API if they do not exist by building CQL query string and use the session.execute(aquery) method. See [this section below](#use-cassandra-java-api-to-create-objects)
+The trick is in the endpoints name. We externalize this setting in a configuration properties and use the cassandra-svc name when deploy in ICP.
 
-then it offers a set operations to support Asset CRUD operations.
-
+It is possible also to create keyspace and tables by API if they do not exist by building CQL query string and use the session.execute(aquery) method. See [this section below](#use-cassandra-java-api-to-create-objects)
 
 ## Define Assets Table Structure with CQL
 Using the csql tool we can create space and table. To use `cqlsh` connect to cassandra pod:

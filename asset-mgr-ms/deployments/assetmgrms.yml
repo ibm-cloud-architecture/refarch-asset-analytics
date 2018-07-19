@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - image: ibmcase/asset-mgr-ms
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: asset-mgr-ms
         ports:
         - containerPort: 8080
@@ -36,10 +36,6 @@ data:
     cassandra.asset.table.name=assets
     cassandra.strategy=SimpleStrategy
     cassandra.replicas=1
-    kafka.bootstrap.server=docker.for.mac.host.internal:30092
-    kafka.asset.topic.name=asset-topic
-    kafka.groupid=assetinjectors
-    kafka.poll.duration=2000
 ---
 apiVersion: v1
 kind: Service

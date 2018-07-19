@@ -1,7 +1,7 @@
 server:
   port: 8080
 cassandra:
- contactpoints: localhost
+ contactpoints: cassandra-0
  port: 9042
  keyspace: assetmonitoring
- basepackages: 
+ basepackages:

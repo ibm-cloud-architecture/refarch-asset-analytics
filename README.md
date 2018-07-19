@@ -54,6 +54,17 @@ The following diagram illustrates the IBM Cloud Private, kubernetes deployment w
 ![](docs/icp-deployment.png)
 
 ## Deployment
+We want to take this project to dig into the detail of workload deployment and address resiliency for each of those components. The full picture can be presented in the diagram below:
+
+![](docs/asset-sol-k8s-depl.png)
+
+* For high availability we need three masters, three proxies, 3 managers and at least 6 workers.
+* Cassandra is deployed with 3 replicas and uses HostPath persistence volume so leverage host filesystems.
+* Kafka is deployed with 3 replicas with anti affinity to avoid to have two pods on same node and on the same node as Zookeeper
+* Zookeeper is deployed with 3 replicas with anti affinity to avoid to have two pods on same node and on the same node as Kafka.   
+This constraint explains the 6 workers.
+* The component of the solution are deployed with at least 3 replicas: Asset manager microservice, dashboard BFF, and asset consumer/cassandra-injector.
+
 ### Pre-requisites
 You need to have access to a kubernetes cluster like IBM Cloud Private. We are providing a script under ./scripts/validateConfig.sh to help you validate the prerequisites.
 
@@ -67,15 +78,17 @@ kubectl config set-credentials admin --token=eyJ0...Ptg
 kubectl config set-context green-cluster-context --user=admin --namespace=greencompute
 kubectl config use-context green-cluster-context
 ```
+We have added a script to support those command so, once you run the script, just getting the security token for the admin user should be enough. See script named `scripts/connectToCluster.sh`
 * Clone this project to get the different kubernetes deployment files and source code of the different component.
 
 ### Deploying Cassandra
 There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the installation instructions are [here](./docs/cassandra/readme.md). We also describe the potential architecture decisions around deploying Cassandra for high availability.
 
+You can use our yaml files to deploy to ICP. (See the files under `deployments/cassandra` and instructions in [this section](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/blob/master/docs/cassandra/readme.md#using-our-configurations))
 When the pods are up and running use the [following commands](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/blob/master/docs/cassandra/readme.md#define-assets-table-structure-with-cql) to create the keyspace and tables.
 
 ### Deploying Kafka
-We are presenting different deployment models, all based on container: with docker, docker edge with local kubernetes for your development environment, IBM Cloud Private for dev or staging. See details [in this note](
+We are presenting different deployment models, all based on container: with docker, docker Edge with local kubernetes for your development environment, IBM Cloud Private for dev or staging. See details [in this note](
   https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka#run-kafka-in-docker)
 For ICP, the new IBM Event Stream product is used as it is built on top of Kafka and brings some nice capabilities.
 

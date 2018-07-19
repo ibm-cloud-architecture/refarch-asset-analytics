@@ -7,7 +7,7 @@ metadata:
     app: cassandra
 spec:
   serviceName: cassandra-svc
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: cassandra
@@ -46,7 +46,7 @@ spec:
                 - nodetool drain
           env:
             - name: CASSANDRA_SEEDS
-              value: cassandra-0.cassandra-svc.greencompute.svc.cluster.local
+              value: cassandra-svc
             - name: MAX_HEAP_SIZE
               value: 512M
             - name: HEAP_NEWSIZE
@@ -70,6 +70,10 @@ spec:
           volumeMounts:
             - name: cassandra-data
               mountPath: /var/lib/cassandra/data
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              topologyKey: "kubernetes.io/hostname"
   volumeClaimTemplates:
     - metadata:
         name: cassandra-data
