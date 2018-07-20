@@ -78,8 +78,8 @@ kubectl config set-credentials admin --token=eyJ0...Ptg
 kubectl config set-context green-cluster-context --user=admin --namespace=greencompute
 kubectl config use-context green-cluster-context
 ```
-We have added a script to support those command so, once you run the script, just getting the security token for the admin user should be enough. See script named `scripts/connectToCluster.sh`
-* Clone this project to get the different kubernetes deployment files and source code of the different component.
+We have added a script to support those commands so, once you run the script, just getting the security token for the admin user should be enough. See script named `scripts/connectToCluster.sh`
+* Clone this project to get all the kubernetes deployment files and source code of the different components.
 
 ### Deploying Cassandra
 There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the installation instructions are [here](./docs/cassandra/readme.md). We also describe the potential architecture decisions around deploying Cassandra for high availability.
@@ -99,3 +99,6 @@ Each component of the solution is compiled and packaged as container. Here is th
 * [Dashboard backend for frontend](asset-dashboard-bff/README.md#deploy)
 
 Finally the [pump simulator](asset-event-producer/readme.md) is a standalone java application used to produce different type of event. It does not need to be deployed to kubernetes.
+
+### Troubleshooting
+As we are deploying different solutions into kubernetes we group [Troubleshooting notes here], and we are adding a [kubernetes FAQ here] and [summary here](https://jbcodeforce.github.io/#/studies)

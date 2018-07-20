@@ -1,0 +1,23 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: asset-mgr-ms
+  name: asset-mgr-ms
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: asset-mgr-ms
+    spec:
+      containers:
+      - image: ibmcase/asset-mgr-ms
+        imagePullPolicy: Always
+        name: asset-mgr-ms
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8080
+          protocol: TCP

@@ -1,7 +1,7 @@
 server:
   port: 8080
 cassandra:
- contactpoints: cassandra-0
+ contactpoints: cassandra-svc
  port: 9042
  keyspace: assetmonitoring
  basepackages:
