@@ -9,9 +9,15 @@ This is a SpringBoot app to support CRUD operations and query to manage manufact
 ## Preparation
 You need to have Cassandra deployed, we present multiple choices in [this note](../docs/cassandra.md) and the scripts to prepare the database (keyspace, tables...)
 
+## Build
+
+## Deploy
+
+To deploy on ICP or a kubernetes cluster use the deployment yaml file under the `deployments` folder.
+
 ## Code explanations
 
-### Cassandra persistence using Spring Cassandra Data 
+### Cassandra persistence using Spring Cassandra Data
 We are using Reactive interface for the BFF which is also supported by [Spring data for cassandra](https://docs.spring.io/spring-data/cassandra/docs/current/reference/html/)
 
 The configuration class leverages annotation to inject parameters coming from cassandra.properties file
@@ -22,7 +28,7 @@ There are three mandatory settings we have to configure to setup the connection 
 * [Introduction to Spring Data Cassandra](http://www.baeldung.com/spring-data-cassandra-tutorial)
 
 ## Build
-To build 
+To build
 We use [Google Container Tool skaffold](https://github.com/GoogleContainerTools/skaffold) tool and docker build pipeline. The image we use is the bare minimum and includes:
 * OpenJDK JRE
 * Alpine linux layer

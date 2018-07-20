@@ -32,6 +32,9 @@ We automate this process with the script `build.sh` which can be included in jen
 
 Two other tools are also part of this project. A web socket client to test the web socket logic and to subscribe to real time new asset events.
 
+## Deploy
+To deploy on ICP or a kubernetes cluster use the deployment yaml file under the `deployments` folder.
+
 ## Code Approach
 ### Springboot serving Angular
 When the angular application is built, there are a set of javascript files, css, images,... that are copied with the index.html to the  `src/main/resources/static` folder. SpringBoot will serve the `index.html` file for the server URL without context. This is done by not using the @EnableWebMvc annotation and use the configuration class to define where to get the resources.
