@@ -1,4 +1,4 @@
-# Asset Manager Microservice
+# Asset Manager Microservice on top of Cassandra 
 This is a SpringBoot app to support CRUD operations and query to manage manufacturing asset. The persistence repository is Cassandra.
 
 ### Features:
