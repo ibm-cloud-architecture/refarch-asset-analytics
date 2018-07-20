@@ -52,6 +52,7 @@ export class AssetsService {
              temperature:  90,
              latitude : '30.266926',
              longitude : '-97.750519',
+             riskRating : 'High',
             timestamp: '2'},
             {id: "100",
               os: 'raspbian',
@@ -66,6 +67,7 @@ export class AssetsService {
                temperature:  60,
                latitude : '31.266926',
               longitude : '-98.750519',
+              riskRating : 'Low',
               timestamp: '2'},
               {id: "104",
                 os: 'raspbian',
@@ -80,6 +82,7 @@ export class AssetsService {
                 temperature:  60,
                 latitude : '28.266926',
                 longitude : '-95.750519',
+                riskRating : 'Medium',
                 timestamp: '2'}
               ];
   }

@@ -68,14 +68,16 @@ export class LeafletMap implements OnInit {
             associatedIcon = greenIcon;
           }
 
-          this.addMarker(this.assets[i].latitude,this.assets[i].longitude,associatedIcon,myMap);
+          this.addMarker(this.assets[i].latitude,this.assets[i].longitude,associatedIcon,this.assets[i].id,myMap);
         }
       }
 
-  addMarker(lat,long,iconType,myMap){
+  addMarker(lat,long,iconType,assetID,myMap){
     console.log('Add Marker run');
-    L.marker([lat,long],{icon: iconType}).addTo(myMap);
+    L.marker([lat,long],{icon: iconType,title:'Asset ' + assetID}).addTo(myMap);
   }
+
+  
 
 
 

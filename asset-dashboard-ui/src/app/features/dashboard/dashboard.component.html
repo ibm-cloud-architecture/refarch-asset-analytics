@@ -4,18 +4,18 @@
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css">
 </head>
 
-<div id ='top' class = 'wrapper' style= 'background-color:palegoldenrod'>
+<div id ='top' style= 'background-color:palegoldenrod'>
   <div class="row">
       <div class="col-md-6">
-        <div id = 'map' class ='split'>
-            <div id = 'mapSummary' class = 'split'>
-              <leafletMap></leafletMap>
+        <div id = 'map'>
+            <div id = 'mapSummary'>
+              <leafletMap ></leafletMap>
               </div>
         </div>
       </div>
       <div class="col-md-6">
         <div id = 'pumpSummary' class = 'split'>
-          <div id = 'riskCategories' style = 'display:inline-block; width:500px' class = 'wrapper'>
+          <div id = 'riskCategories' style = 'display:inline-block; width:500px'>
             <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
             <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
             <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
