@@ -9,10 +9,6 @@ spec:
     - host: assetmanagement.greencompute.ibmcase.com
       http:
         paths:
-          - path: /assetdashboard
-            backend:
-              serviceName: asset-dashboard-bff-svc
-              servicePort: 8080
           - path: /assetmgrms
             backend:
               serviceName: asset-mgr-ms-svc

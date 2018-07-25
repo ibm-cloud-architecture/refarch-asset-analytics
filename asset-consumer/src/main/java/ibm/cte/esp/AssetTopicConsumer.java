@@ -44,6 +44,8 @@ public class AssetTopicConsumer {
         // offsets are committed automatically with a frequency controlled by the config auto.commit.interval.ms
         // here we want to use manual commit 
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"false");
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        // properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         properties.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG,"1000");
         properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
