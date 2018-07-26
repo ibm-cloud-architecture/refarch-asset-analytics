@@ -20,9 +20,10 @@ public class ApplicationConfig {
 	
 	
 	private Properties p;
-	InputStream input = null;
-	
+		
 	public ApplicationConfig() {
+		InputStream input = null;
+
 		p = new Properties();
 		try {
 			input = new FileInputStream("conf/config.properties");
