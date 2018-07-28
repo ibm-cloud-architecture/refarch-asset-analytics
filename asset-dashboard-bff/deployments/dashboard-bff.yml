@@ -22,19 +22,3 @@ spec:
         - containerPort: 8080
           protocol: TCP
  
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: dashboard-bff-svc
-  labels:
-    chart: dashboard-bff
-spec:
-  type: ClusterIP
-  ports:
-  - port: 8080
-    targetPort: 8080
-    protocol: TCP
-    name: dashboard-bff-svc
-  selector:
-    app: dashboard-bff

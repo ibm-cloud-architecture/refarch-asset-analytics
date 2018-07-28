@@ -1,10 +1,9 @@
----
 apiVersion: v1
 kind: Service
 metadata:
-  name: asset-mgr-ms-svc
+  name: dashboard-bff-svc
   labels:
-    chart: asset-mgr-ms
+    chart: dashboard-bff
 spec:
   type: ClusterIP
   ports:
@@ -13,4 +12,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: asset-mgr-ms
+    app: dashboard-bff

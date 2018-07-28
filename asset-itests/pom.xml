@@ -5,22 +5,34 @@
   <version>0.0.1</version>
   <packaging>jar</packaging>
   <name>asset-itests</name>
-  <description>BFF with static angular page</description>
-  <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.3.RELEASE</version>
-    </parent>
+  <description>Integration tests code</description>
+  
   <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+ <dependency>
+	  <groupId>com.datastax.cassandra</groupId>
+	  <artifactId>cassandra-driver-core</artifactId>
+	  <version>3.5.1</version>
+	</dependency>
+	<dependency>
+	  <groupId>com.datastax.cassandra</groupId>
+	  <artifactId>cassandra-driver-mapping</artifactId>
+	  <version>3.5.1</version>
+	</dependency>
+	<dependency>
+	  <groupId>com.datastax.cassandra</groupId>
+	  <artifactId>cassandra-driver-extras</artifactId>
+	  <version>3.5.1</version>
+	</dependency>
+	<dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+          <version>1.7.7</version>
+    </dependency>
+     <dependency>
+  		<groupId>ch.qos.logback</groupId>
+  		<artifactId>logback-classic</artifactId>
+  	    <version>1.2.3</version>
+    </dependency>
   </dependencies>
    <properties>
         <java.version>1.8</java.version>
@@ -28,10 +40,7 @@
 
   <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+           
         </plugins>
     </build>
 </project>
