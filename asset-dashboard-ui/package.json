@@ -20,10 +20,12 @@
     "@angular/platform-browser": "^6.0.0",
     "@angular/platform-browser-dynamic": "^6.0.0",
     "@angular/router": "^6.0.0",
+    "@stomp/stompjs": "^4.0.7",
     "core-js": "^2.5.4",
     "queueing-subject": "^0.3.0",
     "rxjs": "^6.0.0",
     "rxjs-websockets": "^6.0.1",
+    "sockjs-client": "^1.1.5",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
