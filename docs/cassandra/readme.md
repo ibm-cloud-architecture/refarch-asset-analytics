@@ -240,6 +240,9 @@ cqlsh> drop table if exists assets;
 
  * insert data: there is no update so if you want a strict insert you need to add "IF NOT EXISTS" condition in the query.
 
+### Issues
+
+1. When having the cassandra replica set to more than two, the cassandra operations are not happenning parallely on both the pods at a time. Some operations are happenning on one node and some others on the other node. Due to this, inconsistent data is retrieved since both the tables doesnot have the same data.
 
 ## Future Readings
 * [10 steps to set up a multi-data center Cassandra cluster on a Kubernetes platform](https://www.ibm.com/developerworks/library/ba-multi-data-center-cassandra-cluster-kubernetes-platform/index.html)
