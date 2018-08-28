@@ -15,7 +15,7 @@ import { Asset } from '../assets/asset'
 export class DashboardComponent implements OnInit {
 
   assets : Asset[];
- 
+
 
   riskAnalysis : any = {
     highRiskCount : 0,
@@ -25,12 +25,27 @@ export class DashboardComponent implements OnInit {
 
   selectedAssetAnalysis : any;
 
- 
+
 
   constructor(private service: AssetsService) {
 
     //Init
     this.assets = service.getAssets();
+    var assets = this.assets;
+    //Get Uniques
+    var flags = [], output = [], l = assets.length, i;
+    for( i=0; i<l; i++) {
+        if( flags[assets[i].id]) continue;
+        flags[assets[i].id] = true;
+        output.push(assets[i]);
+    }
+    console.log(output);
+    this.assets = output;
+
+
+
+
+
     this.riskAnalysis = {};
     this.riskAnalysis.lowRiskCount = 0;
     this.riskAnalysis.mediumRiskCount = 0;
@@ -52,7 +67,7 @@ export class DashboardComponent implements OnInit {
           this.riskAnalysis.highRiskCount++;
          this.assets[i].riskRating = 'High';
          this.assets[i].riskColor = 'red'
-        
+
        }
        else if((this.assets[i].pressure >= 50 && this.assets[i].pressure <60 )|| (this.assets[i].pressure <100 && this.assets[i].pressure >=90)){
          this.riskAnalysis.mediumRiskCount++;
@@ -64,7 +79,7 @@ export class DashboardComponent implements OnInit {
        this.assets[i].riskRating = 'Low';
        this.assets[i].riskColor = 'green';
       }
-      
+
 
    }
 
@@ -72,4 +87,3 @@ export class DashboardComponent implements OnInit {
 
 
 }
-

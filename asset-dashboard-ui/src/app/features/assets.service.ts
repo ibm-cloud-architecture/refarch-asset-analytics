@@ -49,7 +49,24 @@ export class AssetsService {
   }
 
   getAssets(): Asset[] {
-    return [{id: "12",
+    return [
+      {id: "12",
+              os: 'raspbian',
+              type: 'pump',
+              version: '10',
+              ipAddress: '',
+              antivirus: '',
+              rotation:  0,
+              current:  210,
+              pressure:  100,
+              flowRate:  40,
+               temperature:  90,
+               latitude : '30.266926',
+               longitude : '-97.750519',
+               riskRating : 'High',
+              timestamp: '1'},
+
+              {id: "12",
             os: 'raspbian',
             type: 'pump',
             version: '10',
@@ -64,6 +81,7 @@ export class AssetsService {
              longitude : '-97.750519',
              riskRating : 'High',
             timestamp: '2'},
+
             {id: "100",
               os: 'raspbian',
               type: 'pump',
