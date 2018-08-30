@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer, SafeStyle }  from '@angular/platform-browser';
 import { AssetsService } from '../../features/assets.service';
-import { Asset } from '../../features/assets/asset'
+import { Asset } from '../../features/assets/asset';
 declare function require(path: string);
 
 
@@ -33,7 +33,7 @@ export class ChartSelector implements OnInit {
 }
 
 
-retrieveAsset(id){
+/*retrieveAsset(id){
   var returnedList = [];
   for(var i=0;i<this.assets.length;i++){
     if(id == this.assets[i].id){
@@ -46,3 +46,4 @@ retrieveAsset(id){
 
 
 }
+*/
