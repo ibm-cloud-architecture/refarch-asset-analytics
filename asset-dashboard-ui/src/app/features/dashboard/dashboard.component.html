@@ -33,14 +33,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="asset" *ngFor="let asset of assets;let i = index" (click) = tableClick(i)>
+              <tr class="asset" *ngFor="let asset of uniqueAssets;let i = index" (click) = tableClick(i) id = "listAttributes">
                 <span class="dot" [ngStyle] = "{'background-color':asset.riskColor}"></span>
                  <td>{{asset.id}}</td>
                  <td>{{asset.type}}</td>
                  <td>{{asset.version}}</td>
                  <td>{{asset.pressure}}</td>
                  <td>{{asset.flowRate}}</td>
-                <td>{{asset.temperature}}</td>
+                <td>{{asset.temperature}}</td> 
+                <!-- <td> {{ listAtrributes(i) }}</td> -->
             </tbody>
           </table>
         </div>

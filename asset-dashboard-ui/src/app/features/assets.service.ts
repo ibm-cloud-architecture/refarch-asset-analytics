@@ -33,7 +33,8 @@ export class AssetsService {
         this.stompClient.subscribe(
           '/topic/assets',
           (message: string) => {
-            this.assetEvents.next(message.body);
+            //compile issues on below line
+            //this.assetEvents.next(message.body);
           }
         );
       }
@@ -67,6 +68,22 @@ export class AssetsService {
               timestamp: '1'},
 
               {id: "12",
+              os: 'raspbian',
+              type: 'pump',
+              version: '10',
+              ipAddress: '',
+              antivirus: '',
+              rotation:  0,
+              current:  210,
+              pressure:  100,
+              flowRate:  40,
+               temperature:  100,
+               latitude : '30.266926',
+               longitude : '-97.750519',
+               riskRating : 'High',
+              timestamp: '3'},
+
+              {id: "12",
             os: 'raspbian',
             type: 'pump',
             version: '10',
@@ -76,7 +93,7 @@ export class AssetsService {
  	          current:  210,
  	          pressure:  100,
  	          flowRate:  40,
-             temperature:  90,
+             temperature:  95,
              latitude : '30.266926',
              longitude : '-97.750519',
              riskRating : 'High',
@@ -97,6 +114,23 @@ export class AssetsService {
               longitude : '-98.750519',
               riskRating : 'Low',
               timestamp: '2'},
+
+              {id: "100",
+              os: 'raspbian',
+              type: 'pump',
+              version: '10.1',
+              ipAddress: '',
+              antivirus: '',
+              rotation:  10,
+              current:  220,
+              pressure:  80,
+              flowRate:  80,
+               temperature:  70,
+               latitude : '31.266926',
+              longitude : '-98.750519',
+              riskRating : 'Low',
+              timestamp: '3'},
+
               {id: "104",
                 os: 'raspbian',
                 type: 'pump',
