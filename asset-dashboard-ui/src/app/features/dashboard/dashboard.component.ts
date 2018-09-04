@@ -15,7 +15,7 @@ import { Asset } from '../assets/asset'
 export class DashboardComponent implements OnInit {
 
   assets : Asset[];
-
+  uniqueAssets : Asset[];
 
   riskAnalysis : any = {
     highRiskCount : 0,
@@ -33,14 +33,33 @@ export class DashboardComponent implements OnInit {
     this.assets = service.getAssets();
     var assets = this.assets;
     //Get Uniques
-    var flags = [], output = [], l = assets.length, i;
-    for( i=0; i<l; i++) {
-        if( flags[assets[i].id]) continue;
-        flags[assets[i].id] = true;
-        output.push(assets[i]);
+    var flags = [], output = [], l = assets.length, i, mostRecentValue;
+    // set current timestamp to minimum
+    mostRecentValue = 0; 
+    // build map of pumps to timestamps
+    var mostRecents = new Map();
+    for (i = 0; i < l; i++ && assets[i]) {
+      if (mostRecents.get(assets[i].id) == null) { // ID does not yet exist
+        mostRecents.set(assets[i].id, i);
+      }
+      else { // ID exists, check timestamp against current
+        if (assets[mostRecents.get(assets[i].id)].timestamp < assets[i].timestamp) {
+          mostRecents.set(assets[i].id, i);
+        }
+      }
     }
+
+    // output hashmap of pumps with most recent timestamps
+    mostRecents.forEach(function(value, key) {
+      //console.log(key + ' = ' + value);
+      output.push(assets[value]);
+    });
+
+    console.log("UNIQUE ASSETS:");
     console.log(output);
-    this.assets = output;
+    console.log("ASSETS:");
+    console.log(assets);
+    this.uniqueAssets = output;
 
 
 
@@ -55,29 +74,41 @@ export class DashboardComponent implements OnInit {
 
  //Table Click
  tableClick(index){
-  this.selectedAssetAnalysis = this.assets[index];
+  this.selectedAssetAnalysis = this.uniqueAssets[index];
 }
 
-
+  listAttributes(index) {
+    // print attributes
+    var attributes = ['id','temperature',''];
+    var newAttr = document.createElement('td');
+    var parent = document.getElementById("listAttributes");
+    for (var x in this.uniqueAssets[index]){
+      
+      console.log(this.uniqueAssets[index][x]);
+      newAttr.innerHTML = this.uniqueAssets[index][x];
+      // append new entry
+      parent.appendChild(newAttr);
+    }
+  }
 
   ngOnInit() {
 
-    for(var i = 0; i<this.assets.length;i++){
-      if(this.assets[i].pressure >= 100 || this.assets[i].pressure <50){
+    for(var i = 0; i<this.uniqueAssets.length;i++){
+      if(this.uniqueAssets[i].pressure >= 100 || this.uniqueAssets[i].pressure <50){
           this.riskAnalysis.highRiskCount++;
-         this.assets[i].riskRating = 'High';
-         this.assets[i].riskColor = 'red'
+         this.uniqueAssets[i].riskRating = 'High';
+         this.uniqueAssets[i].riskColor = 'red'
 
        }
-       else if((this.assets[i].pressure >= 50 && this.assets[i].pressure <60 )|| (this.assets[i].pressure <100 && this.assets[i].pressure >=90)){
+       else if((this.uniqueAssets[i].pressure >= 50 && this.uniqueAssets[i].pressure <60 )|| (this.uniqueAssets[i].pressure <100 && this.uniqueAssets[i].pressure >=90)){
          this.riskAnalysis.mediumRiskCount++;
-         this.assets[i].riskRating = 'Medium';
-         this.assets[i].riskColor = 'yellow';
+         this.uniqueAssets[i].riskRating = 'Medium';
+         this.uniqueAssets[i].riskColor = 'yellow';
        }
        else{
        this.riskAnalysis.lowRiskCount++;
-       this.assets[i].riskRating = 'Low';
-       this.assets[i].riskColor = 'green';
+       this.uniqueAssets[i].riskRating = 'Low';
+       this.uniqueAssets[i].riskColor = 'green';
       }
 
 
@@ -87,3 +118,4 @@ export class DashboardComponent implements OnInit {
 
 
 }
+
