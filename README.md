@@ -5,10 +5,11 @@ The problem space is related to continuous operation and service on manufacturin
 
 The use case is also adaptable and the architecture, solution components can be used for a security treat analysis on a park of devices or assets connected to a company intranet: real time events come from device that need to be aggregated and correlated and analytics run can be performed on historical data to assess security risk. Alert can be published to dashboard user interface.  
 
-We are presenting best practices around data management, real team streaming, cassandra high availabiliy    
+We are presenting best practices around data management, real team streaming, cassandra high availability    
 
-## Table of content
-* [Use case](#use-case)
+<details><summary>Table of contents</summary>
+<ul>
+<li><a href="#use-case">Use case</a></li>
 * [System Context](#system-context) to present the solution components
 * [Deployment to kubernetes cluster like IBM Cloud Private](#deployment)
 * Sub projects
@@ -23,6 +24,8 @@ We are presenting best practices around data management, real team streaming, ca
   * [Kafka related](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka)
   * [Cassandra](docs/cassandra/readme.md)
   * [Microservice mesh](https://github.com/ibm-cloud-architecture/refarch-integration/blob/master/docs/service-mesh.md)
+</ul>
+</details>
 
 ## Use Case
 ### The challenge
