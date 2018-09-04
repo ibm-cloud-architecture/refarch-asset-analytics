@@ -33,7 +33,8 @@ export class AssetsService {
         this.stompClient.subscribe(
           '/topic/assets',
           (message: string) => {
-            this.assetEvents.next(message.body);
+            // commenting out line to prevent compile error
+            // this.assetEvents.next(message.body);
           }
         );
       }
