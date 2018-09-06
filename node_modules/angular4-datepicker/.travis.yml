@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+- "6"
+before_install:
+- "export DISPLAY=:99.0"
+- "sh -e /etc/init.d/xvfb start"
+- sleep 3
+install:
+- npm install
+script:
+- gulp all
+- npm test
+after_success:
+- ./node_modules/.bin/codecov  -f test-output/coverage/json/coverage-final.json
+sudo: required
