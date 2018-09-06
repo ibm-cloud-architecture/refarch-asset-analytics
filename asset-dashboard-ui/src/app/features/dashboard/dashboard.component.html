@@ -63,7 +63,8 @@
   </div>
 
   <div id = 'chartSelector' class = 'bottomsplit'>
-    <chartSelector> </chartSelector>
+    <canvas id="line-chart" width="800" height="600"></canvas>
+    <!-- <chartSelector> </chartSelector> -->
   </div>
 
  <div id = 'chartSummary' class = 'bottomsplit' [ngStyle] = "{'text-align':'center', 'background':'lightgrey','box-shadow': '3px 3px 3px 3px'}">
@@ -75,6 +76,8 @@
     <tr>To: </tr>
     <input type="date" class="pumpDate" id = "max"><br>
     <button class = "asset" (click)="filterData(selectedAssetAnalysis)">Plot</button>
+    <br>
+    <div id = "errorMessage" value = " "></div>
     </div> 
  </div>
 

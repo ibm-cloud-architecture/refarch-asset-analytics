@@ -54,27 +54,72 @@ filterData(selectedAssetAnalysis) {
     console.log("selected id: "+selectedAssetAnalysis.id);
     var minDate = new Date(document.getElementById('min').value).getTime();
     var maxDate = new Date(document.getElementById('max').value).getTime();
+    // NaN check
+    if (isNaN(minDate)) {minDate = 0;}
+    if (isNaN(maxDate)) {maxDate = 9999999999999}
     //console.log("date format: "+document.getElementById('min').value)
-    //console.log("min date: "+minDate);
-    //console.log("max date: "+maxDate);
+    console.log("min date: "+minDate);
+    console.log("max date: "+maxDate);
     var pumpHistory = this.historyMap.get(selectedAssetAnalysis.id); 
+
+    // init data
+    var dataset = [];
+    var label = [];
+
     for (var i = 0; i < pumpHistory.length; i++) {
       var pumpTimeStamp = new Date(pumpHistory[i].timestamp).getTime();
       // filter values
       if (pumpTimeStamp >= minDate && pumpTimeStamp <= maxDate) {
         // plot here
-        console.log("temperature: " + pumpHistory[i].temperature + "\n")
+        // console.log("temperature: " + pumpHistory[i].temperature + "\n")
+        dataset.push(pumpHistory[i].temperature);
+        label.push(pumpHistory[i].timestamp);
+
       }
     }
+    if (label.length < 1) {
+        //console.log("no data points");
+        document.getElementById('errorMessage').value = "No data points in specified range!";
+    }
+    var data = [];
+    data.labels = label;
+    data.datasets = [];
+    data.datasets.push(
+          { 
+            data: dataset,
+            label: "Temperature",
+            borderColor: "#c45850",
+            fill: false
+          });
+    this.buildChart(data);
   }
 
-  buildChart (){
+  buildChart(data){
     console.log("build chart");
+    new Chart(document.getElementById("line-chart"), {
+      type: 'line',
+      data: data,
+      options: {
+        title: {
+          display: true,
+          text: 'Pump attributes over specified date range'
+        }
+      }
+    });
   }
 
   ngOnInit() {
-
-    this.buildChart();
+    var data = [];
+    data.labels = [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050];
+    data.datasets = [];
+    data.datasets.push( 
+          {
+            data: [6,3,2,2,7,26,82,172,312,433],
+            label: "FillerData",
+            borderColor: "#c45850",
+            fill: false
+          });
+    this.buildChart(data);
 
     for(var i = 0; i<this.uniqueAssets.length;i++){
       if(this.uniqueAssets[i].pressure >= 100 || this.uniqueAssets[i].pressure <50){
@@ -93,16 +138,12 @@ filterData(selectedAssetAnalysis) {
        this.uniqueAssets[i].riskRating = 'Low';
        this.uniqueAssets[i].riskColor = 'green';
       }
-
-      
-
-
-
-
    }
 
+  // figure out this error! Temporary bracket:
   }
-
+  //
+  }
   // display with latest timestamp
   function initWithUnique(assets) {
 
