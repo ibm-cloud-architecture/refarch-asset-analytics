@@ -3,6 +3,13 @@ import { Component, OnInit,Input } from '@angular/core';
 import { AssetsService } from '../assets.service';
 import { Asset } from '../assets/asset'
 
+/* 
+This declare fixes the Chart error below. Since we are using the CDN,
+You cannot import the Chart asset directly. So declare an anytype var
+Which will allow us to skip the error. 
+*/
+declare var Chart: any;
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -14,14 +21,15 @@ import { Asset } from '../assets/asset'
 
 export class DashboardComponent implements OnInit {
 
-  assets : Asset[];
-  uniqueAssets : Asset[];
+    assets : Asset[];
+    uniqueAssets : Asset[];
+    historyMap : Map<any, any>;
 
-  riskAnalysis : any = {
-    highRiskCount : 0,
-    mediumRiskCount : 0,
-    lowRiskCount : 0
-  }
+    riskAnalysis : any = {
+        highRiskCount : 0,
+        mediumRiskCount : 0,
+        lowRiskCount : 0
+    }
 
   selectedAssetAnalysis : any;
 
@@ -32,10 +40,10 @@ export class DashboardComponent implements OnInit {
     var assets = this.assets;
 
     // create unique assets
-    this.uniqueAssets = initWithUnique(assets);
+    this.uniqueAssets = this.initWithUnique(assets);
 
     // create map with pump history
-    this.historyMap = initHistoryMap(assets);
+    this.historyMap = this.initHistoryMap(assets);
 
     this.riskAnalysis = {};
     this.riskAnalysis.lowRiskCount = 0;
@@ -52,8 +60,8 @@ export class DashboardComponent implements OnInit {
 // chart summary will be triggered here 
 filterData(selectedAssetAnalysis) {
     console.log("selected id: "+selectedAssetAnalysis.id);
-    var minDate = new Date(document.getElementById('min').value).getTime();
-    var maxDate = new Date(document.getElementById('max').value).getTime();
+    var minDate = new Date((<HTMLInputElement>document.getElementById('min')).value).getTime();
+    var maxDate = new Date((<HTMLInputElement>document.getElementById('max')).value).getTime();
     // NaN check
     if (isNaN(minDate)) {minDate = 0;}
     if (isNaN(maxDate)) {maxDate = 9999999999999}
@@ -79,9 +87,9 @@ filterData(selectedAssetAnalysis) {
     }
     if (label.length < 1) {
         //console.log("no data points");
-        document.getElementById('errorMessage').value = "No data points in specified range!";
+        (<HTMLInputElement>document.getElementById('errorMessage')).value = "No data points in specified range!";
     }
-    var data = [];
+    var data: any = {};
     data.labels = label;
     data.datasets = [];
     data.datasets.push(
@@ -109,7 +117,7 @@ filterData(selectedAssetAnalysis) {
   }
 
   ngOnInit() {
-    var data = [];
+    var data: any = {};
     data.labels = [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050];
     data.datasets = [];
     data.datasets.push( 
@@ -145,7 +153,7 @@ filterData(selectedAssetAnalysis) {
   //
   }
   // display with latest timestamp
-  function initWithUnique(assets) {
+  initWithUnique(assets) {
 
     //Get Uniques
     var flags = [], output = [], l = assets.length, i, mostRecentValue;
@@ -174,7 +182,7 @@ filterData(selectedAssetAnalysis) {
   }
 
   // initialize map of form <pump id, list of different timestamp objects>
-  function initHistoryMap(assets) {
+  initHistoryMap(assets) {
 
     var historyMap = new Map();
 
