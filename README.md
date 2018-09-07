@@ -7,23 +7,27 @@ The use case is also adaptable and the architecture, solution components can be 
 
 We are presenting best practices around data management, real team streaming, cassandra high availability    
 
-<details><summary>Table of contents</summary>
+<details><summary><h2>Table of contents</h2></summary>
 <ul>
 <li><a href="#use-case">Use case</a></li>
-* [System Context](#system-context) to present the solution components
-* [Deployment to kubernetes cluster like IBM Cloud Private](#deployment)
-* Sub projects
-  * [Event consumers](asset-consumer/README.md)
-  * [Event producers simulator](asset-event-producer/README.md) to simulate pump events for demonstration purpose.
-  * [Dashboard BFF](asset-dashboard-bff/README.md) to present a mix of static and real time data.
-  * [Asset manager microservice](asset-mgr-ms/README.md) to export RESTful API to manage Asset CRUD operations
-  * [Angular 6 user interface to present dashboard](asset-dashboard-ui/README.md)
-* [Demonstration script](docs/demo.md)
-* [Analytics model](docs/analytics/README.md)
-* Future readings
-  * [Kafka related](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka)
-  * [Cassandra](docs/cassandra/readme.md)
-  * [Microservice mesh](https://github.com/ibm-cloud-architecture/refarch-integration/blob/master/docs/service-mesh.md)
+<li><a href="#system-context">System Context</a> to present the solution components</li>
+<li><a href="#deployment">Deployment to kubernetes cluster like IBM Cloud Private</a></li>
+<li>Related sub projects</li>
+<ul>
+<li><a href="asset-consumer/README.md">Event consumers</a></li>
+<li><a href="asset-event-producer/README.md">Event producers simulator</a> to simulate pump events for demonstration purpose.</li>
+<li><a href="asset-dashboard-ui/README.md">Angular 6 user interface to present dashboard</a> to present a mix of static and real time data.</li>
+<li><a href="asset-dashboard-bff/README.md">Dashboard BFF</a> to present a mix of static and real time data.</li>
+<li><a href="https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice">Asset management microservice</a></li>
+</ul>
+<li><a href="docs/demo.md">Demonstration script</a></li>
+<li><a href="docs/analytics/README.md">Analytics model</a></li>
+<li>Future readings</li>
+<ul>
+<li><a href="https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka">Kafka related</a></li>
+<li><a href="docs/cassandra/readme.md">Cassandra</a></li>
+<li><a href="https://github.com/ibm-cloud-architecture/refarch-integration/blob/master/docs/service-mesh.md">Microservice mesh</a></li>
+</ul>
 </ul>
 </details>
 
