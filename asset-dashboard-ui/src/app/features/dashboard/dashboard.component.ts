@@ -74,8 +74,8 @@ filterData(selectedAssetAnalysis) {
     var dataset = [];
     var label = [];
 
-    var selector = <HTMLInputElement>document.getElementById('attrSelector'));
-    var attributeSelect = selector.options[selector.selectedIndex].value;
+    var selector = <HTMLSelectElement>document.getElementById('attrSelector');
+    var attributeSelect = selector[selector.selectedIndex].value;
     console.log(attributeSelect);
 
     for (var i = 0; i < pumpHistory.length; i++) {
