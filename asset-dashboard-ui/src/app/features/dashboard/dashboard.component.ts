@@ -74,13 +74,21 @@ filterData(selectedAssetAnalysis) {
     var dataset = [];
     var label = [];
 
+    var selector = <HTMLInputElement>document.getElementById('attrSelector'));
+    var attributeSelect = selector.options[selector.selectedIndex].value;
+    console.log(attributeSelect);
+
     for (var i = 0; i < pumpHistory.length; i++) {
       var pumpTimeStamp = new Date(pumpHistory[i].timestamp).getTime();
       // filter values
       if (pumpTimeStamp >= minDate && pumpTimeStamp <= maxDate) {
         // plot here
-        // console.log("temperature: " + pumpHistory[i].temperature + "\n")
-        dataset.push(pumpHistory[i].temperature);
+        // add desired attribute
+        if (attributeSelect === 'temperature') {dataset.push(pumpHistory[i].temperature);}
+        else if (attributeSelect === 'pressure') {dataset.push(pumpHistory[i].pressure);}
+        else if (attributeSelect === 'flow') {dataset.push(pumpHistory[i].flowRate);}
+        else if (attributeSelect === 'current') {dataset.push(pumpHistory[i].current);}
+        else if (attributeSelect === 'rotation') {dataset.push(pumpHistory[i].rotation);}
         label.push(pumpHistory[i].timestamp);
 
       }
@@ -89,13 +97,19 @@ filterData(selectedAssetAnalysis) {
         //console.log("no data points");
         (<HTMLInputElement>document.getElementById('errorMessage')).value = "No data points in specified range!";
     }
+    // add unit of measurement
+    if (attributeSelect === 'temperature') {attributeSelect += ' (°F)';}
+    else if (attributeSelect === 'pressure') {attributeSelect += ' (Pa)';;}
+    else if (attributeSelect === 'flow') {attributeSelect += ' (m3/s)';}
+    else if (attributeSelect === 'current') {attributeSelect += ' (A)';}
+    else if (attributeSelect === 'rotation') {attributeSelect += ' (rad/s)';}
     var data: any = {};
     data.labels = label;
     data.datasets = [];
     data.datasets.push(
           { 
             data: dataset,
-            label: "Temperature",
+            label: attributeSelect,
             borderColor: "#c45850",
             fill: false
           });
