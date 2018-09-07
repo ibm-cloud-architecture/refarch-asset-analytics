@@ -59,7 +59,8 @@
 <div id = 'bottom' style ='background-color: lightgreen'>
 
   <div class = 'bottomsplit'>
-    <assetAnalysis id = {{selectedAssetAnalysis.id}} type = {{selectedAssetAnalysis.type}} version = {{selectedAssetAnalysis.version}} rotation = {{selectedAssetAnalysis.rotation}} current = {{selectedAssetAnalysis.current}} pressure = {{selectedAssetAnalysis.pressure}} flowRate = {{selectedAssetAnalysis.flowRate}} temperature = {{selectedAssetAnalysis.temperature}} riskColor = {{selectedAssetAnalysis.riskColor}} longitude = {{selectedAssetAnalysis.longitude}} latitude = {{selectedAssetAnalysis.latitude}} > </assetAnalysis>
+<!--    <assetAnalysis id = {{selectedAssetAnalysis.id}} type = {{selectedAssetAnalysis.type}} version = {{selectedAssetAnalysis.version}} rotation = {{selectedAssetAnalysis.rotation}} current = {{selectedAssetAnalysis.current}} pressure = {{selectedAssetAnalysis.pressure}} flowRate = {{selectedAssetAnalysis.flowRate}} temperature = {{selectedAssetAnalysis.temperature}} riskColor = {{selectedAssetAnalysis.riskColor}} longitude = {{selectedAssetAnalysis.longitude}} latitude = {{selectedAssetAnalysis.latitude}} > </assetAnalysis>-->
+      <assetAnalysis [asset] = "selectedAssetAnalysis"></assetAnalysis>
   </div>
 
   <div id = 'chartSelector' class = 'bottomsplit'>

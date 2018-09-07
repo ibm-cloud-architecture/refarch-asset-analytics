@@ -1,45 +1,45 @@
 <div class='assetAnalysis'>
      <div [ngStyle] = "{'text-align':'center', 'background':'lightgrey', 'box-shadow': '3px 3px 3px 3px'}">
 
-            <h4 [ngStyle] = "{'border-bottom':'2px solid', 'background-color':riskColor}">Asset {{id}}</h4>
+            <h4 [ngStyle] = "{'border-bottom':'2px solid', 'background-color':asset.riskColor}">Asset {{asset.id}}</h4>
           
       
            
            <p> 
-               Type : {{type}} 
+               Type : {{asset.type}} 
            </p>
            
 
            <p>
-           Rotation : {{rotation}}
+           Rotation : {{asset.rotation}}
            </p>
 
            <p>
-            Version : {{version}}
+            Version : {{asset.version}}
            </p>
 
             <p>
-           Current : {{current}}
+           Current : {{asset.current}}
            </p>
 
             <p>
-           Pressure : {{pressure}}
+           Pressure : {{asset.pressure}}
            </p>
 
             <p>
-           Flow Rate : {{flowRate}}
+           Flow Rate : {{asset.flowRate}}
            </p>
 
             <p>
-           Temperature : {{temperature}}
+           Temperature : {{asset.temperature}}
            </p>
 
            <p>
-                Latitude : {{latitude}}
+                Latitude : {{asset.latitude}}
              </p>
 
              <p>
-               Longitude : {{longitude}}
+               Longitude : {{asset.longitude}}
             </p>
 
 

@@ -141,7 +141,7 @@ filterData(selectedAssetAnalysis) {
    }
 
   // figure out this error! Temporary bracket:
-  }
+  
   //
   }
   // display with latest timestamp
