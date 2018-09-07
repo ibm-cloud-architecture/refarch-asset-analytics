@@ -74,7 +74,7 @@ filterData(selectedAssetAnalysis) {
     var dataset = [];
     var label = [];
 
-    var selector = <HTMLInputElement>document.getElementById('attrSelector'));
+    var selector = (<HTMLSelectElement>document.getElementById('attrSelector'));
     var attributeSelect = selector.options[selector.selectedIndex].value;
     console.log(attributeSelect);
 
