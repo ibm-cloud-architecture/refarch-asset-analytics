@@ -1,7 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
 //Import Data points
 import { AssetsService } from '../assets.service';
-import { Asset } from '../assets/asset'
+import { Asset } from '../assets/asset';
 
 /* 
 This declare fixes the Chart error below. Since we are using the CDN,
@@ -41,6 +41,7 @@ export class DashboardComponent implements OnInit {
 
     // create unique assets
     this.uniqueAssets = this.initWithUnique(assets);
+    
 
     // create map with pump history
     this.historyMap = this.initHistoryMap(assets);
@@ -191,6 +192,8 @@ filterData(selectedAssetAnalysis) {
       //console.log(key + ' = ' + value);
       output.push(assets[value]);
     });
+      
+    console.log(output);
 
     return output;
   }
