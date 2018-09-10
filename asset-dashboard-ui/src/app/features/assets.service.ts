@@ -163,4 +163,31 @@ export class AssetsService {
                 timestamp: '2'}
               ];
   }
+  getUniqueAssets(): UniqueAsset[] {
+    //Get Uniques
+    var assets = this.getAssets();
+    var flags = [], output = [], l = assets.length, i, mostRecentValue;
+    // set current timestamp to minimum
+    mostRecentValue = 0; 
+    // build map of pumps to timestamps
+    var mostRecents = new Map();
+    for (i = 0; i < l; i++ && assets[i]) {
+      if (mostRecents.get(assets[i].id) == null) { // ID does not yet exist
+        mostRecents.set(assets[i].id, i);
+      }
+      else { // ID exists, check timestamp against current
+        if (assets[mostRecents.get(assets[i].id)].timestamp < assets[i].timestamp) {
+          mostRecents.set(assets[i].id, i);
+        }
+      }
+    }
+
+    // output hashmap of pumps with most recent timestamps
+    mostRecents.forEach(function(value, key) {
+      //console.log(key + ' = ' + value);
+      output.push(assets[value]);
+    });
+
+    return output;
+  }
 }

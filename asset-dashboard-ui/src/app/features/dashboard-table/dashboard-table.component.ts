@@ -23,12 +23,13 @@ export class DashboardTableComponent implements OnInit {
 
 //    constructor() { }
     constructor(private service: AssetsService) { 
-        this.dataSource = service.getAssets();
+        this.dataSource = service.getUniqueAssets();
+        console.log(this.dataSource);
     }
 
 
     ngOnInit() {
-        console.log(uAssets);
+        //console.log(uAssets);
     }
 
 }
