@@ -2,6 +2,10 @@
     <script src="/js/angular-leaflet-directive.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css">
+    
+    <!-- Angular Material Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.css">
 </head>
 
 <div id ='top' style= 'background-color:palegoldenrod'>
@@ -15,11 +19,16 @@
       </div>
       <div class="col-md-6">
         <div id = 'pumpSummary' class = 'split'>
-          <div id = 'riskCategories' style = 'display:inline-block; width:500px'>
-            <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
-            <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
-            <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
-          </div>
+            <div id = 'riskCategories' style = 'display:inline-block; width:500px'>
+                <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
+                <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
+                <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
+            </div>
+            
+<!--            New Dashboard Table-->
+            <dashboard-table></dashboard-table>
+            
+<!--
           <table class="table table-striped table-condensed"   style = 'box-shadow: 1px 1px 1px 1px' >
             <thead>
               <tr>
@@ -41,9 +50,10 @@
                  <td>{{asset.pressure}}</td>
                  <td>{{asset.flowRate}}</td>
                 <td>{{asset.temperature}}</td> 
-                <!-- <td> {{ listAtrributes(i) }}</td> -->
+                 <td> {{ listAtrributes(i) }}</td> 
             </tbody>
           </table>
+-->
         </div>
       </div>
        <div id ='pumpDetails'>
