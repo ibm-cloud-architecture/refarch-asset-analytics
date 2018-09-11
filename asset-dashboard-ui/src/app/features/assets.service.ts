@@ -21,6 +21,7 @@ export class AssetsService {
   private socket: any;
   private stompClient: any;
 
+
   public connect() {
     if (this.assetEvents)
       return
@@ -49,7 +50,7 @@ export class AssetsService {
     this.inputStream.next(message)
   }
 
-getAssets(): {} {
+getAssets(): any {
     var assets = [
       {id: "12",
               os: 'raspbian',
@@ -71,12 +72,12 @@ getAssets(): {} {
             os: 'raspbian',
             type: 'pump',
             version: '10',
-            ipAddress: '',
-            antivirus: '',
-            rotation:  0,
-            current:  210,
-            pressure:  100,
-            flowRate:  40,
+ 	          ipAddress: '',
+ 	          antivirus: '',
+ 	          rotation:  0,
+ 	          current:  210,
+ 	          pressure:  100,
+ 	          flowRate:  40,
              temperature:  90,
              latitude : '30.266926',
              longitude : '-97.750519',
@@ -135,12 +136,12 @@ getAssets(): {} {
               os: 'raspbian',
               type: 'pump',
               version: '10.1',
-              ipAddress: '',
-              antivirus: '',
-              rotation:  10,
-              current:  220,
-              pressure:  80,
-              flowRate:  80,
+   	          ipAddress: '',
+   	          antivirus: '',
+   	          rotation:  10,
+   	          current:  220,
+   	          pressure:  80,
+   	          flowRate:  80,
                temperature:  60,
                latitude : '31.266926',
               longitude : '-98.750519',
@@ -165,13 +166,13 @@ getAssets(): {} {
 
     var riskAnalysis = this.getRiskAnalysis(assets);
     return {
-            assets: assets, 
-            riskAnalysis: riskAnalysis
+            'assets': assets, 
+            'riskAnalysis': riskAnalysis
             };
   }
 
   
-  getUniqueAssets(): {} {
+  getUniqueAssets(): any {
     //Get Uniques
     var assets = this.getAssets().assets;
     
@@ -197,11 +198,10 @@ getAssets(): {} {
       output.push(assets[value]);
     });
     var riskAnalysis = this.getRiskAnalysis(output);
+      
+    var obj = {'uniqueAssets': output, 'riskAnalysis': riskAnalysis}
 
-    return {
-            uniqueAssets: output,
-            riskAnalysis: riskAnalysis 
-           };
+    return obj;
   }
     
     getRiskAnalysis(assets: Asset[]): {} {

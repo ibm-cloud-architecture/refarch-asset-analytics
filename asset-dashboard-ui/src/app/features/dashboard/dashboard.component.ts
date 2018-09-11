@@ -36,11 +36,11 @@ export class DashboardComponent implements OnInit {
 
   constructor(private service: AssetsService) {
     //Pull Assets and Unique Assets from our Data Service
-    var assetAnalysis = service.getAssets();
-    var uniqueAssetAnalysis = service.getUniqueAssets();
+    this.assets = service.getAssets().assets;
+    this.uniqueAssets = service.getUniqueAssets().uniqueAssets;
+
+    //console.log(this.assets);
     
-    this.assets = assetAnalysis.assets;
-    this.uniqueAssets = uniqueAssetAnalysis.uniqueAssets;
     // create map with pump history
     //this.historyMap = this.initHistoryMap(this.assets);
     this.riskAnalysis = {};

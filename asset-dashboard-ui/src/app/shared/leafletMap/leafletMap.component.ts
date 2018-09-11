@@ -23,14 +23,6 @@ export class LeafletMap implements OnInit {
   @Input()
   assets : Asset[];
 
-  
-
-
-  constructor(private service: AssetsService) { 
-    //this.assets = service.getAssets();
-  }
-
-
   ngOnInit() {
     //Render Map
     var myMap = L.map('mapid').setView([40, -100], 3.3);

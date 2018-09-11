@@ -24,9 +24,7 @@
                 <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
                 <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
             </div>
-            
-<!--            New Dashboard Table-->
-            <dashboard-table (selectedAsset)="getSelectedAsset($event)" [dataSource] = "uniqueAssets"></dashboard-table>
+            <dashboard-table (selectedAsset)="getSelectedAsset($event)" [dataSource]="uniqueAssets"></dashboard-table>
         </div>
       </div>
        <div id ='pumpDetails'>

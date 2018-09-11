@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Asset } from '../assets/asset';
 import { AssetsService } from '../../features/assets.service';
+import Chart from 'chart.js';
 
 
 @Component({
@@ -17,10 +18,6 @@ export class DashboardChartComponent implements OnInit {
     dataSource: Asset[];
 
     historyMap : Map<any, any>;
-
-    constructor(private service: AssetsService) { 
-        //this.dataSource = service.getAssets().assets;
-    }
 
           // initialize map of form <pump id, list of different timestamp objects>
     initHistoryMap(assets) {
@@ -42,7 +39,6 @@ export class DashboardChartComponent implements OnInit {
 
       return historyMap;
     }
-
 
     // chart summary will be triggered here 
     filterData(selectedAssetAnalysis) {
