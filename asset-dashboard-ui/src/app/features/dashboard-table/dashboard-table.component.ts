@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output,EventEmitter } from '@angular/core';
 import { Asset } from '../assets/asset';
 import { AssetsService } from '../../features/assets.service';
 
@@ -11,8 +11,8 @@ import { MatTableModule } from '@angular/material';
 })
 export class DashboardTableComponent implements OnInit {
     
-    @Input()
-    selectedAsset: Asset;
+    @Output()
+    selectedAsset: EventEmitter<Asset> = new EventEmitter<Asset>();
     
     dataInput: {};
     
@@ -29,9 +29,9 @@ export class DashboardTableComponent implements OnInit {
     }
 
     tableClick (i){
-        this.selectedAsset = this.dataSource[i];
-        console.log(JSON.stringify(this.selectedAsset) + ' has been selected in the dashboard table component');
-
+        //        this.selectedAsset = this.dataSource[i];
+        console.log(JSON.stringify(this.dataSource[i]) + ' has been selected in the dashboard table component');
+        this.selectedAsset.emit(this.dataSource[i])
     }
     ngOnInit() {
     }

@@ -3,6 +3,9 @@ import { Component, OnInit,Input } from '@angular/core';
 import { AssetsService } from '../assets.service';
 import { Asset } from '../assets/asset';
 
+import { DashboardTableComponent } from '../dashboard-table/dashboard-table.component';
+
+
 /* 
 This declare fixes the Chart error below. Since we are using the CDN,
 You cannot import the Chart asset directly. So declare an anytype var
@@ -35,6 +38,7 @@ export class DashboardComponent implements OnInit {
     //Pull Assets and Unique Assets from our Data Service
     var assetAnalysis = service.getAssets();
     var uniqueAssetAnalysis = service.getUniqueAssets();
+    
     this.assets = assetAnalysis.assets;
     this.uniqueAssets = uniqueAssetAnalysis.uniqueAssets;
     // create map with pump history
@@ -43,7 +47,7 @@ export class DashboardComponent implements OnInit {
 //    this.riskAnalysis.lowRiskCount = 0;
 //    this.riskAnalysis.mediumRiskCount = 0;
 //    this.riskAnalysis.highRiskCount = 0;
-    this.selectedAssetAnalysis = {};
+      this.selectedAssetAnalysis = {};
  }
 
 // chart summary will be triggered here 
@@ -148,6 +152,10 @@ filterData(selectedAssetAnalysis) {
         }
       }
     });
+  }
+    
+  getSelectedAsset(data) {
+      this.selectedAssetAnalysis = data;
   }
 
 

@@ -1,5 +1,5 @@
 <div class="dashboard-table">
-    <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="riskColor">
             <th mat-header-cell *matHeaderCellDef> Risk </th>
             <td mat-cell *matCellDef="let asset"><span class="dot" [ngStyle] = "{'background-color':asset.riskColor}"></span></td>
@@ -34,3 +34,5 @@
     
     </mat-table>
 </div>
+
+

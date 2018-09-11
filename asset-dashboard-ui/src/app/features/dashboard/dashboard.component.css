@@ -10,6 +10,10 @@ float : left;
 padding: 10px
 }
 
+#riskCategories{
+    margin: auto;
+}
+
 .summary{
   width:50%;
   margin : 0;
@@ -17,9 +21,7 @@ padding: 10px
 }
 
 .split{
-  width:50%;
-  margin : 0;
-  float: left
+  margin : 20px;
 }
 
 .dot {

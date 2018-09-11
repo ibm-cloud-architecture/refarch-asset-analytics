@@ -7,3 +7,14 @@
     display: inline-block;
     margin-left: 5px
   }
+
+.mat-table {
+    padding: 1vh 2vh;
+    margin: auto;
+    display: table;
+}
+
+th.mat-header-cell {
+    
+    padding: 10px 15px;
+}

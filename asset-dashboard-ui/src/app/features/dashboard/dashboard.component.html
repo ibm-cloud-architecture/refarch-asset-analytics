@@ -19,41 +19,14 @@
       </div>
       <div class="col-md-6">
         <div id = 'pumpSummary' class = 'split'>
-            <div id = 'riskCategories' style = 'display:inline-block; width:500px'>
+            <div id = 'riskCategories' style = 'width:500px'>
                 <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
                 <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
                 <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
             </div>
             
 <!--            New Dashboard Table-->
-            <dashboard-table></dashboard-table>
-            
-<!--
-          <table class="table table-striped table-condensed"   style = 'box-shadow: 1px 1px 1px 1px' >
-            <thead>
-              <tr>
-                <th>Risk</th>
-                <th>Id</th>
-                <th>Type</th>
-                <th>Version</th>
-                <th>Pressure</th>
-                <th>Flow</th>
-                <th>Temperature</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="asset" *ngFor="let asset of uniqueAssets;let i = index" (click) = tableClick(i) id = "listAttributes">
-                <span class="dot" [ngStyle] = "{'background-color':asset.riskColor}"></span>
-                 <td>{{asset.id}}</td>
-                 <td>{{asset.type}}</td>
-                 <td>{{asset.version}}</td>
-                 <td>{{asset.pressure}}</td>
-                 <td>{{asset.flowRate}}</td>
-                <td>{{asset.temperature}}</td> 
-                 <td> {{ listAtrributes(i) }}</td> 
-            </tbody>
-          </table>
--->
+            <dashboard-table (selectedAsset)="getSelectedAsset($event)"></dashboard-table>
         </div>
       </div>
        <div id ='pumpDetails'>
@@ -69,7 +42,6 @@
 <div id = 'bottom' style ='background-color: lightgreen'>
 
   <div class = 'bottomsplit'>
-<!--    <assetAnalysis id = {{selectedAssetAnalysis.id}} type = {{selectedAssetAnalysis.type}} version = {{selectedAssetAnalysis.version}} rotation = {{selectedAssetAnalysis.rotation}} current = {{selectedAssetAnalysis.current}} pressure = {{selectedAssetAnalysis.pressure}} flowRate = {{selectedAssetAnalysis.flowRate}} temperature = {{selectedAssetAnalysis.temperature}} riskColor = {{selectedAssetAnalysis.riskColor}} longitude = {{selectedAssetAnalysis.longitude}} latitude = {{selectedAssetAnalysis.latitude}} > </assetAnalysis>-->
       <assetAnalysis [asset] = "selectedAssetAnalysis"></assetAnalysis>
   </div>
 
