@@ -18,7 +18,7 @@
          </div>
       </div>
       <div class="col-md-6">
-        <div id = 'pumpSummary' class = 'split'>
+        <div id = 'pumpSummary'>
             <div id = 'riskCategories' class="row">
                 <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
                 <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
@@ -33,10 +33,10 @@
 
 <div id = 'bottom'>
    <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-3">
          <assetAnalysis [asset] = "selectedAssetAnalysis"></assetAnalysis>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-9">
          <dashboard-chart [selectedAsset] = "selectedAssetAnalysis" [dataSource] = "assets"></dashboard-chart>
       </div>
    </div>
