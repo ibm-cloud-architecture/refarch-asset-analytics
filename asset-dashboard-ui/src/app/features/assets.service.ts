@@ -50,7 +50,7 @@ export class AssetsService {
   }
 
   getAssets(): Asset[] {
-    return [
+    var assets = [
       {id: "12",
               os: 'raspbian',
               type: 'pump',
@@ -162,10 +162,16 @@ export class AssetsService {
                 riskRating : 'Medium',
                 timestamp: '2'}
               ];
+
+
+    return assets;
   }
-  getUniqueAssets(): UniqueAsset[] {
+
+  
+  getUniqueAssets(): Asset[] {
     //Get Uniques
     var assets = this.getAssets();
+    
     var flags = [], output = [], l = assets.length, i, mostRecentValue;
     // set current timestamp to minimum
     mostRecentValue = 0; 
@@ -190,4 +196,5 @@ export class AssetsService {
 
     return output;
   }
+
 }

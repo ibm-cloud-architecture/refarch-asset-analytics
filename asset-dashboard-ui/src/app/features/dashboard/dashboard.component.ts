@@ -17,8 +17,6 @@ declare var Chart: any;
 })
 
 
-
-
 export class DashboardComponent implements OnInit {
 
     assets : Asset[];
@@ -34,18 +32,11 @@ export class DashboardComponent implements OnInit {
   selectedAssetAnalysis : any;
 
   constructor(private service: AssetsService) {
-
-    //Init
+    //Pull Assets and Unique Assets from our Data Service
     this.assets = service.getAssets();
-    var assets = this.assets;
-
-    // create unique assets
-    this.uniqueAssets = this.initWithUnique(assets);
-    
-
+    this.uniqueAssets = service.getUniqueAssets();
     // create map with pump history
-    this.historyMap = this.initHistoryMap(assets);
-
+    this.historyMap = this.initHistoryMap(this.assets);
     this.riskAnalysis = {};
     this.riskAnalysis.lowRiskCount = 0;
     this.riskAnalysis.mediumRiskCount = 0;
@@ -53,12 +44,8 @@ export class DashboardComponent implements OnInit {
     this.selectedAssetAnalysis = {};
  }
 
- //Table Click
- tableClick(index){
-  this.selectedAssetAnalysis = this.uniqueAssets[index];
-}
-
 // chart summary will be triggered here 
+
 filterData(selectedAssetAnalysis) {
     console.log("selected id: "+selectedAssetAnalysis.id);
     var minDate = new Date((<HTMLInputElement>document.getElementById('min')).value).getTime();
@@ -118,6 +105,35 @@ filterData(selectedAssetAnalysis) {
     this.buildChart(data);
   }
 
+
+  // initialize map of form <pump id, list of different timestamp objects>
+  initHistoryMap(assets) {
+
+    var historyMap = new Map();
+
+    for (var i = 0; i < assets.length && assets[i]; i++) {
+        if (historyMap.get(assets[i].id) == null) { // ID does not yet exist, add first asset to list
+          var startList = []
+          startList.push(assets[i]);
+          historyMap.set(assets[i].id, startList);
+        }
+        else { // ID exists, add asset to current list
+          var currentList = historyMap.get(assets[i].id);
+          currentList.push(assets[i]);
+          historyMap.set(assets[i].id, currentList);
+        }
+    }
+
+    historyMap.forEach(function(value, key) {
+      //console.log(key + ' = ' + value);
+      for (var i = 0; i < value.length; i++) {
+        //console.log("temperature: " + value[i].temperature + "\n")
+      }
+    });
+    return historyMap;
+  }
+
+
   buildChart(data){
     console.log("build chart");
     new Chart(document.getElementById("line-chart"), {
@@ -131,6 +147,8 @@ filterData(selectedAssetAnalysis) {
       }
     });
   }
+
+
 
   ngOnInit() {
     var data: any = {};
@@ -164,67 +182,10 @@ filterData(selectedAssetAnalysis) {
       }
    }
 
-  // figure out this error! Temporary bracket:
   
-  //
   }
-  // display with latest timestamp
-  initWithUnique(assets) {
-
-    //Get Uniques
-    var flags = [], output = [], l = assets.length, i, mostRecentValue;
-    // set current timestamp to minimum
-    mostRecentValue = 0; 
-    // build map of pumps to timestamps
-    var mostRecents = new Map();
-    for (i = 0; i < l; i++ && assets[i]) {
-      if (mostRecents.get(assets[i].id) == null) { // ID does not yet exist
-        mostRecents.set(assets[i].id, i);
-      }
-      else { // ID exists, check timestamp against current
-        if (assets[mostRecents.get(assets[i].id)].timestamp < assets[i].timestamp) {
-          mostRecents.set(assets[i].id, i);
-        }
-      }
-    }
-
-    // output hashmap of pumps with most recent timestamps
-    mostRecents.forEach(function(value, key) {
-      //console.log(key + ' = ' + value);
-      output.push(assets[value]);
-    });
-      
-    console.log(output);
-
-    return output;
-  }
-
-  // initialize map of form <pump id, list of different timestamp objects>
-  initHistoryMap(assets) {
-
-    var historyMap = new Map();
-
-    for (var i = 0; i < assets.length && assets[i]; i++) {
-        if (historyMap.get(assets[i].id) == null) { // ID does not yet exist, add first asset to list
-          var startList = []
-          startList.push(assets[i]);
-          historyMap.set(assets[i].id, startList);
-        }
-        else { // ID exists, add asset to current list
-          var currentList = historyMap.get(assets[i].id);
-          currentList.push(assets[i]);
-          historyMap.set(assets[i].id, currentList);
-        }
-    }
-
-    historyMap.forEach(function(value, key) {
-      //console.log(key + ' = ' + value);
-      for (var i = 0; i < value.length; i++) {
-        //console.log("temperature: " + value[i].temperature + "\n")
-      }
-    });
-    return historyMap;
-  }
+  
+  
 
 
 }

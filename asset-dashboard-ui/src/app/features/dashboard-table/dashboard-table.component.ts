@@ -15,21 +15,24 @@ export class DashboardTableComponent implements OnInit {
     uAssets: Asset[];
     @Input()
     sAsset: Asset;  
+    @Input()
+    selectedAsset: Asset;
     
     dataSource: Asset[];
     
     displayedColumns: string[] = ['riskColor', 'id', 'type', 'version', 'pressure', 'flowRate', 'temperature'];
 //    , 'type', 'version', 'pressure', 'flowRate', 'temperature'
 
-//    constructor() { }
     constructor(private service: AssetsService) { 
         this.dataSource = service.getUniqueAssets();
-        console.log(this.dataSource);
     }
 
+    tableClick (i){
+        this.selectedAsset = this.dataSource[i];
+        console.log(JSON.stringify(this.selectedAsset) + ' has been selected in the dashboard table component');
 
+    }
     ngOnInit() {
-        //console.log(uAssets);
     }
 
 }
