@@ -26,7 +26,7 @@
             </div>
             
 <!--            New Dashboard Table-->
-            <dashboard-table (selectedAsset)="getSelectedAsset($event)"></dashboard-table>
+            <dashboard-table (selectedAsset)="getSelectedAsset($event)" [uniqueAssets]="uniqueAssets"></dashboard-table>
         </div>
       </div>
        <div id ='pumpDetails'>

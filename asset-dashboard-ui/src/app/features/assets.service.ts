@@ -21,6 +21,7 @@ export class AssetsService {
   private socket: any;
   private stompClient: any;
 
+
   public connect() {
     if (this.assetEvents)
       return
@@ -49,7 +50,7 @@ export class AssetsService {
     this.inputStream.next(message)
   }
 
-getAssets(): {} {
+getAssets(): any {
     var assets = [
       {id: "12",
               os: 'raspbian',
@@ -169,15 +170,13 @@ getAssets(): {} {
 //    var retObj = {assets: Asset[], riskAnalysis: {}}
 //    retObj.assets = assets;
 //    retObj.riskAnalysis = riskAnalysis;
+    var obj = {'assets': assets, 'riskAnalysis': riskAnalysis}
 
-    return {
-            assets: assets, 
-            riskAnalysis: riskAnalysis
-            };
+    return obj;
   }
 
   
-  getUniqueAssets(): {} {
+  getUniqueAssets(): any {
     //Get Uniques
     var assets = this.getAssets().assets;
     
@@ -203,11 +202,10 @@ getAssets(): {} {
       output.push(assets[value]);
     });
     var riskAnalysis = this.getRiskAnalysis(output);
+      
+    var obj = {'uniqueAssets': output, 'riskAnalysis': riskAnalysis}
 
-    return {
-            uniqueAssets: output,
-            riskAnalysis: riskAnalysis 
-           };
+    return obj;
   }
     
     getRiskAnalysis(assets: Asset[]): {} {

@@ -13,7 +13,7 @@ export class AssetsComponent implements OnInit {
   private socketSubscription: Subscription;
 
   constructor(private service: AssetsService ) {
-    this.assets = this.service.getAssets();
+    this.assets = this.service.getAssets().assets;
   }
 
 
@@ -29,3 +29,4 @@ export class AssetsComponent implements OnInit {
     this.socketSubscription.unsubscribe()
   }
 }
+

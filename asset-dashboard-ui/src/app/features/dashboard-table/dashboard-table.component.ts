@@ -11,10 +11,13 @@ import { MatTableModule } from '@angular/material';
 })
 export class DashboardTableComponent implements OnInit {
     
+    @Input()
+    uniqueAssets: Asset[] = [];
+    
     @Output()
     selectedAsset: EventEmitter<Asset> = new EventEmitter<Asset>();
     
-    dataInput: {};
+    dataInput: {'uniqueAssets': Asset[], 'riskAnalysis': {}};
     
     dataSource: Asset[];
     
@@ -25,6 +28,7 @@ export class DashboardTableComponent implements OnInit {
     constructor(private service: AssetsService) {
         this.dataInput = service.getUniqueAssets();
         this.dataSource = this.dataInput.uniqueAssets;
+//        this.dataSource = this.uniqueAssets;
         console.log(JSON.stringify(this.dataSource));
     }
 
@@ -32,6 +36,8 @@ export class DashboardTableComponent implements OnInit {
         //        this.selectedAsset = this.dataSource[i];
         console.log(JSON.stringify(this.dataSource[i]) + ' has been selected in the dashboard table component');
         this.selectedAsset.emit(this.dataSource[i])
+        
+    console.log(JSON.stringify(this.uniqueAssets))
     }
     ngOnInit() {
     }
