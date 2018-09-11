@@ -164,11 +164,19 @@ getAssets(): {} {
               ];
 
     var riskAnalysis = this.getRiskAnalysis(assets);
+<<<<<<< HEAD
     //console.log(JSON.stringify(riskAnalysis));
+=======
+    console.log(JSON.stringify(riskAnalysis));
+>>>>>>> 4b61c0fce589beb58b0ff2cfd6cb3c3118d77795
       
 //    var retObj = {assets: Asset[], riskAnalysis: {}}
 //    retObj.assets = assets;
 //    retObj.riskAnalysis = riskAnalysis;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4b61c0fce589beb58b0ff2cfd6cb3c3118d77795
     return {
             assets: assets, 
             riskAnalysis: riskAnalysis

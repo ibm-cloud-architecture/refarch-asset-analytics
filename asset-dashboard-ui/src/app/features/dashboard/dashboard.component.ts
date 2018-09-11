@@ -3,6 +3,9 @@ import { Component, OnInit,Input } from '@angular/core';
 import { AssetsService } from '../assets.service';
 import { Asset } from '../assets/asset';
 
+import { DashboardTableComponent } from '../dashboard-table/dashboard-table.component';
+
+
 /* 
 This declare fixes the Chart error below. Since we are using the CDN,
 You cannot import the Chart asset directly. So declare an anytype var
@@ -33,8 +36,11 @@ export class DashboardComponent implements OnInit {
 
   constructor(private service: AssetsService) {
     //Pull Assets and Unique Assets from our Data Service
-    this.assets = service.getAssets();
-    this.uniqueAssets = service.getUniqueAssets();
+    var assetAnalysis = service.getAssets();
+    var uniqueAssetAnalysis = service.getUniqueAssets();
+    
+    this.assets = assetAnalysis.assets;
+    this.uniqueAssets = uniqueAssetAnalysis.uniqueAssets;
     // create map with pump history
     //this.historyMap = this.initHistoryMap(this.assets);
     this.riskAnalysis = {};
