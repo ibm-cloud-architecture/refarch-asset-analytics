@@ -2,47 +2,42 @@
     <script src="/js/angular-leaflet-directive.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css">
-    
+
     <!-- Angular Material Library -->
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.css">
 </head>
 
-<div id ='top' style= 'background-color:palegoldenrod'>
-  <div class="row">
+<div id ='top'>
+   <div class="row">
       <div class="col-md-6">
-        <div id = 'map'>
+         <div id = 'map'>
             <div id = 'mapSummary'>
-              <leafletMap [assets] = "assets"></leafletMap>
-              </div>
-        </div>
+               <leafletMap [assets] = "assets"></leafletMap>
+            </div>
+         </div>
       </div>
       <div class="col-md-6">
         <div id = 'pumpSummary' class = 'split'>
-            <div id = 'riskCategories' style = 'width:500px'>
+            <div id = 'riskCategories' class="row">
                 <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
                 <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
                 <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
             </div>
-            <dashboard-table (selectedAsset)="getSelectedAsset($event)" [dataSource]="uniqueAssets"></dashboard-table>
+            <dashboard-table class="row" (selectedAsset)="getSelectedAsset($event)" [dataSource]="uniqueAssets"></dashboard-table>
         </div>
       </div>
-       <div id ='pumpDetails'>
-
-        </div>
-
-  </div>
+   </div>
 </div>
 
 
-
-
-<div id = 'bottom' style ='background-color: lightgreen'>
-
-  <div class = 'bottomsplit'>
-      <assetAnalysis [asset] = "selectedAssetAnalysis"></assetAnalysis>
-  </div>
-  
- <dashboard-chart [selectedAsset] = "selectedAssetAnalysis" [dataSource] = "assets"></dashboard-chart>
-
+<div id = 'bottom'>
+   <div class="row">
+      <div class="col-md-4">
+         <assetAnalysis [asset] = "selectedAssetAnalysis"></assetAnalysis>
+      </div>
+      <div class="col-md-8">
+         <dashboard-chart [selectedAsset] = "selectedAssetAnalysis" [dataSource] = "assets"></dashboard-chart>
+      </div>
+   </div>
 </div>
