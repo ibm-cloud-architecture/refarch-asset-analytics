@@ -50,6 +50,11 @@ export class DashboardComponent implements OnInit {
     this.selectedAssetAnalysis = {};
  }
 
+  getSelectedAsset(data) {
+    this.selectedAssetAnalysis = data;
+    //console.log(this.selectedAssetAnalysis);
+  }
+
   ngOnInit() {
 
     for(var i = 0; i<this.uniqueAssets.length;i++){

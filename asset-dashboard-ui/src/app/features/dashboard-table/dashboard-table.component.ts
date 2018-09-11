@@ -25,12 +25,12 @@ export class DashboardTableComponent implements OnInit {
     constructor(private service: AssetsService) {
         this.dataInput = service.getUniqueAssets();
         this.dataSource = this.dataInput.uniqueAssets;
-        console.log(JSON.stringify(this.dataSource));
+        //console.log(JSON.stringify(this.dataSource));
     }
 
     tableClick (i){
         //        this.selectedAsset = this.dataSource[i];
-        console.log(JSON.stringify(this.dataSource[i]) + ' has been selected in the dashboard table component');
+        //console.log(JSON.stringify(this.dataSource[i]) + ' has been selected in the dashboard table component');
         this.selectedAsset.emit(this.dataSource[i])
     }
     ngOnInit() {
