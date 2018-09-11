@@ -12,19 +12,20 @@ import { MatTableModule } from '@angular/material';
 export class DashboardTableComponent implements OnInit {
     
     @Input()
-    uAssets: Asset[];
-    @Input()
-    sAsset: Asset;  
-    @Input()
     selectedAsset: Asset;
+    
+    dataInput: {};
     
     dataSource: Asset[];
     
+    riskRatings: {};
+    
     displayedColumns: string[] = ['riskColor', 'id', 'type', 'version', 'pressure', 'flowRate', 'temperature'];
-//    , 'type', 'version', 'pressure', 'flowRate', 'temperature'
 
-    constructor(private service: AssetsService) { 
-        this.dataSource = service.getUniqueAssets();
+    constructor(private service: AssetsService) {
+        this.dataInput = service.getUniqueAssets();
+        this.dataSource = this.dataInput.uniqueAssets;
+        console.log(JSON.stringify(this.dataSource));
     }
 
     tableClick (i){

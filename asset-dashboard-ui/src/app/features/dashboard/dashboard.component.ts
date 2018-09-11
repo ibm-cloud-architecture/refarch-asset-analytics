@@ -33,14 +33,16 @@ export class DashboardComponent implements OnInit {
 
   constructor(private service: AssetsService) {
     //Pull Assets and Unique Assets from our Data Service
-    this.assets = service.getAssets();
-    this.uniqueAssets = service.getUniqueAssets();
+    var assetAnalysis = service.getAssets();
+    var uniqueAssetAnalysis = service.getUniqueAssets();
+    this.assets = assetAnalysis.assets;
+    this.uniqueAssets = uniqueAssetAnalysis.uniqueAssets;
     // create map with pump history
     this.historyMap = this.initHistoryMap(this.assets);
-    this.riskAnalysis = {};
-    this.riskAnalysis.lowRiskCount = 0;
-    this.riskAnalysis.mediumRiskCount = 0;
-    this.riskAnalysis.highRiskCount = 0;
+    this.riskAnalysis = uniqueAssetAnalysis.riskAnalysis;
+//    this.riskAnalysis.lowRiskCount = 0;
+//    this.riskAnalysis.mediumRiskCount = 0;
+//    this.riskAnalysis.highRiskCount = 0;
     this.selectedAssetAnalysis = {};
  }
 
@@ -162,26 +164,6 @@ filterData(selectedAssetAnalysis) {
             fill: false
           });
     this.buildChart(data);
-
-    for(var i = 0; i<this.uniqueAssets.length;i++){
-      if(this.uniqueAssets[i].pressure >= 100 || this.uniqueAssets[i].pressure <50){
-          this.riskAnalysis.highRiskCount++;
-         this.uniqueAssets[i].riskRating = 'High';
-         this.uniqueAssets[i].riskColor = 'red'
-
-       }
-       else if((this.uniqueAssets[i].pressure >= 50 && this.uniqueAssets[i].pressure <60 )|| (this.uniqueAssets[i].pressure <100 && this.uniqueAssets[i].pressure >=90)){
-         this.riskAnalysis.mediumRiskCount++;
-         this.uniqueAssets[i].riskRating = 'Medium';
-         this.uniqueAssets[i].riskColor = 'yellow';
-       }
-       else{
-       this.riskAnalysis.lowRiskCount++;
-       this.uniqueAssets[i].riskRating = 'Low';
-       this.uniqueAssets[i].riskColor = 'green';
-      }
-   }
-
   
   }
   
