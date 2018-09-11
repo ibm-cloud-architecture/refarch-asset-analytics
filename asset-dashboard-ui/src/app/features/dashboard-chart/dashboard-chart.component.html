@@ -1,0 +1,26 @@
+<div id = 'chartSelector' class = 'dashboard-chart'>
+    <canvas id="line-chart" width="800" height="600"></canvas>
+    <!-- <chartSelector> </chartSelector> -->
+  </div>
+
+ <div id = 'chartSummary' class = 'dashboard-chart' [ngStyle] = "{'text-align':'center', 'background':'lightgrey','box-shadow': '3px 3px 3px 3px'}">
+    <div id ='PLACEHOLDER' style = 'width : 100%; height : 34vh'> 
+    <h4 [ngStyle] = "{'border-bottom':'2px solid'}"> Chart Summary </h4>
+    <div>Selected Pump: {{selectedAsset.id}}</div> 
+    <div>Select Date Range: </div>
+    <input type="date" class="pumpDate" id = "min"><br>
+    <div>To: </div>
+    <input type="date" class="pumpDate" id = "max"><br>
+    <div> Select Attribute: </div>
+    <select id = "attrSelector">
+      <option value="temperature">Temperature</option>
+      <option value="pressure">Pressure</option>
+      <option value="flow">Flow</option>
+      <option value="current">Current</option>
+      <option value="rotation">Rotation</option>
+    </select>
+    <br>
+    <button class = "asset" (click)="filterData(selectedAsset)">Plot</button>
+    <div id = "errorMessage" value = " "></div>
+    </div> 
+ </div>

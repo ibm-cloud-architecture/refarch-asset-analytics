@@ -49,7 +49,7 @@ export class AssetsService {
     this.inputStream.next(message)
   }
 
-  getAssets(): Asset[] {
+getAssets(): {} {
     var assets = [
       {id: "12",
               os: 'raspbian',
@@ -71,12 +71,12 @@ export class AssetsService {
             os: 'raspbian',
             type: 'pump',
             version: '10',
- 	          ipAddress: '',
- 	          antivirus: '',
- 	          rotation:  0,
- 	          current:  210,
- 	          pressure:  100,
- 	          flowRate:  40,
+            ipAddress: '',
+            antivirus: '',
+            rotation:  0,
+            current:  210,
+            pressure:  100,
+            flowRate:  40,
              temperature:  90,
              latitude : '30.266926',
              longitude : '-97.750519',
@@ -135,12 +135,12 @@ export class AssetsService {
               os: 'raspbian',
               type: 'pump',
               version: '10.1',
-   	          ipAddress: '',
-   	          antivirus: '',
-   	          rotation:  10,
-   	          current:  220,
-   	          pressure:  80,
-   	          flowRate:  80,
+              ipAddress: '',
+              antivirus: '',
+              rotation:  10,
+              current:  220,
+              pressure:  80,
+              flowRate:  80,
                temperature:  60,
                latitude : '31.266926',
               longitude : '-98.750519',
@@ -163,14 +163,22 @@ export class AssetsService {
                 timestamp: '2'}
               ];
 
-
-    return assets;
+    var riskAnalysis = this.getRiskAnalysis(assets);
+    //console.log(JSON.stringify(riskAnalysis));
+      
+//    var retObj = {assets: Asset[], riskAnalysis: {}}
+//    retObj.assets = assets;
+//    retObj.riskAnalysis = riskAnalysis;
+    return {
+            assets: assets, 
+            riskAnalysis: riskAnalysis
+            };
   }
 
   
-  getUniqueAssets(): Asset[] {
+  getUniqueAssets(): {} {
     //Get Uniques
-    var assets = this.getAssets();
+    var assets = this.getAssets().assets;
     
     var flags = [], output = [], l = assets.length, i, mostRecentValue;
     // set current timestamp to minimum
@@ -193,8 +201,39 @@ export class AssetsService {
       //console.log(key + ' = ' + value);
       output.push(assets[value]);
     });
+    var riskAnalysis = this.getRiskAnalysis(output);
 
-    return output;
+    return {
+            uniqueAssets: output,
+            riskAnalysis: riskAnalysis 
+           };
   }
+    
+    getRiskAnalysis(assets: Asset[]): {} {
+        var risks = {
+            highRiskCount: 0,
+            mediumRiskCount: 0,
+            lowRiskCount: 0,
+        };
+        
+        for(var i = 0; i<assets.length;i++){
+            if(assets[i].pressure >= 100 || assets[i].pressure <50){
+                 risks.highRiskCount++;
+                 assets[i].riskRating = 'High';
+                 assets[i].riskColor = 'red';
+            }
+            else if((assets[i].pressure >= 50 && assets[i].pressure <60 )|| (assets[i].pressure <100 && assets[i].pressure >=90)){
+                 risks.mediumRiskCount++;
+                 assets[i].riskRating = 'Medium';
+                 assets[i].riskColor = 'yellow';
+            }
+            else{
+                risks.lowRiskCount++;
+                assets[i].riskRating = 'Low';
+                assets[i].riskColor = 'green';
+            }
+        }
+        return risks;
+    }
 
 }

@@ -26,7 +26,7 @@
             </div>
             
 <!--            New Dashboard Table-->
-            <dashboard-table></dashboard-table>
+            <dashboard-table (assetSelected) = ""></dashboard-table>
             
 <!--
           <table class="table table-striped table-condensed"   style = 'box-shadow: 1px 1px 1px 1px' >
@@ -69,16 +69,14 @@
 <div id = 'bottom' style ='background-color: lightgreen'>
 
   <div class = 'bottomsplit'>
-<!--    <assetAnalysis id = {{selectedAssetAnalysis.id}} type = {{selectedAssetAnalysis.type}} version = {{selectedAssetAnalysis.version}} rotation = {{selectedAssetAnalysis.rotation}} current = {{selectedAssetAnalysis.current}} pressure = {{selectedAssetAnalysis.pressure}} flowRate = {{selectedAssetAnalysis.flowRate}} temperature = {{selectedAssetAnalysis.temperature}} riskColor = {{selectedAssetAnalysis.riskColor}} longitude = {{selectedAssetAnalysis.longitude}} latitude = {{selectedAssetAnalysis.latitude}} > </assetAnalysis>-->
       <assetAnalysis [asset] = "selectedAssetAnalysis"></assetAnalysis>
   </div>
 
-  <div id = 'chartSelector' class = 'bottomsplit'>
+  <!--<div id = 'chartSelector' class = 'bottomsplit'>
     <canvas id="line-chart" width="800" height="600"></canvas>
-    <!-- <chartSelector> </chartSelector> -->
-  </div>
+  </div> -->
 
- <div id = 'chartSummary' class = 'bottomsplit' [ngStyle] = "{'text-align':'center', 'background':'lightgrey','box-shadow': '3px 3px 3px 3px'}">
+ <!-- <div id = 'chartSummary' class = 'bottomsplit' [ngStyle] = "{'text-align':'center', 'background':'lightgrey','box-shadow': '3px 3px 3px 3px'}">
     <div id ='PLACEHOLDER' style = 'width : 100%; height : 34vh'> 
     <h4 [ngStyle] = "{'border-bottom':'2px solid'}"> Chart Summary </h4>
     <div>Selected Pump: {{selectedAssetAnalysis.id}}</div>
@@ -98,6 +96,8 @@
     <button class = "asset" (click)="filterData(selectedAssetAnalysis)">Plot</button>
     <div id = "errorMessage" value = " "></div>
     </div> 
- </div>
+ </div> -->
+
+ <dashboard-chart [selectedAsset] = "selectedAssetAnalysis"></dashboard-chart>
 
 </div>
