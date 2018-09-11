@@ -43,3 +43,4 @@ export class DashboardTableComponent implements OnInit {
     }
 
 }
+}

@@ -10,6 +10,7 @@ import { routes } from './routes';
 //Table imports
 import { MatTableModule } from '@angular/material/table';
 import { DashboardTableComponent } from './dashboard-table/dashboard-table.component';
+import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import { DashboardTableComponent } from './dashboard-table/dashboard-table.compo
     enableTracing: false
     }),
   ],
-  declarations: [AssetsComponent, HomeComponent, DashboardComponent, DashboardTableComponent ],
+  declarations: [AssetsComponent, HomeComponent, DashboardComponent, DashboardTableComponent, DashboardChartComponent],
   exports: [ RouterModule]
 })
 export class FeaturesModule { }

@@ -78,6 +78,12 @@ getAssets(): any {
  	          current:  210,
  	          pressure:  100,
  	          flowRate:  40,
+            ipAddress: '',
+            antivirus: '',
+            rotation:  0,
+            current:  210,
+            pressure:  100,
+            flowRate:  40,
              temperature:  90,
              latitude : '30.266926',
              longitude : '-97.750519',
@@ -142,6 +148,12 @@ getAssets(): any {
    	          current:  220,
    	          pressure:  80,
    	          flowRate:  80,
+              ipAddress: '',
+              antivirus: '',
+              rotation:  10,
+              current:  220,
+              pressure:  80,
+              flowRate:  80,
                temperature:  60,
                latitude : '31.266926',
               longitude : '-98.750519',
@@ -170,9 +182,16 @@ getAssets(): any {
 //    var retObj = {assets: Asset[], riskAnalysis: {}}
 //    retObj.assets = assets;
 //    retObj.riskAnalysis = riskAnalysis;
+<<<<<<< HEAD
     var obj = {'assets': assets, 'riskAnalysis': riskAnalysis}
 
     return obj;
+=======
+    return {
+            assets: assets, 
+            riskAnalysis: riskAnalysis
+            };
+>>>>>>> 6419f299c2bdf4923d70e2744593434afd4a5712
   }
 
   
