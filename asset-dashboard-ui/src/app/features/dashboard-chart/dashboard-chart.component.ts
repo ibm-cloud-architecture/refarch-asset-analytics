@@ -3,12 +3,18 @@ import { Asset } from '../assets/asset';
 import { AssetsService } from '../../features/assets.service';
 import Chart from 'chart.js';
 
+export interface Attribute {
+ value: string;
+ viewValue: string;
+}
+
 
 @Component({
   selector: 'dashboard-chart',
   templateUrl: './dashboard-chart.component.html',
   styleUrls: ['./dashboard-chart.component.css']
 })
+
 export class DashboardChartComponent implements OnInit {
     
     @Input()
@@ -18,6 +24,16 @@ export class DashboardChartComponent implements OnInit {
     dataSource: Asset[];
 
     historyMap : Map<any, any>;
+
+    attributes: Attribute[] = [
+      {value: 'temperature', viewValue: 'temperature'},
+      {value: 'pressure', viewValue: 'pressure'},
+      {value: 'flow', viewValue: 'flow'},
+      {value: 'current', viewValue: 'current'},
+      {value: 'rotation', viewValue: 'rotation'}
+    ];
+
+    selectedAttribute: any;
 
           // initialize map of form <pump id, list of different timestamp objects>
     initHistoryMap(assets) {
@@ -56,11 +72,9 @@ export class DashboardChartComponent implements OnInit {
         // init data
         var dataset = [];
         var label = [];
-
-        var selector = (<HTMLSelectElement>document.getElementById('attrSelector'));
-        var attributeSelect = selector.options[selector.selectedIndex].value;
-
-        console.log(attributeSelect);
+        
+        var attributeSelect = this.selectedAttribute;
+        console.log("selected attribute: "+attributeSelect);
 
         for (var i = 0; i < pumpHistory.length; i++) {
           var pumpTimeStamp = new Date(pumpHistory[i].timestamp).getTime();

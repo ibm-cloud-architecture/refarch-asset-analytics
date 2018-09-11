@@ -6,17 +6,19 @@ import { AssetsComponent } from './assets/assets.component';
 import { HomeComponent } from './home/home.component';
 import { SharedModule } from '../shared/shared.module';
 import { DashboardComponent } from './dashboard/dashboard.component'
-import { routes } from './routes';
-//Table imports
-import { MatTableModule } from '@angular/material/table';
 import { DashboardTableComponent } from './dashboard-table/dashboard-table.component';
 import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
+import { routes } from './routes';
+//Angular material imports
+import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
     MatTableModule,
+    MatSelectModule,
     RouterModule.forRoot(routes, {
     useHash: true,
     enableTracing: false

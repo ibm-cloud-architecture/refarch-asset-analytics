@@ -11,14 +11,22 @@
     <input type="date" class="pumpDate" id = "min"><br>
     <div>To: </div>
     <input type="date" class="pumpDate" id = "max"><br>
-    <div> Select Attribute: </div>
-    <select id = "attrSelector">
+    <br>
+   <!-- <div> Select Attribute: </div> -->
+    <!--<select id = "attrSelector">
       <option value="temperature">Temperature</option>
       <option value="pressure">Pressure</option>
       <option value="flow">Flow</option>
       <option value="current">Current</option>
       <option value="rotation">Rotation</option>
-    </select>
+    </select> -->
+    <mat-form-field>
+      <mat-select placeholder="Select Attribute" [(value)]="selectedAttribute" >
+        <mat-option *ngFor="let attribute of attributes" [value] = "attribute.value">
+          {{attribute.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
     <br>
     <button class = "asset" (click)="filterData(selectedAsset)">Plot</button>
     <div id = "errorMessage" value = " "></div>
