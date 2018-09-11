@@ -13,13 +13,13 @@ export class DashboardChartComponent implements OnInit {
     @Input()
     selectedAsset: Asset;
     
+    @Input()
     dataSource: Asset[];
 
     historyMap : Map<any, any>;
 
     constructor(private service: AssetsService) { 
-        this.dataSource = service.getAssets().assets;
-        this.historyMap = this.initHistoryMap(this.dataSource);
+        //this.dataSource = service.getAssets().assets;
     }
 
           // initialize map of form <pump id, list of different timestamp objects>
@@ -119,6 +119,8 @@ export class DashboardChartComponent implements OnInit {
       }
 
       ngOnInit() {
+        //console.log(this.dataSource);
+        this.historyMap = this.initHistoryMap(this.dataSource);
         var data: any = {};
         data.labels = [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050];
         data.datasets = [];

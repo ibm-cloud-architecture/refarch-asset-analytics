@@ -20,13 +20,14 @@ declare var L;
 export class LeafletMap implements OnInit {
   @Input()
   id: string = '';
+  @Input()
   assets : Asset[];
 
   
 
 
   constructor(private service: AssetsService) { 
-    this.assets = service.getAssets();
+    //this.assets = service.getAssets();
   }
 
 

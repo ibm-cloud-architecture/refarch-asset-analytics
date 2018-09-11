@@ -13,7 +13,7 @@
       <div class="col-md-6">
         <div id = 'map'>
             <div id = 'mapSummary'>
-              <leafletMap ></leafletMap>
+              <leafletMap [assets] = "assets"></leafletMap>
               </div>
         </div>
       </div>
@@ -26,7 +26,7 @@
             </div>
             
 <!--            New Dashboard Table-->
-            <dashboard-table (selectedAsset)="getSelectedAsset($event)"></dashboard-table>
+            <dashboard-table (selectedAsset)="getSelectedAsset($event)" [dataSource] = "uniqueAssets"></dashboard-table>
         </div>
       </div>
        <div id ='pumpDetails'>
@@ -71,6 +71,6 @@
     </div> 
  </div> -->
 
- <dashboard-chart [selectedAsset] = "selectedAssetAnalysis"></dashboard-chart>
+ <dashboard-chart [selectedAsset] = "selectedAssetAnalysis" [dataSource] = "assets"></dashboard-chart>
 
 </div>

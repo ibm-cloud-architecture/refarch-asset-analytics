@@ -164,10 +164,6 @@ getAssets(): {} {
               ];
 
     var riskAnalysis = this.getRiskAnalysis(assets);
-      
-//    var retObj = {assets: Asset[], riskAnalysis: {}}
-//    retObj.assets = assets;
-//    retObj.riskAnalysis = riskAnalysis;
     return {
             assets: assets, 
             riskAnalysis: riskAnalysis

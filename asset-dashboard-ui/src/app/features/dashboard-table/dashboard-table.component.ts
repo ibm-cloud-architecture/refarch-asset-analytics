@@ -10,12 +10,11 @@ import { MatTableModule } from '@angular/material';
   styleUrls: ['./dashboard-table.component.css']
 })
 export class DashboardTableComponent implements OnInit {
-    
+  
     @Output()
     selectedAsset: EventEmitter<Asset> = new EventEmitter<Asset>();
-    
-    dataInput: {};
-    
+
+    @Input()
     dataSource: Asset[];
     
     riskRatings: {};
@@ -23,8 +22,6 @@ export class DashboardTableComponent implements OnInit {
     displayedColumns: string[] = ['riskColor', 'id', 'type', 'version', 'pressure', 'flowRate', 'temperature'];
 
     constructor(private service: AssetsService) {
-        this.dataInput = service.getUniqueAssets();
-        this.dataSource = this.dataInput.uniqueAssets;
         //console.log(JSON.stringify(this.dataSource));
     }
 
@@ -34,6 +31,8 @@ export class DashboardTableComponent implements OnInit {
         this.selectedAsset.emit(this.dataSource[i])
     }
     ngOnInit() {
+        //this.dataInput = service.getUniqueAssets();
+        //this.dataSource = this.dataInput.uniqueAssets;
     }
 
 }
