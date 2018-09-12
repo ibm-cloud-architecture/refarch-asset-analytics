@@ -15,7 +15,7 @@
 }
 
 th.mat-header-cell {
-    
+
     padding: 10px 15px;
 }
 
@@ -23,8 +23,8 @@ th.mat-header-cell {
     max-height: 300px;
     height: auto;
     overflow: auto;
-    
-    border: 1px solid black;
+
+    /*border: 1px solid black;*/
 }
 
 td {
