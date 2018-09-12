@@ -10,13 +10,26 @@ float : left;
 padding: 10px
 }
 
-.summary{
-  width:50%;
-  margin : 0;
-  float: left
+#riskCategories{
+    margin: auto;
 }
 
-.split{
+#mapSummary {
+   margin-top: 20px;
+   margin-bottom: 20px;
+}
+
+#pumpSummary {
+   margin-top: 20px;
+   margin-bottom: 20px;
+   padding-left: 10px;
+   padding-right: 10px;
+   border: 2px solid;
+   height: 50vh;
+   max-height: 450px;
+}
+
+.summary{
   width:50%;
   margin : 0;
   float: left

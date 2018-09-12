@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer, SafeStyle }  from '@angular/platform-browser';
-import { AssetsService } from '../../features/assets.service';
 import { Asset } from '../../features/assets/asset'
 declare function require(path: string);
 
@@ -20,15 +19,8 @@ declare var L;
 export class LeafletMap implements OnInit {
   @Input()
   id: string = '';
+  @Input()
   assets : Asset[];
-
-  
-
-
-  constructor(private service: AssetsService) { 
-    this.assets = service.getAssets();
-  }
-
 
   ngOnInit() {
     //Render Map

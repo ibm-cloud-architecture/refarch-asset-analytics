@@ -1,49 +1,14 @@
 <div class='assetAnalysis'>
-     <div [ngStyle] = "{'text-align':'center', 'background':'lightgrey', 'box-shadow': '3px 3px 3px 3px'}">
-
-            <h4 [ngStyle] = "{'border-bottom':'2px solid', 'background-color':asset.riskColor}">Asset {{asset.id}}</h4>
-          
-      
-           
-           <p> 
-               Type : {{asset.type}} 
-           </p>
-           
-
-           <p>
-           Rotation : {{asset.rotation}}
-           </p>
-
-           <p>
-            Version : {{asset.version}}
-           </p>
-
-            <p>
-           Current : {{asset.current}}
-           </p>
-
-            <p>
-           Pressure : {{asset.pressure}}
-           </p>
-
-            <p>
-           Flow Rate : {{asset.flowRate}}
-           </p>
-
-            <p>
-           Temperature : {{asset.temperature}}
-           </p>
-
-           <p>
-                Latitude : {{asset.latitude}}
-             </p>
-
-             <p>
-               Longitude : {{asset.longitude}}
-            </p>
-
-
-
-            </div>
-
+   <div [ngStyle] = "{'text-align':'center','background':'lightgrey', 'border':'2px solid', 'height': '40vh'}">
+      <h4 [ngStyle] = "{'border-bottom':'2px solid','background-color':asset.riskColor}">Asset {{asset.id}}</h4>
+      <p> Type : {{asset.type}} </p>
+      <p> Rotation : {{asset.rotation}} </p>
+      <p> Version : {{asset.version}} </p>
+      <p> Current : {{asset.current}} </p>
+      <p> Pressure : {{asset.pressure}} </p>
+      <p> Flow Rate : {{asset.flowRate}} </p>
+      <p> Temperature : {{asset.temperature}} </p>
+      <p> Latitude : {{asset.latitude}} </p>
+      <p> Longitude : {{asset.longitude}} </p>
+   </div>
 </div>

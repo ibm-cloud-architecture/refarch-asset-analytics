@@ -2,92 +2,42 @@
     <script src="/js/angular-leaflet-directive.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css">
+
+    <!-- Angular Material Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.css">
 </head>
 
-<div id ='top' style= 'background-color:palegoldenrod'>
-  <div class="row">
+<div id ='top'>
+   <div class="row">
       <div class="col-md-6">
-        <div id = 'map'>
+         <div id = 'map'>
             <div id = 'mapSummary'>
-              <leafletMap ></leafletMap>
-              </div>
-        </div>
+               <leafletMap [assets] = "assets"></leafletMap>
+            </div>
+         </div>
       </div>
       <div class="col-md-6">
-        <div id = 'pumpSummary' class = 'split'>
-          <div id = 'riskCategories' style = 'display:inline-block; width:500px'>
-            <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
-            <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
-            <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
-          </div>
-          <table class="table table-striped table-condensed"   style = 'box-shadow: 1px 1px 1px 1px' >
-            <thead>
-              <tr>
-                <th>Risk</th>
-                <th>Id</th>
-                <th>Type</th>
-                <th>Version</th>
-                <th>Pressure</th>
-                <th>Flow</th>
-                <th>Temperature</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="asset" *ngFor="let asset of uniqueAssets;let i = index" (click) = tableClick(i) id = "listAttributes">
-                <span class="dot" [ngStyle] = "{'background-color':asset.riskColor}"></span>
-                 <td>{{asset.id}}</td>
-                 <td>{{asset.type}}</td>
-                 <td>{{asset.version}}</td>
-                 <td>{{asset.pressure}}</td>
-                 <td>{{asset.flowRate}}</td>
-                <td>{{asset.temperature}}</td> 
-                <!-- <td> {{ listAtrributes(i) }}</td> -->
-            </tbody>
-          </table>
+        <div id = 'pumpSummary'>
+            <div id = 'riskCategories' class="row">
+                <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
+                <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
+                <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
+            </div>
+            <dashboard-table class="row" (selectedAsset)="getSelectedAsset($event)" [dataSource]="uniqueAssets"></dashboard-table>
         </div>
       </div>
-       <div id ='pumpDetails'>
-
-        </div>
-
-  </div>
+   </div>
 </div>
 
 
-
-
-<div id = 'bottom' style ='background-color: lightgreen'>
-
-  <div class = 'bottomsplit'>
-<!--    <assetAnalysis id = {{selectedAssetAnalysis.id}} type = {{selectedAssetAnalysis.type}} version = {{selectedAssetAnalysis.version}} rotation = {{selectedAssetAnalysis.rotation}} current = {{selectedAssetAnalysis.current}} pressure = {{selectedAssetAnalysis.pressure}} flowRate = {{selectedAssetAnalysis.flowRate}} temperature = {{selectedAssetAnalysis.temperature}} riskColor = {{selectedAssetAnalysis.riskColor}} longitude = {{selectedAssetAnalysis.longitude}} latitude = {{selectedAssetAnalysis.latitude}} > </assetAnalysis>-->
-      <assetAnalysis [asset] = "selectedAssetAnalysis"></assetAnalysis>
-  </div>
-
-  <div id = 'chartSelector' class = 'bottomsplit'>
-    <canvas id="line-chart" width="800" height="600"></canvas>
-    <!-- <chartSelector> </chartSelector> -->
-  </div>
-
- <div id = 'chartSummary' class = 'bottomsplit' [ngStyle] = "{'text-align':'center', 'background':'lightgrey','box-shadow': '3px 3px 3px 3px'}">
-    <div id ='PLACEHOLDER' style = 'width : 100%; height : 34vh'> 
-    <h4 [ngStyle] = "{'border-bottom':'2px solid'}"> Chart Summary </h4>
-    <div>Selected Pump: {{selectedAssetAnalysis.id}}</div>
-    <div>Select Date Range: </div>
-    <input type="date" class="pumpDate" id = "min"><br>
-    <div>To: </div>
-    <input type="date" class="pumpDate" id = "max"><br>
-    <div> Select Attribute: </div>
-    <select id = "attrSelector">
-      <option value="temperature">Temperature</option>
-      <option value="pressure">Pressure</option>
-      <option value="flow">Flow</option>
-      <option value="current">Current</option>
-      <option value="rotation">Rotation</option>
-    </select>
-    <br>
-    <button class = "asset" (click)="filterData(selectedAssetAnalysis)">Plot</button>
-    <div id = "errorMessage" value = " "></div>
-    </div> 
- </div>
-
+<div id = 'bottom'>
+   <div class="row">
+      <div class="col-md-3">
+         <assetAnalysis [asset] = "selectedAssetAnalysis"></assetAnalysis>
+      </div>
+      <div class="col-md-9">
+         <dashboard-chart [selectedAsset] = "selectedAssetAnalysis" [dataSource] = "assets"></dashboard-chart>
+      </div>
+   </div>
 </div>

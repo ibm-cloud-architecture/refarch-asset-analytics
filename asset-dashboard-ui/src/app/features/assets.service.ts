@@ -21,6 +21,7 @@ export class AssetsService {
   private socket: any;
   private stompClient: any;
 
+
   public connect() {
     if (this.assetEvents)
       return
@@ -49,8 +50,8 @@ export class AssetsService {
     this.inputStream.next(message)
   }
 
-  getAssets(): Asset[] {
-    return [
+getAssets(): any {
+    var assets = [
       {id: "12",
               os: 'raspbian',
               type: 'pump',
@@ -162,5 +163,72 @@ export class AssetsService {
                 riskRating : 'Medium',
                 timestamp: '2'}
               ];
+
+    var riskAnalysis = this.getRiskAnalysis(assets);
+    return {
+            'assets': assets, 
+            'riskAnalysis': riskAnalysis
+            };
   }
+
+  
+  getUniqueAssets(): any {
+    //Get Uniques
+    var assets = this.getAssets().assets;
+    
+    var flags = [], output = [], l = assets.length, i, mostRecentValue;
+    // set current timestamp to minimum
+    mostRecentValue = 0; 
+    // build map of pumps to timestamps
+    var mostRecents = new Map();
+    for (i = 0; i < l; i++ && assets[i]) {
+      if (mostRecents.get(assets[i].id) == null) { // ID does not yet exist
+        mostRecents.set(assets[i].id, i);
+      }
+      else { // ID exists, check timestamp against current
+        if (assets[mostRecents.get(assets[i].id)].timestamp < assets[i].timestamp) {
+          mostRecents.set(assets[i].id, i);
+        }
+      }
+    }
+
+    // output hashmap of pumps with most recent timestamps
+    mostRecents.forEach(function(value, key) {
+      //console.log(key + ' = ' + value);
+      output.push(assets[value]);
+    });
+    var riskAnalysis = this.getRiskAnalysis(output);
+      
+    var obj = {'uniqueAssets': output, 'riskAnalysis': riskAnalysis}
+
+    return obj;
+  }
+    
+    getRiskAnalysis(assets: Asset[]): {} {
+        var risks = {
+            highRiskCount: 0,
+            mediumRiskCount: 0,
+            lowRiskCount: 0,
+        };
+        
+        for(var i = 0; i<assets.length;i++){
+            if(assets[i].pressure >= 100 || assets[i].pressure <50){
+                 risks.highRiskCount++;
+                 assets[i].riskRating = 'High';
+                 assets[i].riskColor = 'red';
+            }
+            else if((assets[i].pressure >= 50 && assets[i].pressure <60 )|| (assets[i].pressure <100 && assets[i].pressure >=90)){
+                 risks.mediumRiskCount++;
+                 assets[i].riskRating = 'Medium';
+                 assets[i].riskColor = 'yellow';
+            }
+            else{
+                risks.lowRiskCount++;
+                assets[i].riskRating = 'Low';
+                assets[i].riskColor = 'green';
+            }
+        }
+        return risks;
+    }
+
 }
