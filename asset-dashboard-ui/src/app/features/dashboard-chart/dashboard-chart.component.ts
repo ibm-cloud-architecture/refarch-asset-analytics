@@ -63,14 +63,14 @@ export class DashboardChartComponent implements OnInit {
 
     // chart summary will be triggered here 
     filterData(selectedAssetAnalysis) {
-        console.log("selected id: "+selectedAssetAnalysis.id);
+        // console.log("selected id: "+selectedAssetAnalysis.id);
         var minDate = this.startDate.value.getTime();
         var maxDate = this.endDate.value.getTime();
         // NaN check
         if (isNaN(minDate)) {minDate = 0;}
         if (isNaN(maxDate)) {maxDate = 9999999999999}
-        console.log("min date: "+this.startDate.value.getTime());
-        console.log("max date: "+this.endDate.value.getTime());
+
+        // get pump history map
         var pumpHistory = this.historyMap.get(selectedAssetAnalysis.id); 
 
         // init data
@@ -88,8 +88,7 @@ export class DashboardChartComponent implements OnInit {
           var pumpTimeStamp = new Date(pumpHistory[i].timestamp).getTime();
           // filter values
           if (pumpTimeStamp >= minDate-86400000 && pumpTimeStamp <= maxDate) {
-            // plot here
-            // add desired attribute
+            // decide which attribute
             if (attributeSelect === 'temperature') {dataset.push(pumpHistory[i].temperature);}
             else if (attributeSelect === 'pressure') {dataset.push(pumpHistory[i].pressure);}
             else if (attributeSelect === 'flow') {dataset.push(pumpHistory[i].flowRate);}
