@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Asset } from '../assets/asset';
 import { AssetsService } from '../../features/assets.service';
+import { FormControl } from '@angular/forms';
+
 import Chart from 'chart.js';
 
 export interface Attribute {
@@ -35,6 +37,9 @@ export class DashboardChartComponent implements OnInit {
 
     selectedAttribute: any;
 
+    startDate = new FormControl(new Date());
+    endDate = new FormControl(new Date());
+
           // initialize map of form <pump id, list of different timestamp objects>
     initHistoryMap(assets) {
 
@@ -59,27 +64,30 @@ export class DashboardChartComponent implements OnInit {
     // chart summary will be triggered here 
     filterData(selectedAssetAnalysis) {
         console.log("selected id: "+selectedAssetAnalysis.id);
-        var minDate = new Date((<HTMLInputElement>document.getElementById('min')).value).getTime();
-        var maxDate = new Date((<HTMLInputElement>document.getElementById('max')).value).getTime();
+        var minDate = this.startDate.value.getTime();
+        var maxDate = this.endDate.value.getTime();
         // NaN check
         if (isNaN(minDate)) {minDate = 0;}
         if (isNaN(maxDate)) {maxDate = 9999999999999}
-        //console.log("date format: "+document.getElementById('min').value)
-        console.log("min date: "+minDate);
-        console.log("max date: "+maxDate);
+        console.log("min date: "+this.startDate.value.getTime());
+        console.log("max date: "+this.endDate.value.getTime());
         var pumpHistory = this.historyMap.get(selectedAssetAnalysis.id); 
 
         // init data
         var dataset = [];
         var label = [];
-        
+
         var attributeSelect = this.selectedAttribute;
+
+        if (attributeSelect === undefined) {
+          attributeSelect = 'temperature';
+        }
         console.log("selected attribute: "+attributeSelect);
 
         for (var i = 0; i < pumpHistory.length; i++) {
           var pumpTimeStamp = new Date(pumpHistory[i].timestamp).getTime();
           // filter values
-          if (pumpTimeStamp >= minDate && pumpTimeStamp <= maxDate) {
+          if (pumpTimeStamp >= minDate-86400000 && pumpTimeStamp <= maxDate) {
             // plot here
             // add desired attribute
             if (attributeSelect === 'temperature') {dataset.push(pumpHistory[i].temperature);}
