@@ -1,0 +1,14 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: vol7
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Recycle
+  capacity:
+    storage: 4Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/usr/data"

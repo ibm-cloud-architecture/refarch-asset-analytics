@@ -1,8 +1,8 @@
 # Event Producers
-In this article we are presenting how to:
-* [Develop a kafka stream application using the stream API and stateful aggregation]()
-* [Use spring boot microservice to consume kafka topic and persist to Cassandra for future analytics]
-SpringBoot app to support creating different event to publish to Kafka Topics.
+In this note we are presenting the following items:
+* [How to develop a kafka stream application using the stream API and stateful aggregation]()
+* [Use Spring boot microservice to consume kafka topic and persist to Cassandra for future analytics]
+* Use SpringBoot app to support creating different event to publish to Kafka Topics.
 
 ## What you will learn
 
@@ -11,7 +11,7 @@ SpringBoot app to support creating different event to publish to Kafka Topics.
 *
 
 ## Kafka
-You can run kafka locally using docker-compose or by deploying it to Kubernetes on docker desktop. See the note [here](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka) or to a remote cluster running on kubernetes.
+You can run kafka locally using docker-compose or by deploying it to Kubernetes on docker desktop. See the note [here](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka) or to a remote cluster running on kubernetes like [IBM Cloud Private](https://github.com/ibm-cloud-architecture/refarch-analytics/blob/master/docs/kafka/readme.md#install-kafka-on-icp) or IBM Cloud Container Service.
 
 ## Kafka useful APIs
 Here is a list of common API to use in your producer and consumer.

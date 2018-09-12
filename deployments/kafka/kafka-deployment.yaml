@@ -5,7 +5,7 @@ metadata:
     app: kafka
   name: kafka
 spec:
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
