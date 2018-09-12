@@ -130,7 +130,7 @@ export class DashboardChartComponent implements OnInit {
             options: {
               title: {
                 display: true,
-                text: 'Pump attributes over specified date range'
+                text: 'Pump Attributes Over Time'
               }
             }
           });
