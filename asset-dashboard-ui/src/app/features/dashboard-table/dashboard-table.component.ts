@@ -23,12 +23,13 @@ export class DashboardTableComponent {
     
     @ViewChild(MatSort) sort: MatSort;
     
-    tableClick (i){
-        this.selectedAsset.emit(this.dataSource[i])
+    tableClick (asset){
+        this.selectedAsset.emit(asset);
     }
     
     ngOnInit() {
         this.dataSource = new MatTableDataSource<Asset>(this.data);
+
         this.dataSource.sort = this.sort;
     }
 }
