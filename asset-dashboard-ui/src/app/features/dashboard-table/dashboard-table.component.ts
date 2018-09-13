@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output,EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output,EventEmitter, ViewChild } from '@angular/core';
 import { Asset } from '../assets/asset';
 
-import { MatTableModule } from '@angular/material';
+import { MatTableModule, MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'dashboard-table',
@@ -10,8 +10,9 @@ import { MatTableModule } from '@angular/material';
 })
 export class DashboardTableComponent {
     
-    @Input()
-    dataSource: Asset[];
+    @Input() data: Asset[];
+    
+    dataSource: MatTableDataSource<Asset>;
 
     @Output()
     selectedAsset: EventEmitter<Asset> = new EventEmitter<Asset>();
@@ -20,7 +21,14 @@ export class DashboardTableComponent {
     
     displayedColumns: string[] = ['riskColor', 'id', 'type', 'version', 'pressure', 'flowRate', 'temperature'];
     
+    @ViewChild(MatSort) sort: MatSort;
+    
     tableClick (i){
         this.selectedAsset.emit(this.dataSource[i])
+    }
+    
+    ngOnInit() {
+        this.dataSource = new MatTableDataSource<Asset>(this.data);
+        this.dataSource.sort = this.sort;
     }
 }

@@ -10,7 +10,7 @@ import { DashboardTableComponent } from './dashboard-table/dashboard-table.compo
 import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
 import { routes } from './routes';
 //Angular material imports
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatSortModule} from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -24,6 +24,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     SharedModule,
     MatTableModule,
+    MatSortModule,
     MatButtonModule,
     MatSelectModule,
     MatDatepickerModule,

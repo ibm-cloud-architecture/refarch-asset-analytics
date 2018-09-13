@@ -25,8 +25,8 @@ padding: 10px
    padding-left: 10px;
    padding-right: 10px;
    border: 2px solid;
-   height: 50vh;
-   max-height: 450px;
+   height: 30em;
+   max-height: 30em;
 }
 
 .summary{
