@@ -5,9 +5,10 @@ The problem space is related to continuous operation and service on manufacturin
 
 The use case is also adaptable and the architecture, solution components can be used for a security treat analysis on a park of devices or assets connected to a company intranet: real time events come from device that need to be aggregated and correlated and analytics run can be performed on historical data to assess security risk. Alert can be published to dashboard user interface.  
 
-We are presenting best practices around data management, real team streaming, cassandra high availability    
+We are presenting best practices around data management, real team streaming, cassandra high availability, microservices and serverless implementation.    
 
-<details><summary><h2>Table of contents</h2></summary>
+## Table of contents
+<details><summary><h2> </h2></summary>
 <ul>
 <li><a href="#use-case">Use case</a></li>
 <li><a href="#system-context">System Context</a> to present the solution components</li>

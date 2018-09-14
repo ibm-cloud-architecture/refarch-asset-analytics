@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output,EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output,EventEmitter, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Asset } from '../assets/asset';
 
-import { MatTableModule } from '@angular/material';
+import { MatTableModule, MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'dashboard-table',
@@ -10,8 +10,9 @@ import { MatTableModule } from '@angular/material';
 })
 export class DashboardTableComponent implements OnChanges {
     
-    @Input()
-    dataSource: Asset[];
+    @Input() data: Asset[];
+    
+    dataSource: MatTableDataSource<Asset>;
 
     @Output()
     selectedAsset: EventEmitter<Asset> = new EventEmitter<Asset>();
@@ -20,8 +21,16 @@ export class DashboardTableComponent implements OnChanges {
     
     displayedColumns: string[] = ['riskColor', 'id', 'type', 'version', 'pressure', 'flowRate', 'temperature'];
     
-    tableClick (i){
-        this.selectedAsset.emit(this.dataSource[i])
+    @ViewChild(MatSort) sort: MatSort;
+    
+    tableClick (asset){
+        this.selectedAsset.emit(asset);
+    }
+    
+    ngOnInit() {
+        this.dataSource = new MatTableDataSource<Asset>(this.data);
+
+        this.dataSource.sort = this.sort;
     }
 
     ngOnChanges(changes: SimpleChanges) {
