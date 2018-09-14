@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output,EventEmitter, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output,EventEmitter, ViewChild } from '@angular/core';
 import { Asset } from '../assets/asset';
 
 import { MatTableModule, MatSort, MatTableDataSource } from '@angular/material';
@@ -8,7 +8,7 @@ import { MatTableModule, MatSort, MatTableDataSource } from '@angular/material';
   templateUrl: './dashboard-table.component.html',
   styleUrls: ['./dashboard-table.component.css']
 })
-export class DashboardTableComponent implements OnChanges {
+export class DashboardTableComponent {
     
     @Input() data: Asset[];
     
@@ -31,11 +31,5 @@ export class DashboardTableComponent implements OnChanges {
         this.dataSource = new MatTableDataSource<Asset>(this.data);
 
         this.dataSource.sort = this.sort;
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if(changes.dataSource.currentValue) {
-          console.log("dashboard-table: "+this.dataSource);
-        }
     }
 }

@@ -27,20 +27,14 @@ export class DashboardComponent implements OnInit {
 
   constructor(private service: AssetsService) {
     //Pull Assets and Unique Assets from our Data Service
-    this.selectedAssetAnalysis = new Asset;
-    service.getAssets()
-      .then((dataObject) => {
-        //console.log(dataObject);
-        this.assets = dataObject;
-        this.riskAnalysis = {};
-        this.riskAnalysis.lowRiskCount = 0;
-        this.riskAnalysis.mediumRiskCount = 0;
-        this.riskAnalysis.highRiskCount = 0;
-        const uniqueAssetsObject = service.getUniqueAssets(this.assets);
-        this.riskAnalysis = uniqueAssetsObject.riskAnalysis;
-        this.uniqueAssets = uniqueAssetsObject.uniqueAssets;
-        console.log("assets created in dashboard.component.ts");
-      });
+    this.assets = service.getAssets().assets;
+    this.uniqueAssets = service.getUniqueAssets().uniqueAssets;
+    this.riskAnalysis = {};
+    this.riskAnalysis.lowRiskCount = 0;
+    this.riskAnalysis.mediumRiskCount = 0;
+    this.riskAnalysis.highRiskCount = 0;
+    this.selectedAssetAnalysis = {};
+    this.riskAnalysis = service.getUniqueAssets().riskAnalysis
  }
 
   getSelectedAsset(data) {

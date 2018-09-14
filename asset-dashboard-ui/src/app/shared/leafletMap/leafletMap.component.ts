@@ -1,4 +1,4 @@
-import { Component, OnInit, OnViewInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer, SafeStyle }  from '@angular/platform-browser';
 import { Asset } from '../../features/assets/asset'
 declare function require(path: string);
@@ -16,16 +16,14 @@ declare var L;
   styleUrls: ['./leafletMap.component.css']
 })
 
-export class LeafletMap implements OnChanges {
+export class LeafletMap implements OnInit {
   @Input()
   id: string = '';
   @Input()
   assets : Asset[];
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnInit() {
     //Render Map
-    //if (changes.assets.currentValue === undefined) {return;}
-    console.log("leaflet assets: "+this.assets);
     var myMap = L.map('mapid').setView([40, -100], 3.3);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}', {foo: 'bar'}).addTo(myMap);
     //Build Icon Types
@@ -64,7 +62,7 @@ export class LeafletMap implements OnChanges {
 
           this.addMarker(this.assets[i].latitude,this.assets[i].longitude,associatedIcon,this.assets[i].id,myMap);
         }
-  }
+      }
 
   addMarker(lat,long,iconType,assetID,myMap){
     console.log('Add Marker run');
@@ -80,4 +78,3 @@ export class LeafletMap implements OnChanges {
  
 
 }
-

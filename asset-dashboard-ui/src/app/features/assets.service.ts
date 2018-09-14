@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { Asset } from './assets/asset';
 import * as SockJS from 'sockjs-client';
@@ -7,9 +8,6 @@ import websocketConnect from 'rxjs-websockets';
 import { QueueingSubject } from 'queueing-subject';
 import { share} from 'rxjs/operators';
 import { Http } from '@angular/http';
-//import 'rxjs/add/operator/map';
-import { map } from 'rxjs/operators';
-import { catchError } from 'rxjs/operators';
 // import 'rxjs/add/operator/share';
 /**
 Get the current top 50 assets from backend.
@@ -24,16 +22,11 @@ export class AssetsService {
   private inputStream: QueueingSubject<string>
   private socket: any;
   private stompClient: any;
-  private dataObject: any;
-  private dataUrl = '/assetmanager/assets'; 
-  constructor(private http:Http) { } 
+  private dataUrl = '/assetmanager/assets';
   assets: any;
+  private getSuccess: Boolean;
+  private urlDataSource: any;
 
-  // const myObserver = {
-  //   next: x => console.log(x),
-  //   error: err => console.error("error"+err),
-  //   complete: () => console.log('complete'),
-  // };
 
   public connect() {
     if (this.assetEvents)
@@ -63,163 +56,156 @@ export class AssetsService {
     this.inputStream.next(message)
   }
 
-  getAssetsWithObservable(): Observable<any>{
-      return this.http.get(this.dataUrl)
-        .pipe(map(this.extractData),
-        catchError(this.handleErrorObservable));
+  httpGet(theUrl) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.onreadystatechange = () => {
+      if (xmlHttp.status > 202 ) { this.getSuccess = false;}
+      else {
+        this.getSuccess = true;
+        this.urlDataSource = JSON.parse(xmlHttp.responseText);
+        console.log(this.urlDataSource);
+      }
+      if (xmlHttp.status === 404) { console.log("** 404 Error");}
+      if (xmlHttp.status === 504) { console.log("** 504 Error");}
+    };
+    xmlHttp.send( null );
   }
 
-  private extractData(res: Response) {
-    let body = res.json();
-    return body;
-  }
 
-  private handleErrorObservable (error: Response | any) {
-    console.error(error.message || error);
-    return Observable.throw(error.message || error);
-  }
+getAssets(): any {
+    this.httpGet(this.dataUrl);
+    console.log(this.getSuccess);
+    if (this.getSuccess === true) {
+      this.assets = this.urlDataSource;
+    }
+    else {
+      this.assets = [
+      {id: "12",
+              os: 'raspbian',
+              type: 'pump',
+              version: '10',
+              ipAddress: '',
+              antivirus: '',
+              rotation:  0,
+              current:  210,
+              pressure:  100,
+              flowRate:  40,
+               temperature:  80,
+               latitude : '30.266926',
+               longitude : '-97.750519',
+               riskRating : 'High',
+              timestamp: '2018-09-01'},
 
-  getAssets(): any {
-      // this.assets = [
-        // {id: "12",
-        //         os: 'raspbian',
-        //         type: 'pump',
-        //         version: '10',
-        //         ipAddress: '',
-        //         antivirus: '',
-        //         rotation:  0,
-        //         current:  210,
-        //         pressure:  100,
-        //         flowRate:  40,
-        //          temperature:  80,
-        //          latitude : '30.266926',
-        //          longitude : '-97.750519',
-        //          riskRating : 'High',
-        //         timestamp: '2018-09-01'},
+              {id: "12",
+            os: 'raspbian',
+            type: 'pump',
+            version: '10',
+             ipAddress: '',
+             antivirus: '',
+             rotation:  0,
+             current:  210,
+             pressure:  100,
+             flowRate:  40,
+             temperature:  90,
+             latitude : '30.266926',
+             longitude : '-97.750519',
+             riskRating : 'High',
+            timestamp: '2018-09-02'},
 
-      //           {id: "12",
-      //         os: 'raspbian',
-      //         type: 'pump',
-      //         version: '10',
-   	  //         ipAddress: '',
-   	  //         antivirus: '',
-   	  //         rotation:  0,
-   	  //         current:  210,
-   	  //         pressure:  100,
-   	  //         flowRate:  40,
-      //          temperature:  90,
-      //          latitude : '30.266926',
-      //          longitude : '-97.750519',
-      //          riskRating : 'High',
-      //         timestamp: '2018-09-02'},
+            {id: "12",
+            os: 'raspbian',
+            type: 'pump',
+            version: '10',
+            ipAddress: '',
+            antivirus: '',
+            rotation:  0,
+            current:  210,
+            pressure:  100,
+            flowRate:  40,
+             temperature:  100,
+             latitude : '30.266926',
+             longitude : '-97.750519',
+             riskRating : 'High',
+            timestamp: '2018-09-03'},
 
-      //         {id: "12",
-      //         os: 'raspbian',
-      //         type: 'pump',
-      //         version: '10',
-      //         ipAddress: '',
-      //         antivirus: '',
-      //         rotation:  0,
-      //         current:  210,
-      //         pressure:  100,
-      //         flowRate:  40,
-      //          temperature:  100,
-      //          latitude : '30.266926',
-      //          longitude : '-97.750519',
-      //          riskRating : 'High',
-      //         timestamp: '2018-09-03'},
+            {id: "12",
+            os: 'raspbian',
+            type: 'pump',
+            version: '10',
+            ipAddress: '',
+            antivirus: '',
+            rotation:  0,
+            current:  210,
+            pressure:  100,
+            flowRate:  40,
+             temperature:  110,
+             latitude : '30.266926',
+             longitude : '-97.750519',
+             riskRating : 'High',
+            timestamp: '2018-09-04'},
 
-      //         {id: "12",
-      //         os: 'raspbian',
-      //         type: 'pump',
-      //         version: '10',
-      //         ipAddress: '',
-      //         antivirus: '',
-      //         rotation:  0,
-      //         current:  210,
-      //         pressure:  100,
-      //         flowRate:  40,
-      //          temperature:  110,
-      //          latitude : '30.266926',
-      //          longitude : '-97.750519',
-      //          riskRating : 'High',
-      //         timestamp: '2018-09-04'},
+            {id: "12",
+            os: 'raspbian',
+            type: 'pump',
+            version: '10',
+            ipAddress: '',
+            antivirus: '',
+            rotation:  0,
+            current:  210,
+            pressure:  100,
+            flowRate:  40,
+             temperature:  120,
+             latitude : '30.266926',
+             longitude : '-97.750519',
+             riskRating : 'High',
+            timestamp: '2018-09-05'},
 
-      //         {id: "12",
-      //         os: 'raspbian',
-      //         type: 'pump',
-      //         version: '10',
-      //         ipAddress: '',
-      //         antivirus: '',
-      //         rotation:  0,
-      //         current:  210,
-      //         pressure:  100,
-      //         flowRate:  40,
-      //          temperature:  120,
-      //          latitude : '30.266926',
-      //          longitude : '-97.750519',
-      //          riskRating : 'High',
-      //         timestamp: '2018-09-05'},
-
-      //         {id: "100",
-      //           os: 'raspbian',
-      //           type: 'pump',
-      //           version: '10.1',
-     	//           ipAddress: '',
-     	//           antivirus: '',
-     	//           rotation:  10,
-     	//           current:  220,
-     	//           pressure:  80,
-     	//           flowRate:  80,
-      //            temperature:  60,
-      //            latitude : '31.266926',
-      //           longitude : '-98.750519',
-      //           riskRating : 'Low',
-      //           timestamp: '2'},
-      //           {id: "104",
-      //             os: 'raspbian',
-      //             type: 'pump',
-      //             version: '10.2',
-      //             ipAddress: '',
-      //             antivirus: '',
-      //             rotation:  20,
-      //             current:  220,
-      //             pressure:  55,
-      //             flowRate:  82,
-      //             temperature:  60,
-      //             latitude : '28.266926',
-      //             longitude : '-95.750519',
-      //             riskRating : 'Medium',
-      //             timestamp: '2'}
-      //           ];
-
-      //console.log(this.dataUrl);
-      //this.dataObject = this.getAssetsWithObservable();
-
-      // this.dataObject.subscribe(this.myObserver);
-      // //console.dir(this.dataObject);
-
-      // var riskAnalysis = this.getRiskAnalysis(this.assets);
-
-      // return {
-      //         'assets': this.assets, 
-      //         'riskAnalysis': riskAnalysis
-      //         };
-
-     return new Promise((resolve, reject) => {
-        this.dataObject = this.getAssetsWithObservable();
-        this.dataObject.subscribe({
-          next: x => resolve(x),
-          error: err => reject(err),
-          complete: () => console.log('complete'),
-        });
-      });
+            {id: "100",
+              os: 'raspbian',
+              type: 'pump',
+              version: '10.1',
+               ipAddress: '',
+               antivirus: '',
+               rotation:  10,
+               current:  220,
+               pressure:  80,
+               flowRate:  80,
+               temperature:  60,
+               latitude : '31.266926',
+              longitude : '-98.750519',
+              riskRating : 'Low',
+              timestamp: '2'},
+              {id: "104",
+                os: 'raspbian',
+                type: 'pump',
+                version: '10.2',
+                ipAddress: '',
+                antivirus: '',
+                rotation:  20,
+                current:  220,
+                pressure:  55,
+                flowRate:  82,
+                temperature:  60,
+                latitude : '28.266926',
+                longitude : '-95.750519',
+                riskRating : 'Medium',
+                timestamp: '2'}
+              ];
 
     }
 
+    var riskAnalysis = this.getRiskAnalysis(this.assets);
+    return {
+            'assets': this.assets, 
+            'riskAnalysis': riskAnalysis
+            };
+  }
+
   
-  getUniqueAssets(assets) {
+  getUniqueAssets(): any {
     //Get Uniques
+    var assets = this.assets;
     
     var flags = [], output = [], l = assets.length, i, mostRecentValue;
     // set current timestamp to minimum
@@ -243,7 +229,7 @@ export class AssetsService {
       output.push(assets[value]);
     });
     var riskAnalysis = this.getRiskAnalysis(output);
-    console.log(riskAnalysis);
+      
     var obj = {'uniqueAssets': output, 'riskAnalysis': riskAnalysis}
 
     return obj;
