@@ -8,14 +8,8 @@ import { Asset } from '../../features/assets/asset';
   templateUrl: './assetAnalysis.component.html',
   styleUrls: ['./assetAnalysis.component.css']
 })
-export class AssetAnalysis implements OnInit {
+export class AssetAnalysis{
 
     @Input ()
     asset: Asset;
-
-    constructor() { }
-
-    ngOnInit() {
-    }
-
 }

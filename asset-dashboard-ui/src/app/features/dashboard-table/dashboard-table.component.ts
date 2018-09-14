@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output,EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output,EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Asset } from '../assets/asset';
 
 import { MatTableModule } from '@angular/material';
@@ -8,7 +8,7 @@ import { MatTableModule } from '@angular/material';
   templateUrl: './dashboard-table.component.html',
   styleUrls: ['./dashboard-table.component.css']
 })
-export class DashboardTableComponent {
+export class DashboardTableComponent implements OnChanges {
     
     @Input()
     dataSource: Asset[];
@@ -22,5 +22,11 @@ export class DashboardTableComponent {
     
     tableClick (i){
         this.selectedAsset.emit(this.dataSource[i])
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if(changes.dataSource.currentValue) {
+          console.log("dashboard-table: "+this.dataSource);
+        }
     }
 }

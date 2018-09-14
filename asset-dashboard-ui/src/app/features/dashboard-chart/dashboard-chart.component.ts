@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Asset } from '../assets/asset';
 import { AssetsService } from '../../features/assets.service';
 import { FormControl } from '@angular/forms';
@@ -17,7 +17,7 @@ export interface Attribute {
   styleUrls: ['./dashboard-chart.component.css']
 })
 
-export class DashboardChartComponent implements OnInit {
+export class DashboardChartComponent implements OnInit, OnChanges {
     
     @Input()
     selectedAsset: Asset;
@@ -137,7 +137,7 @@ export class DashboardChartComponent implements OnInit {
 
       ngOnInit() {
         //console.log(this.dataSource);
-        this.historyMap = this.initHistoryMap(this.dataSource);
+        //this.historyMap = this.initHistoryMap(this.dataSource);
         var data: any = {};
         data.labels = [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050];
         data.datasets = [];
@@ -149,6 +149,15 @@ export class DashboardChartComponent implements OnInit {
                 fill: false
               });
         this.buildChart(data);
+      }
+
+      ngOnChanges(changes: SimpleChanges) {
+        console.log(changes);
+        if(changes.dataSource.currentValue) {
+          //console.log(changes.dataSource.currentValue)
+          console.log(this.dataSource);
+          this.historyMap = this.initHistoryMap(this.dataSource);
+        }
       }
 
 }
