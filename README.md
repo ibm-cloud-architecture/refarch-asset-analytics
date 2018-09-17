@@ -19,7 +19,7 @@ We are presenting best practices around data management, real team streaming, ca
 <li><a href="asset-event-producer/README.md">Event producers simulator</a> to simulate pump events for demonstration purpose.</li>
 <li><a href="asset-dashboard-ui/README.md">Angular 6 user interface to present dashboard</a> to present a mix of static and real time data.</li>
 <li><a href="asset-dashboard-bff/README.md">Dashboard BFF</a> to present a mix of static and real time data.</li>
-<li><a href="https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice">Asset management microservice</a></li>
+<li><a href="https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice">Asset management microservice</a> used to expose REST api in front of Cassandra persistence</li>
 </ul>
 <li><a href="docs/demo.md">Demonstration script</a></li>
 <li><a href="docs/analytics/README.md">Analytics model</a></li>
