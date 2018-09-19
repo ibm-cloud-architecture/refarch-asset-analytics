@@ -1,0 +1,15 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: db2-pv
+  labels:
+    type: nfs
+spec:
+  persistentVolumeReclaimPolicy: Recycle
+  capacity:
+    storage: 4Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: "172.16.0.5"
+    path: "/storage/green/db2"
