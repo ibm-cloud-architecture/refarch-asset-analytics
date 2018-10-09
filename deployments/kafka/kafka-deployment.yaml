@@ -14,17 +14,17 @@ spec:
       containers:
       - env:
         - name: KAFKA_ADVERTISED_HOST_NAME
-          value: "kafka-service"
+          value: "greencompute-kafka-svc"
         - name: KAFKA_ADVERTISED_PORT
           value: "9092"
         - name: KAFKA_BROKER_ID
           value: "1"
         - name: KAFKA_ZOOKEEPER_CONNECT
-          value: zookeeper-service:2181
+          value: greencompute-zookeeper-service:2181
         - name: KAFKA_CREATE_TOPICS
           value: "asset-topic:1:1"
         image: wurstmeister/kafka
         imagePullPolicy: IfNotPresent
-        name: kafka
+        name: greencompute-kafka
         ports:
         - containerPort: 9092

@@ -41,7 +41,7 @@ A set of geographically distributed electrical submersible pumps (can apply to a
 
 The solution combines key performance indicators aggregation, real-time reporting to a web-based dashboard user interface component, risk scoring microservice, and big data sink used by data scientists to develop and tune analytics and machine learning models.  
 
-Data are continuously persisted in a document oriented database, we selected [Cassandra](http://cassandra.apache.org/) as a data sink. The real time event processing is supported by [Kafka](http://cassandra.apache.org/) and Kafka streaming. The microservices are done in Java, one in microprofile and one in Java. The data science work is done using ICP for data and data science experience.
+Data are continuously persisted in a document oriented database, we selected [Cassandra](http://cassandra.apache.org/) as a data sink. The real time event processing is supported by [Kafka](http://kafka.apache.org/) and Kafka streaming. The microservices are done in Java, one in microprofile and one in Java. The data science work is done using [ICP for Data](https://www.ibm.com/analytics/cloud-private-for-data) and data science experience.
 
 ### The Benefits
 The solution gives visibility to analysts and executive about the real time status of the devices in the grids, with an aggregate view of the ones at risk. The device operation was increased by 15% and the unpredictable failure rate decreased by 85%. The model added diagnostic capabilities to help field engineers to deliver better maintenance.
@@ -55,25 +55,27 @@ The processing starts by the continuous event flow emitted by a set of monitored
 1. The user interface is Angular 6 and the dash board look like the following wireframe:
 ![](docs/dashboard-wireframe.png)  
 and the project is under the [asset-dashboard-ui](./asset-dashboard-ui) folder.
-1. Manage CRUD operation on the assets. See [the Asset manager microservice code.](asset-mgr-ms/README.md)
+1. Manage CRUD operation on the assets. See [the Asset manager microservice code.](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice)
 
-The following diagram illustrates the IBM Cloud Private, kubernetes deployment we are doing in this solution. You will find the same components as in the system context above, with added elements for data management and data scientists using [ICP for Data](https://www.ibm.com/analytics/cloud-private-for-data).
+The following diagram illustrates the IBM Cloud Private, kubernetes deployment we are using in this solution. You will find the same components as in the system context above, with added elements for data management and data scientists using [ICP for Data](https://www.ibm.com/analytics/cloud-private-for-data).
 
 ![](docs/icp-deployment.png)
 
 ## Deployment
-We want to take this project to dig into the detail of workload deployment and address resiliency for each of those components. The full picture can be presented in the diagram below:
+We want within this project to dig into the detail of workload deployment and address resiliency for each of those components. The diagram below presents the deployment of runtime components as well as Zookeeper, Kafka and Cassandra clusters deployment inside k8s:
 
 ![](docs/asset-sol-k8s-depl.png)
 
 * For high availability we need three masters, three proxies, 3 managers and at least 6 workers.
-* Cassandra is deployed with 3 replicas and uses HostPath persistence volume so leverage host filesystems.
-* Kafka is deployed with 3 replicas with anti affinity to avoid to have two pods on same node and on the same node as Zookeeper
+* Cassandra is deployed with 3 replicas and uses NFS based persistence volume so leverage shareable filesystems.
+* Kafka is deployed with 3 replicas with anti affinity to avoid to have two pods on same node and also on the same node as Zookeeper's ones.
 * Zookeeper is deployed with 3 replicas with anti affinity to avoid to have two pods on same node and on the same node as Kafka.   
 This constraint explains the 6 workers.
 * The component of the solution are deployed with at least 3 replicas: Asset manager microservice, dashboard BFF, and asset consumer/cassandra-injector.
 
 ### Pre-requisites
+* Clone this project to get all the kubernetes deployment files and source code of the different components.
+* Clone the [asset management microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice) implementation
 You need to have access to a kubernetes cluster like IBM Cloud Private. We are providing a script under ./scripts/validateConfig.sh to help you validate the prerequisites.
 
 * If not done already create a namespace named `greencompute`
@@ -87,26 +89,38 @@ kubectl config set-context green-cluster-context --user=admin --namespace=greenc
 kubectl config use-context green-cluster-context
 ```
 We have added a script to support those commands so, once you run the script, just getting the security token for the admin user should be enough. See script named `scripts/connectToCluster.sh`
-* Clone this project to get all the kubernetes deployment files and source code of the different components.
+
 
 ### Deploying Cassandra
-There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` folder and the installation instructions are [here](./docs/cassandra/readme.md). We also describe the potential architecture decisions around deploying Cassandra for high availability.
+There is no Cassandra helm chart currently delivered with ICP Helm catalog. We are using volume, service and statefuleset deployment files from the `deployments/cassandra` project folder and the installation instructions are [detailed here](./docs/cassandra/readme.md). In the readme, we also describe the potential architecture decisions around deploying Cassandra for high availability.
 
 You can use our yaml files to deploy to ICP. (See the files under `deployments/cassandra` and instructions in [this section](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/blob/master/docs/cassandra/readme.md#using-our-configurations))
-When the pods are up and running use the [following commands](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/blob/master/docs/cassandra/readme.md#define-assets-table-structure-with-cql) to create the keyspace and tables.
+
+When the pods are up and running use the [following commands](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/blob/master/docs/cassandra/readme.md#define-assets-table-structure-with-cql) to create the needed keyspace and tables for the solution to run.
 
 ### Deploying Kafka
-We are presenting different deployment models, all based on container: with docker, docker Edge with local kubernetes for your development environment, IBM Cloud Private for dev or staging. See details [in this note](
+We are presenting different deployment models, all based on container: with docker, docker Edge with local kubernetes for your development environment, IBM Cloud Private for dev or staging. See details [in this note.](
   https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka#run-kafka-in-docker)
-For ICP, the new IBM Event Stream product is used as it is built on top of Kafka and brings some nice capabilities.
+
+For ICP, the new [IBM Event Stream]() product is used, as it is built on top of Kafka and brings very nice capabilities.
 
 ### Solution Deployment on ICP
 Each component of the solution is compiled and packaged as container. Here is the list of supported deployment:
-* [Asset management microservice deployment](asset-mgr-ms/README.md#deploy)
+* [Asset management microservice deployment](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice)
 * [Asset consumer and injector to Cassandra](asset-consumer/README.md#deploy)
 * [Dashboard backend for frontend](asset-dashboard-bff/README.md#deploy)
 
 Finally the [pump simulator](asset-event-producer/readme.md) is a standalone java application used to produce different type of event. It does not need to be deployed to kubernetes.
 
 ### Troubleshooting
-As we are deploying different solutions into kubernetes we group [Troubleshooting notes here], and we are adding a [kubernetes FAQ here] and [summary here](https://jbcodeforce.github.io/#/studies)
+As we are deploying different solutions into kubernetes we group [Troubleshooting notes here](https://github.com/ibm-cloud-architecture/refarch-integration/blob/master/docs/icp/troubleshooting.md) and [a technology summary here](https://jbcodeforce.github.io/#/studies)
+
+## Contributors
+
+* Lead development [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/)
+* [Amaresh Rajasekharan for the data science part](https://www.linkedin.com/in/amaresh-rajasekharan/)
+* [Hemankita Perabathini for the asset management microservice and ICP](https://www.linkedin.com/in/hemankita-perabathini/)
+* [Zach Silverstein](https://www.linkedin.com/in/zsilverstein/)
+
+
+Please [contact me](mailto:boyerje@us.ibm.com) for any questions.

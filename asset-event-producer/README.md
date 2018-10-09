@@ -1,7 +1,6 @@
 # Event Producers
-In this note we are presenting the following items:
+In this project we are presenting the following items:
 * [How to develop a kafka stream application using the stream API and stateful aggregation]()
-* [Use Spring boot microservice to consume kafka topic and persist to Cassandra for future analytics]
 * Use SpringBoot app to support creating different event to publish to Kafka Topics.
 
 ## What you will learn

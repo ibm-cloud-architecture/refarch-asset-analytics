@@ -17,8 +17,8 @@ import com.google.gson.GsonBuilder;
 import ibm.cte.esp.model.Asset;
 
 /**
- * Simulate a Electrical S Pump generating events for rotator and temperature measurement.
- * 
+ * Simulate a Electrical Pump generating events for rotator, preassure and temperature metrics.
+ *
  * - connect to a kafka topic to publish two types of events:
  *    - new asset added to the grid of devices
  *    - new asset measurement every n seconds
@@ -31,13 +31,13 @@ public class PumpSimulator {
 	private int timeGap = 10000;
 	private boolean event = false;
 	private ApplicationConfig config;
-	
+
 	private KafkaProducer<String, Object> kafkaProducer;
-	
+
 	public PumpSimulator() {
 		config = new ApplicationConfig();
 	}
-	
+
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		logger.info("######### Pump Simulator Starting ############ ");
 		PumpSimulator simulator= new PumpSimulator();
@@ -48,18 +48,21 @@ public class PumpSimulator {
 			simulator.generateEvents();
 		} else {
 			simulator.generateAssets();
-			
+
 			simulator.shutdown();
 		}
 	}
-	
-	
+
+
 	/**
-	 * Generate pump event every n seconds
+	 * Generate pump event every n seconds using one of the available pattern:
+	 - temperature decrease
+	 - preassure decrease over time
+	 - preassure increase
 	 */
 	public void generateEvents() {
-	    
-		
+
+
 	}
 
 	public void shutdown() {
@@ -68,7 +71,7 @@ public class PumpSimulator {
 
 	private void prepareProducer() {
 		Properties properties = new Properties();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, 
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
         		config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER));
         properties.put(ProducerConfig.CONNECTIONS_MAX_IDLE_MS_CONFIG, 10000);
         properties.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 4000);
@@ -79,29 +82,42 @@ public class PumpSimulator {
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         this.kafkaProducer = new KafkaProducer<>(properties);
-        
+
 		if (event) {
-			logger.info("Pump Simulator sending pump event to " 
-		    + config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER) 
+			logger.info("Pump Simulator sending pump event to "
+		    + config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER)
 		    + " every " + timeGap + " ms");
 		} else {
-			logger.info("Pump Simulator sending " + numberOfAssets 
+			logger.info("Pump Simulator sending " + numberOfAssets
 					+ " new asset event to "+ config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER)  +" every " + timeGap + " ms");
 		}
 	}
 
+	/**
+	The argument can be
+	 0 -> topicname to be used to publish events
+	 1 -> kafka server name or ip address
+	 2 -> number of events to be produce or "--event"
+	    in case of event
+			3 -> temperature or preassure
+			4 -> increase or decrease
+			5 -> event frequency
+			6 -> number of event to generate
+	*/
 	public void processArgument(String[] args) {
 		if (args.length >= 3) {
 			config.getConfig().setProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME, args[0]);
 			config.getConfig().setProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER, args[1]);
 			if (args[2].contains("event")) {
 				event = true;
+				config.getConfig().setProperty(ApplicationConfig.EVT_PATTERN, args[3]);
+				
 			} else {
 				numberOfAssets = Integer.parseInt(args[2]);
 			}
 		}
 	}
-	
+
 	private  void generateAssets() throws InterruptedException, ExecutionException {
 		for (int i = 0; i < numberOfAssets; i++) {
 			String uid= java.util.UUID.randomUUID().toString();
@@ -119,7 +135,7 @@ public class PumpSimulator {
 			a.setVersion("0.0.1");
 			a.setLatitude(30.307182);
 			a.setLongitude(-97.755996);
-			
+
 			publishAsset(a,config.getConfig().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME));
 			Thread.sleep(1000);
 		}

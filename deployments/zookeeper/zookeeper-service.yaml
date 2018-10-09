@@ -3,12 +3,16 @@ kind: Service
 metadata:
   labels:
     app: zookeeper
-  name: zookeeper-service
+  name: greencompute-zookeeper-service
+  namespace: greencompute
 spec:
-  clusterIP: None
   ports:
-  - name: zookeeper-port
+  - name: client
     port: 2181
-    targetPort: 2181
+  - port: 2888
+    name: server
+  - port: 3888
+    name: leader-election
+  clusterIP: None
   selector:
     app: zookeeper
