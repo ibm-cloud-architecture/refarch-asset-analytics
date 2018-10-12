@@ -15,12 +15,10 @@ import application.kafka.Consumer;
  * @author jeromeboyer
  *
  */
-public class SimpleConsumer {
-	private static String BOOTSTRAP_SERVERS = "docker.for.mac.host.internal:30092";
-	private static String TOPICNAME = "streams-wordcount-output";
-	// private static String TOPICNAME = "test-topic";
+public class SimpleConsumer extends SimpleKafkaBase {
+
 	
-	public static void main(String[] args) throws InstantiationException, ConnectException, InterruptedException, ExecutionException {
+	public static void main(String[] args) throws InstantiationException, ConnectException{
 		String brokers = BOOTSTRAP_SERVERS;
 		String topic = TOPICNAME;
 		
@@ -31,10 +29,19 @@ public class SimpleConsumer {
 		System.out.println("############ Text Consumer from topic: "+ topic +" on server "+ brokers +" ####### ");
 		 
 		Consumer consumer = new Consumer(brokers,topic);
-        for (ConsumerRecord<String, String> record : consumer.consume()) {
-        	 System.out.println("Received :"+ record.toString());
-        }
-        consumer.shutdown();
+		while (true) {
+			for (ConsumerRecord<String, String> record : consumer.consume()) {
+	        	 System.out.println("Received :"+ record.toString());
+	        }
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				consumer.shutdown();
+			}
+		}
+        
+        
 	}
 
 }

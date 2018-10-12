@@ -1,19 +1,23 @@
 # Event Producers
-In this project we are presenting the following items:
-* [How to develop a kafka stream application using the stream API and stateful aggregation]()
-* Use SpringBoot app to support creating different event to publish to Kafka Topics.
+A set of Kafka Consumers to test Kafka deployment and support the Asset analytics solution.
+
+Update 10/11/2018 - *Author: [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/)*  
 
 ## What you will learn
+In this project we are presenting the following items:
+* [How to integrate with a Kafka Broker running on ICP]
+* [How to develop a kafka stream application using the stream API and stateful aggregation]()
+* Use SpringBoot app to support creating different event to publish to Kafka Topics.
 
 ## Features:
 * Publish asset creation event: an event to identify a new asset added to the scope of the monitoring platform
 *
 
 ## Kafka
-You can run kafka locally using docker-compose or by deploying it to Kubernetes on docker desktop. See the note [here](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka) or to a remote cluster running on kubernetes like [IBM Cloud Private](https://github.com/ibm-cloud-architecture/refarch-analytics/blob/master/docs/kafka/readme.md#install-kafka-on-icp) or IBM Cloud Container Service.
+You can run kafka locally using docker-compose or by deploying it to Kubernetes on docker desktop. See the note [here](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka) or to a remote cluster running on Kubernetes like [IBM Cloud Private](https://github.com/ibm-cloud-architecture/refarch-analytics/blob/master/docs/kafka/readme.md#install-zookeeper-kafka-on-icp) or IBM Cloud Container Service.
 
 ## Kafka useful APIs
-Here is a list of common API to use in your producer and consumer.
+Here is a list of common API to use in your producer and consumer code.
 
 * [KafkaProducer](https://kafka.apache.org/11/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html) A Kafka client that publishes records to the Kafka cluster.  The send method is asynchronous.
 * [ProducerRecord](https://kafka.apache.org/11/javadoc/org/apache/kafka/clients/producer/ProducerRecord.html) to be published to a topic
@@ -28,6 +32,11 @@ Here is a list of common API to use in your producer and consumer.
   * if a process fails, the partitions assigned to it will be reassigned to other consumers in the same group
 * [ConsumerRecords](https://kafka.apache.org/11/javadoc/org/apache/kafka/clients/consumer/ConsumerRecords.html) holds the list ConsumerRecord per partition for a particular topic.
 * [ConsumerRecord](https://kafka.apache.org/11/javadoc/org/apache/kafka/clients/consumer/ConsumerRecord.html) A key/value pair to be received from Kafka. This also consists of a topic name and a partition number from which the record is being received, an offset that points to the record in a Kafka partition, and a timestamp
+
+# Code example
+## Basic pub/subscribe
+The Java code to send text messages and consume them with remote kafka broker is under the `src/main/java/` classes `ibm.cte.kafka.play.SimpleConsumer` and `ibm.cte.kafka.play.SimpleProducer`
+
 
 ## Pump Simulator
 The Pump simulator can generate two events:

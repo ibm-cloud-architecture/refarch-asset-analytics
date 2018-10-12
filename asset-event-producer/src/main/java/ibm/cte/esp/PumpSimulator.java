@@ -61,7 +61,13 @@ public class PumpSimulator {
 	 - preassure increase
 	 */
 	public void generateEvents() {
-
+		int baseT = 60;
+		int baseP = 100;
+		
+		for (int i = 0; i < 	config.getConfig().getProperty(ApplicationConfig.NB_OF_EVENTS); i++) {
+			AssetEvent e = new AssetEvent();
+			// TODO add attributes
+		}
 
 	}
 
@@ -110,8 +116,10 @@ public class PumpSimulator {
 			config.getConfig().setProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER, args[1]);
 			if (args[2].contains("event")) {
 				event = true;
-				config.getConfig().setProperty(ApplicationConfig.EVT_PATTERN, args[3]);
-				
+				config.getConfig().setProperty(ApplicationConfig.EVENT_PATTERN, args[3]);
+				config.getConfig().setProperty(ApplicationConfig.METRICS_TRENT, args[4]);
+				config.getConfig().setProperty(ApplicationConfig.EVENT_FREQ, args[5]);
+				config.getConfig().setProperty(ApplicationConfig.NB_OF_EVENTS, args[6]);
 			} else {
 				numberOfAssets = Integer.parseInt(args[2]);
 			}

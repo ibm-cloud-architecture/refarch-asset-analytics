@@ -5,7 +5,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kafka.version>1.1.0</kafka.version>
+        <kafka.version>2.0.0</kafka.version>
         <slf4j.version>1.7.7</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
         <logback.version>1.0.1</logback.version>
@@ -67,6 +67,24 @@
 						 </goals>
 						 <configuration>
 								 <mainClass>ibm.cte.esp.PumpSimulator</mainClass>
+						 </configuration>
+				 </execution>
+				 <execution>
+						 <id>text-consumer</id>
+						 <goals>
+							 <goal>java</goal>
+						 </goals>
+						 <configuration>
+								 <mainClass>ibm.cte.kafka.play.SimpleConsumer</mainClass>
+						 </configuration>
+				 </execution>
+				  <execution>
+						 <id>text-producer</id>
+						 <goals>
+							 <goal>java</goal>
+						 </goals>
+						 <configuration>
+								 <mainClass>ibm.cte.kafka.play.SimpleProducer</mainClass>
 						 </configuration>
 				 </execution>
 			</executions>

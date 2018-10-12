@@ -17,11 +17,11 @@ public class Producer {
 
     private final String topic;
 
-    private KafkaProducer<String, String> kafkaProducer;
+    private static KafkaProducer<String, String> kafkaProducer = null;
     
     private Logger logger = Logger.getLogger(Producer.class.getName());
 
-    public Producer(String bootstrapServerAddress, String topic) throws InstantiationException {
+    public  Producer(String bootstrapServerAddress, String topic) throws InstantiationException {
         this.topic = topic;
         if (topic == null) {
             throw new InstantiationException("Missing required topic name.");
