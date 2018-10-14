@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import ibm.cte.esp.model.Asset;
+import ibm.cte.esp.model.AssetEvent;
 
 /**
  * Simulate a Electrical Pump generating events for rotator, preassure and temperature metrics.
@@ -37,6 +37,11 @@ public class PumpSimulator {
 	public PumpSimulator() {
 		config = new ApplicationConfig();
 	}
+	
+	public PumpSimulator(ApplicationConfig cfg) {
+		config = cfg;
+	}
+
 
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		logger.info("######### Pump Simulator Starting ############ ");
@@ -63,10 +68,13 @@ public class PumpSimulator {
 	public void generateEvents() {
 		int baseT = 60;
 		int baseP = 100;
-		
-		for (int i = 0; i < 	config.getConfig().getProperty(ApplicationConfig.NB_OF_EVENTS); i++) {
-			AssetEvent e = new AssetEvent();
+		int nbOfEvents = Integer.parseInt(config.getConfig().getProperty(ApplicationConfig.NB_OF_EVENTS));
+		for (int i = 0; i < nbOfEvents ; i++) {
+			AssetEvent ae = new AssetEvent();
+			ae.setTemperature(baseT);
+			ae.setPressure(baseP);
 			// TODO add attributes
+			logger.info(ae.toString());
 		}
 
 	}
@@ -129,7 +137,7 @@ public class PumpSimulator {
 	private  void generateAssets() throws InterruptedException, ExecutionException {
 		for (int i = 0; i < numberOfAssets; i++) {
 			String uid= java.util.UUID.randomUUID().toString();
-			Asset a = new Asset();
+			AssetEvent a = new AssetEvent();
 			a.setId(uid);
 			a.setAntivirus("v2.3");
 			a.setCurrent((long)(110*Math.random()+10));
@@ -149,7 +157,7 @@ public class PumpSimulator {
 		}
 	} // generateAssets
 
-	private  void publishAsset(Asset a, String topic) throws InterruptedException, ExecutionException {
+	private  void publishAsset(AssetEvent a, String topic) throws InterruptedException, ExecutionException {
 		GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String s = gson.toJson(a);

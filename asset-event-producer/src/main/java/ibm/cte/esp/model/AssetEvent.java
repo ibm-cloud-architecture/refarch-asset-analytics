@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 
-public class Asset implements Serializable {
+public class AssetEvent implements Serializable {
 	/**
 	 * 
 	 */
@@ -24,8 +24,12 @@ public class Asset implements Serializable {
 	protected double longitude;
 	protected Date creationDate;
 	
-	public Asset() {
+	public AssetEvent() {
 		this.creationDate = new Date();
+	}
+	
+	public String toString() {
+		return getId() + " " + getIpAddress() + " C:" + getCurrent() + " P:" + getPressure() + " T:" + getTemperature();
 	}
 
 	public String getId() {

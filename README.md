@@ -13,7 +13,7 @@ We are presenting best practices around data management, real team streaming, ca
 <li><a href="#use-case">Use case</a></li>
 <li><a href="#system-context">System Context</a> to present the solution components</li>
 <li><a href="#deployment">Deployment to kubernetes cluster like IBM Cloud Private</a></li>
-<li>Related sub projects</li>
+<li>Related sub projects - repositories </li>
 <ul>
 <li><a href="asset-consumer/README.md">Event consumers</a></li>
 <li><a href="asset-event-producer/README.md">Event producers simulator</a> to simulate pump events for demonstration purpose.</li>
@@ -27,7 +27,7 @@ We are presenting best practices around data management, real team streaming, ca
 <ul>
 <li><a href="https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka">Kafka related</a></li>
 <li><a href="docs/cassandra/readme.md">Cassandra</a></li>
-<li><a href="https://github.com/ibm-cloud-architecture/refarch-integration/blob/master/docs/service-mesh.md">Microservice mesh</a></li>
+<li><a href="https://github.com/ibm-cloud-architecture/refarch-integration/tree/master/docs/service-mesh">Microservice mesh</a></li>
 </ul>
 </ul>
 </details>
@@ -56,6 +56,7 @@ The processing starts by the continuous event flow emitted by a set of monitored
 ![](docs/dashboard-wireframe.png)  
 and the project is under the [asset-dashboard-ui](./asset-dashboard-ui) folder.
 1. Manage CRUD operation on the assets. See [the Asset manager microservice code.](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice)
+1. Pump Simulator is a java program running on developer laptop or on a server but external to ICP. The approach is to address communication to brokers deployed on ICP. The code and guidance are in the [asset-event-producer project](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/tree/master/asset-event-producer#pump-simulator). 
 
 The following diagram illustrates the IBM Cloud Private, kubernetes deployment we are using in this solution. You will find the same components as in the system context above, with added elements for data management and data scientists using [ICP for Data](https://www.ibm.com/analytics/cloud-private-for-data).
 
