@@ -9,8 +9,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ibm.cte.esp.ApplicationConfig;
-import ibm.cte.esp.CassandraRepo;
-import ibm.cte.esp.model.Asset;
+import ibm.cte.esp.dao.CassandraRepo;
+import ibm.cte.esp.model.AssetEvent;
 
 public class CassandraAssetRepoTest {
 	
@@ -28,7 +28,7 @@ public class CassandraAssetRepoTest {
 
 	@Test
 	public void shouldAddNewAsset() throws Exception {
-		Asset a = new Asset();
+		AssetEvent a = new AssetEvent();
 		a.setId("Asset022");
 		a.setOs("Raspbian");
 		a.setAntivirus("v2.3");
@@ -43,16 +43,16 @@ public class CassandraAssetRepoTest {
 		a.setLatitude(new Double(30.307182));
 		a.setLongitude(new Double(-97.755996));
 		repo.persistAsset(a);
-		Asset aOut=repo.getAssetById("Asset022");
+		AssetEvent aOut=repo.getAssetById("Asset022");
 		Assert.assertNotNull(aOut);
 		System.out.println(aOut.getOs());
 	}
 	
 	@Test
 	public void shouldGetAllAssets() throws Exception {
-		List<Asset> l=repo.getAllAssets();
+		List<AssetEvent> l=repo.getAllAssets();
 		Assert.assertTrue(l.size() >= 1);
-		for (Asset a : l) {
+		for (AssetEvent a : l) {
 			System.out.println(a.toString());
 		}
 	}

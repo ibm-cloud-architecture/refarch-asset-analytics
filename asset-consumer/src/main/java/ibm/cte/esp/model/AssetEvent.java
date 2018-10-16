@@ -8,7 +8,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 @Table("assets")
-public class Asset implements Serializable {
+public class AssetEvent implements Serializable {
 	/**
 	 * 
 	 */
@@ -29,9 +29,12 @@ public class Asset implements Serializable {
 	protected Double longitude;
 	protected Date creationDate;
 	  
-	public Asset() {}
+	public AssetEvent() {}
 	
-	 
+	public String toString() {
+		return getId() + " " + getIpAddress() + " C:" + getCurrent() + " P:" + getPressure() + " T:" + getTemperature();
+	}
+
 
 	public String getId() {
 		return id;
@@ -139,17 +142,13 @@ public class Asset implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Asset ) {
-			Asset oa = (Asset) o;
+		if (o instanceof AssetEvent ) {
+			AssetEvent oa = (AssetEvent) o;
 			return (oa.latitude == this.latitude) && (oa.longitude == this.longitude);
 		}
 		return false;
 	}
 	
-	public String toString() {
-		return this.getId();
-	}
-
 
 	public Date getCreationDate() {
 		return creationDate;

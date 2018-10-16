@@ -83,7 +83,7 @@ public class PumpSimulator {
 		this.kafkaProducer.close();
 	}
 
-	private void prepareProducer() {
+	public void prepareProducer() {
 		Properties properties = new Properties();
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
         		config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER));
@@ -134,7 +134,7 @@ public class PumpSimulator {
 		}
 	}
 
-	private  void generateAssets() throws InterruptedException, ExecutionException {
+	public  void generateAssets() throws InterruptedException, ExecutionException {
 		for (int i = 0; i < numberOfAssets; i++) {
 			String uid= java.util.UUID.randomUUID().toString();
 			AssetEvent a = new AssetEvent();
@@ -157,7 +157,7 @@ public class PumpSimulator {
 		}
 	} // generateAssets
 
-	private  void publishAsset(AssetEvent a, String topic) throws InterruptedException, ExecutionException {
+	public  void publishAsset(AssetEvent a, String topic) throws InterruptedException, ExecutionException {
 		GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String s = gson.toJson(a);
@@ -167,6 +167,9 @@ public class PumpSimulator {
 	    logger.info("Receive partition id= " + recordMetadata.partition() + " offset= " + recordMetadata.offset());
 	}
 
+	public void publishAsset(AssetEvent a) throws InterruptedException, ExecutionException {
+		publishAsset(a,config.getConfig().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME));
+	}
 
 	public int getNumberOfAssets() {
 		return numberOfAssets;

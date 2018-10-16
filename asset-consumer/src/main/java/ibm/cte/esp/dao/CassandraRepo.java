@@ -1,4 +1,4 @@
-package ibm.cte.esp;
+package ibm.cte.esp.dao;
 
 
 
@@ -12,7 +12,8 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 
-import ibm.cte.esp.model.Asset;
+import ibm.cte.esp.ApplicationConfig;
+import ibm.cte.esp.model.AssetEvent;
 
 public class CassandraRepo implements AssetDAO {
 	private static Logger logger = Logger.getLogger("CassandraRepo");
@@ -91,7 +92,7 @@ public class CassandraRepo implements AssetDAO {
         session.execute(query);
     }
     
-    private void updateAssetFromRow(Row r,Asset a) {
+    private void updateAssetFromRow(Row r,AssetEvent a) {
     	a.setId(r.getString("id"));
 		a.setOs(r.getString("os"));
 		a.setVersion(r.getString("version"));
@@ -108,13 +109,13 @@ public class CassandraRepo implements AssetDAO {
 		a.setCreationDate(r.getTimestamp("creationDate"));
     }
     
-    private Asset rowToAsset(Row r) {
-    	Asset a = new Asset();
+    private AssetEvent rowToAsset(Row r) {
+    	AssetEvent a = new AssetEvent();
     	updateAssetFromRow(r,a);
 		return a;
     }
 
-	public Asset getAssetById(String assetId) throws Exception {
+	public AssetEvent getAssetById(String assetId) throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
 			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
@@ -124,7 +125,7 @@ public class CassandraRepo implements AssetDAO {
 			      .append(assetId)
 			      .append("';");
 		String query = sb.toString();
-		Asset a = new Asset();
+		AssetEvent a = new AssetEvent();
 		ResultSet rs = session.execute(query);
 		if (rs.isFullyFetched()) {
 			updateAssetFromRow(rs.one(),a);	
@@ -132,7 +133,7 @@ public class CassandraRepo implements AssetDAO {
 		return a;
 	}
 
-	public List<Asset> getAllAssets() throws Exception {
+	public List<AssetEvent> getAllAssets() throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
 			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
@@ -141,14 +142,14 @@ public class CassandraRepo implements AssetDAO {
 			      .append(";");
 		String query = sb.toString();
 		ResultSet rs = session.execute(query);
-		List<Asset> l = new ArrayList<Asset>();
+		List<AssetEvent> l = new ArrayList<AssetEvent>();
 		while (! rs.isExhausted()) {
 			l.add(rowToAsset(rs.one()));	
 		}
 		return l;
 	}
 	
-	public void persistAsset(Asset a) throws Exception {
+	public void persistAsset(AssetEvent a) throws Exception {
 		StringBuilder sb = new StringBuilder("INSERT INTO ")
 			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
 			    		  + "." 

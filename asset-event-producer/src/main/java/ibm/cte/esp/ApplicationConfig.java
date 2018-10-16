@@ -39,7 +39,7 @@ public class ApplicationConfig {
 	}
 
 	private  void setDefaults() {
-		 p.setProperty(KAFKA_BOOTSTRAP_SERVER, "docker.for.mac.host.internal:30092");
+		 p.setProperty(KAFKA_BOOTSTRAP_SERVER, "gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local:32224");
 		 p.setProperty(KAFKA_ASSET_TOPIC_NAME,"asset-topic");
 	}
 }

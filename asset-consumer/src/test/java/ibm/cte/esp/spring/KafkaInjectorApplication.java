@@ -16,7 +16,7 @@ import org.springframework.kafka.listener.config.ContainerProperties;
 
 import com.google.gson.Gson;
 
-import ibm.cte.esp.model.Asset;
+import ibm.cte.esp.model.AssetEvent;
 
 /**
  * listen all events coming from input topic in the form of Asset and persist
@@ -52,7 +52,7 @@ public class KafkaInjectorApplication implements CommandLineRunner  {
 	        @Override
 	        public void onMessage(ConsumerRecord<String, String> message) {
 	            logger.info("received: " + message);
-	            Asset a = gson.fromJson(message.value(),Asset.class);
+	            AssetEvent a = gson.fromJson(message.value(),AssetEvent.class);
 	            
 	            cassandra.save(a);
 	        }

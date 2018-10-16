@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import ibm.cte.esp.model.Asset;
+import ibm.cte.esp.model.AssetEvent;
 
 /**
  * subscriber to asset topic
@@ -38,7 +38,7 @@ public class AssetTopicConsumer {
     private void prepareConsumer() {
 		Properties properties = new Properties();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, 
-        		config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER));
+        		config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS));
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, 
         		config.getConfig().getProperty(ApplicationConfig.KAFKA_GROUPID));
         // offsets are committed automatically with a frequency controlled by the config auto.commit.interval.ms
@@ -57,13 +57,13 @@ public class AssetTopicConsumer {
         kafkaConsumer.subscribe(Arrays.asList(config.getConfig().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME)));
 	}
     
-    public List<Asset>  consume() {
-    	List<Asset> buffer = new ArrayList<>();
+    public List<AssetEvent>  consume() {
+    	List<AssetEvent> buffer = new ArrayList<>();
     	ConsumerRecords<String, String> records = kafkaConsumer.poll(
     			Long.parseLong(config.getConfig().getProperty(ApplicationConfig.KAFKA_POLL_DURATION)));
     	
 	    for (ConsumerRecord<String, String> record : records) {
-	    		Asset a = gson.fromJson(record.value(), Asset.class);
+	    	AssetEvent a = gson.fromJson(record.value(), AssetEvent.class);
 	    		logger.info((new Date()).toString() + " " + a.toString());
 	            buffer.add(a);
 	    }
