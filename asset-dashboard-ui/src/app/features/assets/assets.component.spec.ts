@@ -11,13 +11,15 @@ export class AssetServiceMockup {
     let a: Asset = {id:'assetid', os : ' raspbian', version: '0.10'};
     this.newAsset = of(a);
   }
-  public getAssets() {};
+  getAssets(): Observable<Asset[]> {
+    return of([{id:'asset01', os : ' raspbian', version: '0.10'},
+              {id:'asset02', os : ' raspbian', version: '0.10'}]);
+  }
 }
 
 describe('AssetsComponent', () => {
   let component: AssetsComponent;
   let fixture: ComponentFixture<AssetsComponent>;
-  let assetServiceMockup = {newAsset : jasmine.createSpy('newAsset'), getAssets: jasmine.createSpy('getAssets')}
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

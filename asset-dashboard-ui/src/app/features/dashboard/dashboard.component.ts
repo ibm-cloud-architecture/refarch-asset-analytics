@@ -3,7 +3,7 @@ import { Component, OnInit,Input } from '@angular/core';
 import { AssetsService } from '../assets.service';
 import { Asset } from '../assets/asset';
 
-import { DashboardTableComponent } from '../dashboard-table/dashboard-table.component';
+import { DashboardTableComponent } from './dashboard-table/dashboard-table.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,7 +27,11 @@ export class DashboardComponent implements OnInit {
 
   constructor(private service: AssetsService) {
     //Pull Assets and Unique Assets from our Data Service
-    this.assets = service.getAssets().assets;
+    this.service.getAssets().subscribe(data => {
+      this.assets = data;
+    });
+    /*
+
     this.uniqueAssets = service.getUniqueAssets().uniqueAssets;
     this.riskAnalysis = {};
     this.riskAnalysis.lowRiskCount = 0;
@@ -35,6 +39,7 @@ export class DashboardComponent implements OnInit {
     this.riskAnalysis.highRiskCount = 0;
     this.selectedAssetAnalysis = {};
     this.riskAnalysis = service.getUniqueAssets().riskAnalysis
+    */
  }
 
   getSelectedAsset(data) {

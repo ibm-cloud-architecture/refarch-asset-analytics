@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Manufacturing Asset Dashboard v0.0.1';
+  title = 'Manufacturing Asset Real Time Dashboard';
 }

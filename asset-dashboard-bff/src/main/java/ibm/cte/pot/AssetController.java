@@ -1,6 +1,6 @@
 package ibm.cte.pot;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,14 +12,21 @@ import ibm.cte.esp.model.Asset;
 @RestController()
 @RequestMapping(value="/assets")
 public class AssetController {
+	public static AssetEventMgrClient restClient = new AssetEventMgrClient();;
+	
+	public AssetController() {
+		
+	}
 	
 	@RequestMapping("") 
 	public @ResponseBody List<Asset> getAssets() {
-		// tODO http client to asset mgr microservice
-		Asset a = new Asset();
-		a.setId("Asset_01");
+		try {
+			return restClient.getAllAssets();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<Asset>();
+		}
 		
-		return Arrays.asList(a);
 	}
 	
 }

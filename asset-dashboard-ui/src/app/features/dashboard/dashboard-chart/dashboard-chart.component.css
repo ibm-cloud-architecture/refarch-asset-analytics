@@ -1,0 +1,11 @@
+#chartSelector {
+   padding-right: 30px;
+   padding-left: 0px;
+}
+
+#chartSummary {
+   text-align: center;
+   background: lightgrey;
+   border: 2px solid;
+   height: 40vh;
+}

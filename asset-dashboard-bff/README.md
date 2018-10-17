@@ -28,7 +28,7 @@ Then run the image by matching the exposed port
 ```
 docker run -ti -p 9080:9080 ibmcase/asset-dashboard-bff
 ```
-We automate this process with the script `build.sh` which can be included in jenkins pipeline.
+We automate this process with the script `build.sh` which can be included in a Jenkins pipeline.
 
 Two other tools are also part of this project. A web socket client to test the web socket logic and to subscribe to real time new asset events.
 

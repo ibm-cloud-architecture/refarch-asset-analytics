@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-
+/*
 import { WebSocketService } from './websocket.service';
 
 describe('WebsocketService', () => {
@@ -13,3 +13,4 @@ describe('WebsocketService', () => {
     expect(service).toBeTruthy();
   }));
 });
+*/

@@ -1,0 +1,40 @@
+.dot {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 1vh 0 -1vh 0;
+  }
+
+.mat-table {
+/*    padding: 1vh 2vh;*/
+/*    margin: auto;*/
+    width: 100%;
+    display: table;
+}
+
+th.mat-header-cell {
+
+    padding: 10px 15px;
+}
+
+.dashboard-table {
+    max-height: 300px;
+    height: auto;
+    overflow: auto;
+
+    /*border: 1px solid black;*/
+}
+
+th {
+    text-align: center;
+}
+
+td {
+    text-align: center;
+}
+
+td.mat-cell:first-of-type {
+    padding: 0px;
+}
