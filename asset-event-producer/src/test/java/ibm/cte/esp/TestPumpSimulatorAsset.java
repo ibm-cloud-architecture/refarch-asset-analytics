@@ -23,8 +23,8 @@ class TestPumpSimulatorAsset {
 		a.setFlowRate((long)(100*Math.random()));
 		a.setIpAddress("172.16.0.1");
 		a.setOs("Raspbian");
-		a.setPressure((long)(1000*Math.random()));
-		a.setTemperature((long)(300*Math.random()));
+		a.setPressure((long)(100*Math.random()));
+		a.setTemperature((long)(200*Math.random()));
 		a.setType("ESP");
 		a.setRotation((long)(360*Math.random()));
 		a.setVersion("0.0.1");

@@ -1,0 +1,10 @@
+{
+  "assets": [
+    {"id":"0001", "riskRating": 85, "type": "pump-be", "version": "v.12", "latitude": "30.7604", "longitude": "-97.3698", "pressure": 100, "flowRate": 20, "temperature": 70},
+    {"id":"0002", "riskRating": 50, "type": "pump-be", "version": "v.12", "latitude": "32.7767", "longitude": "-96.7970", "pressure": 90, "flowRate": 33, "temperature": 72},
+    {"id":"LA03", "riskRating": 70, "type": "pump-be", "version": "v.12", "latitude": "33.055", "longitude": "-118.3437", "pressure": 45, "flowRate": 33, "temperature": 120},
+    {"id":"LA04", "riskRating": 20, "type": "pump-be", "version": "v.12", "latitude": "33.0500", "longitude": "-118.2400", "pressure": 45, "flowRate": 33, "temperature": 120},
+    {"id":"LA05", "riskRating": 20, "type": "pump-be", "version": "v.12", "latitude": "33.0822", "longitude": "-118.200", "pressure": 45, "flowRate": 33, "temperature": 120},
+    {"id":"0004", "riskRating": 70, "type": "pump-be", "version": "v.12", "latitude": "45.028302", "longitude": "-103.896258", "pressure": 45, "flowRate": 37, "temperature": 110}
+  ]
+}

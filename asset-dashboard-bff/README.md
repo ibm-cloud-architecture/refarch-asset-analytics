@@ -3,6 +3,7 @@ This project includes a SpringBoot app to support the user interface business lo
 
 ### Features:
 * [Serve the Angular](#springboot-serving-angular) single page application.
+* Integrate with asset management microservice deployed in kubernetes cluster.
 * Consume event from Kafka and push them to User Interface
 
 ## Solution components

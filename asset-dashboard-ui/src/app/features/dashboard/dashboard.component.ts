@@ -2,9 +2,13 @@ import { Component, OnInit,Input } from '@angular/core';
 //Import Data points
 import { AssetsService } from '../assets.service';
 import { Asset } from '../assets/asset';
+import { RiskCounters } from './Counter';
 
 import { DashboardTableComponent } from './dashboard-table/dashboard-table.component';
 
+/*
+The dashboard is the main page to content map, table of assets and widgets about real time Data
+*/
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -13,39 +17,42 @@ import { DashboardTableComponent } from './dashboard-table/dashboard-table.compo
 
 export class DashboardComponent implements OnInit {
 
-    assets : Asset[];
-    uniqueAssets : Asset[];
-    historyMap : Map<any, any>;
+  assets : Asset[];
+  historyMap : Map<any, any>;
+    // Data to consolidate the number of pump in each risk category
+  riskCounters : RiskCounters = new RiskCounters();
 
-    riskAnalysis : any = {
-        highRiskCount : 0,
-        mediumRiskCount : 0,
-        lowRiskCount : 0
-    }
-
-  selectedAssetAnalysis : any;
+  selectedAssetAnalysis : Asset;
 
   constructor(private service: AssetsService) {
-    //Pull Assets and Unique Assets from our Data Service
-    this.service.getAssets().subscribe(data => {
-      this.assets = data;
-    });
-    /*
+  }
 
-    this.uniqueAssets = service.getUniqueAssets().uniqueAssets;
-    this.riskAnalysis = {};
-    this.riskAnalysis.lowRiskCount = 0;
-    this.riskAnalysis.mediumRiskCount = 0;
-    this.riskAnalysis.highRiskCount = 0;
-    this.selectedAssetAnalysis = {};
-    this.riskAnalysis = service.getUniqueAssets().riskAnalysis
-    */
- }
+  ngOnInit() {
+    //Pull Assets and Unique Assets from our Data Service
+    this.service.getAssets().subscribe(
+      data => {
+        this.assets = data;
+        this.modifyCounters();
+      },
+      error => { console.log(JSON.stringify(error))}
+    );
+    this.selectedAssetAnalysis = new Asset();
+  }
 
   getSelectedAsset(data) {
     this.selectedAssetAnalysis = data;
   }
 
-  ngOnInit() {
+  modifyCounters() {
+    for (let asset of this.assets) {
+      if (asset.riskRatingClass === "High") {
+        this.riskCounters.high += 1;
+      } else if (asset.riskRatingClass === "Medium") {
+        this.riskCounters.medium += 1;
+      } else {
+          this.riskCounters.low += 1;
+      }
+    }
   }
+
 }

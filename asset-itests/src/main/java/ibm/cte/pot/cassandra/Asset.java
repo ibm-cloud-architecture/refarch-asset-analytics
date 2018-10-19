@@ -21,8 +21,8 @@ public class Asset implements Serializable {
 	protected BigDecimal pressure;
 	protected BigDecimal flowRate;
 	protected BigDecimal temperature;
-	protected Double latitude;
-	protected Double longitude;
+	protected String latitude;
+	protected String longitude;
 	protected Date creationDate;
 	  
 	public Asset() {}
@@ -143,21 +143,7 @@ public class Asset implements Serializable {
 		this.temperature = temperature;
 	}
 
-	public Double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-
-	public Double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
+	
 
 	@Override
 	public boolean equals(Object o) {
@@ -176,5 +162,17 @@ public class Asset implements Serializable {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+	public String getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	public String getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
 	}
 }

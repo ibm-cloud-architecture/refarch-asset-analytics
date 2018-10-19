@@ -18,7 +18,8 @@ export class AssetsComponent implements OnInit {
   constructor(private service: AssetsService ) {
     this.service.getAssets().subscribe(data => {
       this.assets = data;
-    });
+    },
+    error => { this.assets = [{id:"0001", type: "pump-mock", version: "v.12", pressure: 100, flowRate: 20, temperature: 70}]});
   }
 
 

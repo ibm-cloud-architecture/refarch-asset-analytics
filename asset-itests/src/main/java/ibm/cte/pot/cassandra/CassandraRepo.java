@@ -79,8 +79,8 @@ public class CassandraRepo {
           .append("pressure decimal,")
           .append("flowRate decimal,")
           .append("temperature decimal,")
-          .append("latitude double,")
-          .append("longitude double,")
+          .append("latitude string,")
+          .append("longitude string,")
           .append("creationDate timestamp);");
         
      
@@ -101,8 +101,8 @@ public class CassandraRepo {
 		a.setPressure(r.getDecimal("pressure"));
 		a.setFlowRate(r.getDecimal("flowRate"));
 		a.setTemperature(r.getDecimal("temperature"));
-		a.setLatitude(r.getDouble("latitude"));
-		a.setLongitude(r.getDouble("longitude"));
+		a.setLatitude(r.getString("latitude"));
+		a.setLongitude(r.getString("longitude"));
 		a.setCreationDate(r.getTimestamp("creationDate"));
     }
     

@@ -4,13 +4,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class TestWebSocket {
-	private static final String SERVERNAME = "asset.bff.green";
-	private static final String PORT = "8080";
+	// private static final String SERVERNAME = "asset.bff.green";
+	private static final String SERVERNAME = "localhost";
+	private static final String PORT = "8081";
 	
 	public static void main(String[] args) {
 		System.out.println(
 				  "##################### \n"
-				+ " Tool to test web socket implementation with BFF running locally on port 8080 \n"
+				+ " Tool to test web socket implementation with BFF running locally on port " + PORT +"\n"
 				+ "#####################");
 		WebsocketClientEndpoint clientEndPoint;
 		try {

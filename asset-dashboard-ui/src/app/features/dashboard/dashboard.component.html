@@ -4,18 +4,21 @@
       <div class="col-md-6">
          <div id = 'map'>
             <div id = 'mapSummary'>
-               <leafletMap [assets] = "assets"></leafletMap>
+                <leafletMap [assets] = "assets"></leafletMap>
             </div>
          </div>
       </div>
       <div class="col-md-6">
         <div id = 'pumpSummary'>
             <div id = 'riskCategories' class="row">
-                <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
-                <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>
-                <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
+                <assetRisk id ='high' count = {{riskCounters.high}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>
+                <assetRisk id ='medium' count = {{riskCounters.medium}} riskName = 'Medium Risk' color = '#f48942' class = 'riskCategory'> </assetRisk>
+                <assetRisk id ='low' count = {{riskCounters.low}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>
             </div>
-            <dashboard-table class="row" (selectedAsset)="getSelectedAsset($event)" [data]="uniqueAssets"></dashboard-table>
+            <!-- present the assets information in table format -->
+            <div *ngIf='assets'>
+              <dashboard-table class="row" (selectedAsset)="getSelectedAsset($event)" [data]="assets"></dashboard-table>
+            </div>
         </div>
       </div>
    </div>

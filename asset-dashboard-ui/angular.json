@@ -27,10 +27,10 @@
                 "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
               },
               "src/styles.css",
-              "src/assets/leaflet/leaflet.css"
+               "./node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": [
-              "src/assets/leaflet/leaflet.js"
+
             ]
           },
           "configurations": {
@@ -56,7 +56,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "asset-dashboard-ui:build"
+            "browserTarget": "asset-dashboard-ui:build",
+            "proxyConfig": "proxy.config.json"
           },
           "configurations": {
             "production": {

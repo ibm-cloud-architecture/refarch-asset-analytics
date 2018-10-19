@@ -20,9 +20,12 @@ public class Asset implements Serializable {
 	protected BigDecimal pressure;
 	protected BigDecimal flowRate;
 	protected BigDecimal temperature;
-	protected Double latitude;
-	protected Double longitude;
+	protected BigDecimal riskRating;
 	protected Date timestamp;
+	protected String latitude;
+	protected String longitude;
+	
+	
 	  
 	public Asset() {}
 
@@ -114,21 +117,7 @@ public class Asset implements Serializable {
 		this.temperature = temperature;
 	}
 
-	public Double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-
-	public Double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
+	
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -140,6 +129,30 @@ public class Asset implements Serializable {
 
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public BigDecimal getRiskRating() {
+		return riskRating;
+	}
+
+	public void setRiskRating(BigDecimal riskRating) {
+		this.riskRating = riskRating;
 	}
 
 	

@@ -16,10 +16,11 @@ Subscribe to new asset events
 export class AssetsService {
 
   public assetEvents: Asset[] = [];
-  private assetUrl = '/dashboardbff/assets';
-
+  //private assetUrl = 'http://localhost:3000/assets';
+  private assetUrl = '/assets';
+  private riskScoringUrl = '/asset/scoring';
+  //private assetUrl = 'http://assetmgr.greencompute.ibmcase.com/assetmanager/assets'
   constructor(private http: HttpClient) {
-
   }
 
 
@@ -28,10 +29,36 @@ export class AssetsService {
       return this.http.get<Asset[]>(this.assetUrl)
       .pipe(map(data => {
         this.assetEvents = data;
-        return data;
+        for (let asset of this.assetEvents) {
+            this.getRiskFactor(asset);
+        }
+        return this.assetEvents;
       }))
     } else {
       return of(this.assetEvents);
+    }
+  }
+
+  public getRiskFactor(asset:Asset) {
+
+    if (asset.riskRating == undefined || asset.riskRating === -1 ){
+        // TODO call remote service for maintenance scoring service.
+        /**
+        this.http.get<Asset>(this.riskScoringUrl+"/"+asset.id);
+        */
+        asset.riskRating = Math.floor(Math.random() * 100) + 1;
+    }
+    if (asset.riskRating <= 60) {
+      asset.riskColor = "#42744b";
+      asset.riskRatingClass = 'Low';
+    } else {
+      if (asset.riskRating <= 80) {
+        asset.riskColor = "#f48942";
+        asset.riskRatingClass = 'Medium';
+      } else {
+        asset.riskColor = "#f44b42";
+        asset.riskRatingClass = 'High';
+      }
     }
   }
 }

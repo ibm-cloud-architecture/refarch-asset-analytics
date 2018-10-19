@@ -9,13 +9,15 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
 // app specifics
-import { DashboardComponent } from './dashboard.component'
+import { DashboardComponent } from './dashboard.component';
+import { SharedModule } from '../../shared/shared.module';
 import { DashboardTableComponent } from './dashboard-table/dashboard-table.component';
 import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    SharedModule,
     MatTableModule,
     MatSortModule,
     MatButtonModule,

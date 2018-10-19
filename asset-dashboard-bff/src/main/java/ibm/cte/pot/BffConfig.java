@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class BffConfig implements WebMvcConfigurer {
 
+	// serve the SPA compiled in the src/main/resource/static folder
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/").addResourceLocations("classpath:/static/");

@@ -92,54 +92,6 @@ getAssets(): any {
                riskRating : 'High',
               timestamp: '2018-09-01'},
 
-              {id: "12",
-            os: 'raspbian',
-            type: 'pump',
-            version: '10',
-             ipAddress: '',
-             antivirus: '',
-             rotation:  0,
-             current:  210,
-             pressure:  100,
-             flowRate:  40,
-             temperature:  90,
-             latitude : '30.266926',
-             longitude : '-97.750519',
-             riskRating : 'High',
-            timestamp: '2018-09-02'},
-
-            {id: "12",
-            os: 'raspbian',
-            type: 'pump',
-            version: '10',
-            ipAddress: '',
-            antivirus: '',
-            rotation:  0,
-            current:  210,
-            pressure:  100,
-            flowRate:  40,
-             temperature:  107,
-             latitude : '30.266926',
-             longitude : '-97.750519',
-             riskRating : 'High',
-            timestamp: '2018-09-03'},
-
-            {id: "12",
-            os: 'raspbian',
-            type: 'pump',
-            version: '10',
-            ipAddress: '',
-            antivirus: '',
-            rotation:  0,
-            current:  210,
-            pressure:  100,
-            flowRate:  40,
-             temperature:  110,
-             latitude : '30.266926',
-             longitude : '-97.750519',
-             riskRating : 'High',
-            timestamp: '2018-09-04'},
-
             {id: "12",
             os: 'raspbian',
             type: 'pump',
@@ -205,12 +157,6 @@ getAssets(): any {
               ];
 
     }
-
-    var riskAnalysis = this.getRiskAnalysis(this.assets);
-    return {
-            'assets': this.assets,
-            'riskAnalysis': riskAnalysis
-            };
   }
 
 
@@ -239,38 +185,12 @@ getAssets(): any {
       //console.log(key + ' = ' + value);
       output.push(assets[value]);
     });
-    var riskAnalysis = this.getRiskAnalysis(output);
 
-    var obj = {'uniqueAssets': output, 'riskAnalysis': riskAnalysis}
+
+    var obj = {'uniqueAssets': output, 'riskAnalysis': null } //riskAnalysis}
 
     return obj;
   }
 
-    getRiskAnalysis(assets: Asset[]): {} {
-        var risks = {
-            highRiskCount: 0,
-            mediumRiskCount: 0,
-            lowRiskCount: 0,
-        };
-
-        for(var i = 0; i<assets.length;i++){
-            if(assets[i].pressure >= 100 || assets[i].pressure <50){
-                 risks.highRiskCount++;
-                 assets[i].riskRating = 'High';
-                 assets[i].riskColor = 'red';
-            }
-            else if((assets[i].pressure >= 50 && assets[i].pressure <60 )|| (assets[i].pressure <100 && assets[i].pressure >=90)){
-                 risks.mediumRiskCount++;
-                 assets[i].riskRating = 'Medium';
-                 assets[i].riskColor = 'yellow';
-            }
-            else{
-                risks.lowRiskCount++;
-                assets[i].riskRating = 'Low';
-                assets[i].riskColor = 'green';
-            }
-        }
-        return risks;
-    }
 
 }
