@@ -57,4 +57,3 @@ The Kafka consumer code is based on the same type of code from [the kafka consum
 The code uses the MessageListener.   
 
 @@@@ to continue
-We also support continuous build with Google tool: "skaffold"
