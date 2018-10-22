@@ -131,7 +131,7 @@
 						 </configuration>
 				 </execution>
 				 <execution>
-						 <id>AssetPrint</id>
+						 <id>AssetEventPrint</id>
 						 <goals>
 							 <goal>java</goal>
 						 </goals>

@@ -40,8 +40,8 @@ public class CassandraAssetRepoTest {
 		a.setType("ESP");
 		a.setRotation(new BigDecimal(360*Math.random()));
 		a.setVersion("0.0.1");
-		a.setLatitude(new Double(30.307182));
-		a.setLongitude(new Double(-97.755996));
+		a.setLatitude("30.307182");
+		a.setLongitude("-97.755996");
 		repo.persistAsset(a);
 		AssetEvent aOut=repo.getAssetById("Asset022");
 		Assert.assertNotNull(aOut);

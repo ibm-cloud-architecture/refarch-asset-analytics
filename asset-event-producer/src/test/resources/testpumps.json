@@ -1,0 +1,8 @@
+[
+    {"id":"HOU-01",  "ipAddress": "172.16.0.1", "type": "ESP", "version": "v.12", "os":"Raspbian","latitude": "30.7604", "longitude": "-97.3698", "antivirus":"v3.0","rotation":209,"pressure": 100, "flowRate": 20, "flowRate":40,"temperature": 70},
+    {"id":"DAL01", "ipAddress": "172.16.0.1", "type": "ESP", "version": "v.12", "os":"Raspbian","latitude": "32.7767", "longitude": "-96.7970", "antivirus":"v3.0","rotation":209,"pressure": 90, "flowRate": 33, "flowRate":40,"temperature": 72},
+    {"id":"LA03", "ipAddress": "172.16.0.1", "type": "ESP", "version": "v.12","os":"Raspbian", "latitude": "33.055", "longitude": "-118.3437", "antivirus":"v3.0","rotation":209,"pressure": 45, "flowRate": 33, "flowRate":40,"temperature": 120},
+    {"id":"LA04", "ipAddress": "172.16.0.1","type": "ESP", "version": "v.12","os":"Raspbian", "latitude": "33.0500", "longitude": "-118.2400", "antivirus":"v3.0","rotation":209,"pressure": 45, "flowRate": 33, "flowRate":40,"temperature": 120},
+    {"id":"LA05", "ipAddress": "172.16.0.1", "type": "ESP", "version": "v.12","os":"Raspbian", "latitude": "33.0822", "longitude": "-118.200", "antivirus":"v3.0","rotation":209,"pressure": 45, "flowRate": 33, "flowRate":40,"temperature": 120},
+    {"id":"ND04", "ipAddress": "172.16.0.1", "type": "ESP", "version": "v.12","os":"Raspbian", "latitude": "45.028302", "longitude": "-103.896258", "antivirus":"v3.0","rotation":209,"pressure": 45, "flowRate": 37, "flowRate":40,"temperature": 110}
+  ]

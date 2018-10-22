@@ -45,8 +45,8 @@ public class TestAssetEventMgrClient {
 		a.setType("ESP");
 		a.setRotation(new BigDecimal(360*Math.random()));
 		a.setVersion("0.0.1");
-		a.setLatitude(30.2672);
-		a.setLongitude(97.7431);
+		a.setLatitude("30.2672");
+		a.setLongitude("-97.7431");
 		try {
 			client.saveAsset(a);
 		} catch (Exception e) {

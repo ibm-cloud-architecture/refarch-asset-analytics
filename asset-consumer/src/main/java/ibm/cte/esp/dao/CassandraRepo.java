@@ -104,8 +104,9 @@ public class CassandraRepo implements AssetDAO {
 		a.setPressure(r.getDecimal("pressure"));
 		a.setFlowRate(r.getDecimal("flowRate"));
 		a.setTemperature(r.getDecimal("temperature"));
-		a.setLatitude(r.getDouble("latitude"));
-		a.setLongitude(r.getDouble("longitude"));
+		a.setRiskRating(r.getDecimal("riskRating"));
+		a.setLatitude(r.getString("latitude"));
+		a.setLongitude(r.getString("longitude"));
 		a.setCreationDate(r.getTimestamp("creationDate"));
     }
     

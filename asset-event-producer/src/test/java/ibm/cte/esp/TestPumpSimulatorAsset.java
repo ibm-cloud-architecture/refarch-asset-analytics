@@ -4,7 +4,7 @@ import static org.junit.Assert.fail;
 
 import java.util.concurrent.ExecutionException;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import ibm.cte.esp.model.AssetEvent;
 
@@ -28,8 +28,8 @@ class TestPumpSimulatorAsset {
 		a.setType("ESP");
 		a.setRotation((long)(360*Math.random()));
 		a.setVersion("0.0.1");
-		a.setLatitude(30.307182);
-		a.setLongitude(-97.755996);
+		a.setLatitude("30.307182");
+		a.setLongitude("-97.755996");
 		try {
 			ps.publishAsset(a);
 		} catch (InterruptedException e) {

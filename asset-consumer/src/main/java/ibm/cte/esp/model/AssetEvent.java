@@ -4,16 +4,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
 
-@Table("assets")
 public class AssetEvent implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	 @PrimaryKey
 	protected String id;
 	protected String os;
 	protected String version;
@@ -25,16 +21,18 @@ public class AssetEvent implements Serializable {
 	protected BigDecimal pressure;
 	protected BigDecimal flowRate;
 	protected BigDecimal temperature;
-	protected Double latitude;
-	protected Double longitude;
+	protected BigDecimal riskRating = new BigDecimal(-1);
+	protected String latitude;
+	protected String longitude;
 	protected Date creationDate;
-	  
-	public AssetEvent() {}
+	
+	public AssetEvent() {
+		this.creationDate = new Date();
+	}
 	
 	public String toString() {
 		return getId() + " " + getIpAddress() + " C:" + getCurrent() + " P:" + getPressure() + " T:" + getTemperature();
 	}
-
 
 	public String getId() {
 		return id;
@@ -84,6 +82,34 @@ public class AssetEvent implements Serializable {
 		this.antivirus = antivirus;
 	}
 
+	
+	
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
 	public BigDecimal getRotation() {
 		return rotation;
 	}
@@ -124,39 +150,17 @@ public class AssetEvent implements Serializable {
 		this.temperature = temperature;
 	}
 
-	public Double getLatitude() {
-		return latitude;
+	public BigDecimal getRiskRating() {
+		return riskRating;
 	}
 
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
+	public void setRiskRating(BigDecimal riskRating) {
+		this.riskRating = riskRating;
 	}
 
-	public Double getLongitude() {
-		return longitude;
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof AssetEvent ) {
-			AssetEvent oa = (AssetEvent) o;
-			return (oa.latitude == this.latitude) && (oa.longitude == this.longitude);
-		}
-		return false;
-	}
 	
-
-	public Date getCreationDate() {
-		return creationDate;
-	}
-
-
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
 }
