@@ -66,8 +66,12 @@ The following diagram illustrates the IBM Cloud Private, kubernetes deployment w
 We propose two deployments: one for quick validation in a development laptop (tested on Mac) and one on IBM Cloud Private cluster.
 ### Pre-requisites
 * Clone this project to get all the kubernetes deployment files and source code of the different components.
-* Clone the [asset management microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice) implementation
 * Clone the master project ([Reference Architecture Analytics](https://github.com/ibm-cloud-architecture/refarch-analytics))to get Zookeeper and Kafka deployment manifests.
+* Clone the [asset management microservice using the microprofile branch](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice) implementation.
+  ```
+  git clone https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice.git
+  git checkout microprofile
+  ```
 * Access to a kubernetes deployment for development, for example on Mac, we use [Docker Edge](https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac) distribution. You can use [this article](https://rominirani.com/tutorial-getting-started-with-kubernetes-with-docker-on-mac-7f58467203fd) to install Docker Edge and enable kubernetes.
 
 For test and 'production' deployment you need to have access to a kubernetes cluster like IBM Cloud Private.
@@ -156,7 +160,11 @@ We also recommend to be familiar with [this kubernetes tutorial on how to deploy
 
 ### Deploy the solution
 The steps are not yet automated:
-* We need to deploy the asset manager microservice first. 
+* We need to deploy the asset manager microservice first. The docker image is pushed to docker hub so the manifests under `refarch-asset-manager-microservice/manifests` is using this image.
+
+the script: `scripts/deployLocal.sh` should deploy to your local kubernetes cluster.
+
+* Deploy the BFF: this will includes the angular app.
 
 ### ICP Deployment
 We want within this project to dig into the detail of workload deployment and address resiliency for each of those components. The diagram below presents the deployment of runtime components as well as Zookeeper, Kafka and Cassandra clusters deployment inside k8s:

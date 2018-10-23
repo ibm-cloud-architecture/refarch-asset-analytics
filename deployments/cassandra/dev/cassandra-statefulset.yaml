@@ -46,9 +46,9 @@ spec:
               - nodetool drain
         env:
           - name: CASSANDRA_SEEDS
-            value: cassandra-svc
+            value: cassandra-0.cassandra-svc.greencompute.svc.cluster.local
           - name: MAX_HEAP_SIZE
-            value: 512M
+            value: 256M
           - name: HEAP_NEWSIZE
             value: 100M
           - name: CASSANDRA_CLUSTER_NAME
@@ -77,4 +77,4 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 5Gi
+            storage: 1Gi
