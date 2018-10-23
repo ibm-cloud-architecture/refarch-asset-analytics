@@ -1,4 +1,4 @@
-package ibm.cte.pot;
+package ibm.cte.esp.services;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -61,14 +61,10 @@ public  class RestClient {
 		setHttpClient(HttpClients.createDefault());
 	}
 	
-	public RestClient(String protocol,String hn) {
+	public RestClient(String protocol,String hn,String port) {
 		setHostName(hn);
 		setProtocol(protocol);
-		if ("https".equals(protocol)) {
-			setPort(443);
-		} else {
-			setPort(80);
-		}
+		setPort(Integer.parseInt(port));
 		setHost( new HttpHost(getHostName(),getPort(),getProtocol()));
 		setHttpClient(HttpClients.createDefault());
 	}

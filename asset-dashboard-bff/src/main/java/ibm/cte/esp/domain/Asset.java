@@ -1,4 +1,4 @@
-package ibm.cte.esp.model;
+package ibm.cte.esp.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

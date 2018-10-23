@@ -1,4 +1,4 @@
-package ibm.cte.pot;
+package ibm.cte.esp;
 
 import java.net.URI;
 import java.net.URISyntaxException;

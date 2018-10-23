@@ -1,4 +1,4 @@
-package ibm.cte.pot;
+package ibm.cte.esp.web;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,15 +7,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ibm.cte.esp.model.Asset;
+import ibm.cte.esp.domain.Asset;
+import ibm.cte.esp.services.AssetEventMgrClient;
 
 @RestController()
 @RequestMapping(value="/assets")
 public class AssetController {
-	public static AssetEventMgrClient restClient = new AssetEventMgrClient();;
 	
-	public AssetController() {
-		
+	public  AssetEventMgrClient restClient;
+	
+	public AssetController(AssetEventMgrClient c ) {
+		this.restClient = c;
 	}
 	
 	@RequestMapping("") 
@@ -26,7 +28,6 @@ public class AssetController {
 			e.printStackTrace();
 			return new ArrayList<Asset>();
 		}
-		
 	}
 	
 }

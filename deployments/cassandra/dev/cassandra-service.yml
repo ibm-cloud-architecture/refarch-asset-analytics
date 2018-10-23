@@ -4,11 +4,11 @@ kind: Service
 metadata:
   labels:
     app: cassandra
-  name: cassandra-svc
+  name: cassandra
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
-  clusterIP: None
+  type: NodePort
   ports:
     - port: 9042
       name: cassandra

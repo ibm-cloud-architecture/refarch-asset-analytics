@@ -13,12 +13,10 @@ spec:
         app: dashboard-bff
     spec:
       containers:
-      - image: ibmcase/dashboard-bff
+      - image: ibmcase/gc-dashboard-bff
         imagePullPolicy: IfNotPresent
         name: dashboard-bff
         ports:
-        - containerPort: 8080
-          protocol: TCP
-        - containerPort: 8080
+        - containerPort: 8081
           protocol: TCP
  

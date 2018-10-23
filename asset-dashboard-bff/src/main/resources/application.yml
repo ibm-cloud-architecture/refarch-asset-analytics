@@ -5,5 +5,9 @@ spring:
     bootstrap-servers: gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local:32224
 
 app:
-  topic:
-    assets: asset-topic
+  assetsTopic: asset-topic
+  assetManager:
+    host: assetmgr.greencompute.ibmcase.com
+    port: 32544
+    protocol: http
+    baseUrl: /assetmanager

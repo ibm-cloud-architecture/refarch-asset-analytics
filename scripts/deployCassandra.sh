@@ -13,7 +13,13 @@ nspace="greencompute"
 svc=$(kubectl get svc  --namespace $nspace | grep cassandra-svc)
 if [ -z "$svc" ]; then
   echo "Cassandra service not found under namespace " $nspace
-  kubectl apply -f ./deployments/cassandra/cassandra-service.yaml --namespace $nspace
+  if [ "$mode" = "dev"  ]
+  then
+    kubectl apply -f ./deployments/cassandra/dev/cassandra-service.yml --namespace $nspace
+  else
+    kubectl apply -f ./deployments/cassandra/prod/cassandra-service.yml --namespace $nspace
+    kubectl apply -f ./deployments/cassandra/prod/cassandra-ingress.yml --namespace $nspace
+  fi
 fi
 echo "Found cassandra service: " $svc " under namespace " $nspace
 
@@ -23,9 +29,10 @@ if [ -z "$pvs" ]; then
   echo "Cassandra Persistence volume not found... "
   if [ "$mode" = "dev"  ]
   then
-    kubectl apply -f ./deployments/cassandra/dev/cassandra-volumes.yaml --namespace $nspace
+    kubectl apply -f ./deployments/cassandra/dev/cassandra-volumes.yml --namespace $nspace
   else
-    kubectl apply -f ./deployments/cassandra/prod/cassandra-volumes.yaml --namespace $nspace
+    kubectl apply -f ./deployments/cassandra/prod/cassandra-volumes.yml --namespace $nspace
+
   fi
 
   echo sleep to be sure PVs are created
@@ -40,9 +47,9 @@ if [ -z "$sfs" ]; then
   echo "Cassandra Statefulset not found... "
   if [ "$mode" = "dev"  ]
   then
-    kubectl apply -f ./deployments/cassandra/dev/cassandra-statefulset.yaml --namespace $nspace
+    kubectl apply -f ./deployments/cassandra/dev/cassandra-statefulset.yml --namespace $nspace
   else
-    kubectl apply -f ./deployments/cassandra/prod/cassandra-statefulset.yaml --namespace $nspace
+    kubectl apply -f ./deployments/cassandra/prod/cassandra-statefulset.yml --namespace $nspace
   fi
 fi
 echo "Found cassandra statefulset "

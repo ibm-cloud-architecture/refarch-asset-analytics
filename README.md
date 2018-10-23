@@ -164,7 +164,47 @@ The steps are not yet automated:
 
 the script: `scripts/deployLocal.sh` should deploy to your local kubernetes cluster.
 
-* Deploy the BFF: this will includes the angular app.
+* Deploy the BFF: this will includes the angular app and the SpringBoot app. Under the The code is compile and packaged as war using:
+ ```
+ $ mvn package
+ ```
+ Then a docker image can be built. It is pushed to docker hub so no need to compile, package and build the image. In case you want to build it use:
+ ```
+ $ docker build -t ibmcase/gc-dashboard-bff .
+ ```
+
+ Finally we are providing a tool to deploy the service and the deployment to your local kubernetes cluster
+ ```
+ $ ./scripts/deployBff.sh
+ ```
+
+ Once deployed the web application can be seen at the URL: http://localhost:31986, The port number is the nodeport defined when deploying the dashboard service. 
+
+  ```
+  $ kubectl get pods -o wide
+  NAME                             READY     STATUS    RESTARTS   AGE       IP           NODE
+ assetmanager-5784b9d845-z5m9h    1/1       Running   0          3h        10.1.0.226   docker-for-desktop
+ cassandra-0                      0/1       Running   0          3h        10.1.0.225   docker-for-desktop
+ dashboard-bff-684bd9c7cb-65pbf   1/1       Running   0          2m        10.1.0.228   docker-for-desktop
+ gc-kafka-0                       1/1       Running   0          10h       10.1.0.216   docker-for-desktop
+ gc-zookeeper-57dc5679bb-bh29q    1/1       Running   0          10h       10.1.0.215   docker-for-desktop
+
+  $ kubectl logs dashboard-bff-684bd9c7cb-65pbf
+  $ 2018-10-23 04:34:42.132  INFO 1 --- [io-8081-exec-10] RestClient                               : http://assetmgr.greencompute.ibmcase.com:32544/assetmanager/assets/
+>> URL http://assetmgr.greencompute.ibmcase.com:32544/assetmanager/assets/
+<< RESPONSE - Status code 200
+
+<< PAYLOAD -[]
+  ```
+
+* Populate the Cassandra with 3 assets
+TBD
+* Deploy Asset Injector
+TBD
+* Start Pump Simulator to add one asset
+TBD
+* Start Pump Simulator to generate metrics event on existing pumps
+TBD
 
 ### ICP Deployment
 We want within this project to dig into the detail of workload deployment and address resiliency for each of those components. The diagram below presents the deployment of runtime components as well as Zookeeper, Kafka and Cassandra clusters deployment inside k8s:
