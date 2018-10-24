@@ -38,9 +38,9 @@ public class AssetTopicConsumer {
     private void prepareConsumer() {
 		Properties properties = new Properties();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, 
-        		config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS));
+        		config.getProperties().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS));
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, 
-        		config.getConfig().getProperty(ApplicationConfig.KAFKA_GROUPID));
+        		config.getProperties().getProperty(ApplicationConfig.KAFKA_GROUPID));
         // offsets are committed automatically with a frequency controlled by the config auto.commit.interval.ms
         // here we want to use manual commit 
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"false");
@@ -54,13 +54,13 @@ public class AssetTopicConsumer {
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         
         kafkaConsumer = new KafkaConsumer<>(properties);
-        kafkaConsumer.subscribe(Arrays.asList(config.getConfig().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME)));
+        kafkaConsumer.subscribe(Arrays.asList(config.getProperties().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME)));
 	}
     
     public List<AssetEvent>  consume() {
     	List<AssetEvent> buffer = new ArrayList<>();
     	ConsumerRecords<String, String> records = kafkaConsumer.poll(
-    			Long.parseLong(config.getConfig().getProperty(ApplicationConfig.KAFKA_POLL_DURATION)));
+    			Long.parseLong(config.getProperties().getProperty(ApplicationConfig.KAFKA_POLL_DURATION)));
     	
 	    for (ConsumerRecord<String, String> record : records) {
 	    	AssetEvent a = gson.fromJson(record.value(), AssetEvent.class);

@@ -178,7 +178,7 @@ the script: `scripts/deployLocal.sh` should deploy to your local kubernetes clus
  $ ./scripts/deployBff.sh
  ```
 
- Once deployed the web application can be seen at the URL: http://localhost:31986, The port number is the nodeport defined when deploying the dashboard service. 
+ Once deployed the web application can be seen at the URL: http://localhost:31986, The port number is the nodeport defined when deploying the dashboard service.
 
   ```
   $ kubectl get pods -o wide
@@ -197,8 +197,22 @@ the script: `scripts/deployLocal.sh` should deploy to your local kubernetes clus
 << PAYLOAD -[]
   ```
 
-* Populate the Cassandra with 3 assets
-TBD
+* Populate the Cassandra with some assets
+The project https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice has one script to do a `curl post` with json file representing pumps. You can change the URL to match your asset manager microservice endpoint, and then deploy the pump once the asset manager is deployed.
+```
+$ cd scripts
+$ ./addAsset.sh pumpDAL01.json
+$ ./addAsset.sh pumpHOU1.json
+$ ./addAsset.sh pumpLA1.json
+$ ./addAsset.sh pumpLA2.json
+$ ./addAsset.sh pumpLA3.json
+$ ./addAsset.sh pumpND1.json
+$ ./getAssets.sh
+```
+
+The dashboard reports the imported pumps:
+![](./docs/somepump.png)
+
 * Deploy Asset Injector
 TBD
 * Start Pump Simulator to add one asset

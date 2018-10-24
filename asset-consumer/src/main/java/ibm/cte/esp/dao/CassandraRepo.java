@@ -26,7 +26,7 @@ public class CassandraRepo implements AssetDAO {
 	public CassandraRepo(ApplicationConfig cfg) {
 		this.cfg = cfg;
 		Builder b;
-		String ep = cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_ENDPOINTS);
+		String ep = cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_ENDPOINTS);
 		if (ep.contains(",")) {
 			b = Cluster.builder().addContactPoints(ep.split(","));
 		} else {
@@ -34,15 +34,15 @@ public class CassandraRepo implements AssetDAO {
 		}
 		
 		
-		port = new Integer(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_PORT));
+		port = new Integer(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_PORT));
 		if (port != null) {
             b.withPort(port);
         }
         cluster = b.build();
         session = cluster.connect();
-        createKeyspace(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE),
-        		cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_STRATEGY),
-        		Integer.parseInt(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_REPLICAS)));
+        createKeyspace(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE),
+        		cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_STRATEGY),
+        		Integer.parseInt(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_REPLICAS)));
         createTable();
 	}
 	
@@ -68,9 +68,9 @@ public class CassandraRepo implements AssetDAO {
     
     private void createTable() {
         StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
-          .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+          .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
         		  + "." 
-        		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME)).append("(")
+        		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME)).append("(")
           .append("id text PRIMARY KEY, ")
           .append("os text,")
           .append("version text,")
@@ -119,9 +119,9 @@ public class CassandraRepo implements AssetDAO {
 	public AssetEvent getAssetById(String assetId) throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
-			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
 			    		  + "." 
-			    		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
+			    		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
 			      .append(" WHERE id='")
 			      .append(assetId)
 			      .append("';");
@@ -137,9 +137,9 @@ public class CassandraRepo implements AssetDAO {
 	public List<AssetEvent> getAllAssets() throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
-			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
 			    		  + "." 
-			    		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
+			    		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
 			      .append(";");
 		String query = sb.toString();
 		ResultSet rs = session.execute(query);
@@ -152,9 +152,9 @@ public class CassandraRepo implements AssetDAO {
 	
 	public void persistAsset(AssetEvent a) throws Exception {
 		StringBuilder sb = new StringBuilder("INSERT INTO ")
-			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
 			    		  + "." 
-			    		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
+			    		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
 			      .append("(id, os, version, type, ipAddress, antivirus, rotation, current, pressure, flowRate, temperature,latitude,longitude, creationDate ) ")
 			      .append("VALUES ('").append(a.getId())
 			      .append("','").append(a.getOs())

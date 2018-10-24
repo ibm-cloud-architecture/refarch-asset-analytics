@@ -10,9 +10,11 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 9042
-      name: cassandra
-    - name: jmx
-      port: 7199
+  - port: 9042
+    nodePort: 32042
+    name: cassandra
+  - name: jmx
+    nodePort: 31199
+    port: 7199
   selector:
     app: cassandra

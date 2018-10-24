@@ -108,6 +108,17 @@
         </configuration>
       </plugin>
       <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>ibm.cte.esp.AssetInjector</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+      <plugin>
 			 <groupId>org.codehaus.mojo</groupId>
 			 <artifactId>exec-maven-plugin</artifactId>
 			 <version>1.6.0</version>
@@ -118,7 +129,7 @@
 							 <goal>java</goal>
 						 </goals>
 						 <configuration>
-								 <mainClass>ibm.cte.esp.KafkaInjectorApplication</mainClass>
+								 <mainClass>ibm.cte.esp.spring.KafkaInjectorApplication</mainClass>
 						 </configuration>
 				 </execution>
 				 <execution>

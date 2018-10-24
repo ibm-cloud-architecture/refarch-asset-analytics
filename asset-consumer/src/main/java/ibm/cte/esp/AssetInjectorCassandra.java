@@ -5,7 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ibm.cte.esp.client.AssetEventMgrClient;
+import ibm.cte.esp.dao.AssetDAO;
+import ibm.cte.esp.dao.CassandraRepo;
 import ibm.cte.esp.model.AssetEvent;
 
 /**
@@ -20,28 +21,32 @@ import ibm.cte.esp.model.AssetEvent;
  * @author jerome boyer
  *
  */
-public class AssetInjector {
+public class AssetInjectorCassandra {
 
 	final static Logger logger = LoggerFactory.getLogger("AssetIngestor");
 
 	private int minBatchSize = 2;
     private AssetTopicConsumer kafkaConsumer;
-    private AssetEventMgrClient assertManager;
+    private AssetDAO assetDAO;
     private boolean runAgain = true;
 
-    public AssetInjector() {
+    public AssetInjectorCassandra() {
     	ApplicationConfig cfg = new ApplicationConfig();
 		logger.info("########### Asset Injector START ##########");
 		logger.info("  Version:" + cfg.getProperties().getProperty(ApplicationConfig.VERSION));
 		logger.info("  Kafka:" + cfg.getProperties().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS));
-		logger.info("  Asset Manager:" + cfg.getProperties().getProperty(ApplicationConfig.ASSET_MGR_HOST));
+		logger.info("  Cassandra:" + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_ENDPOINTS));
 
+		try {
+			assetDAO = new CassandraRepo(cfg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     	kafkaConsumer = new AssetTopicConsumer(cfg);
-    	assertManager = new AssetEventMgrClient(cfg);
     }
 
 	public static void main(String[] args) {
-		AssetInjector injector = new AssetInjector();	
+		AssetInjectorCassandra injector = new AssetInjectorCassandra();
 		injector.run();
 	}
 
@@ -49,9 +54,9 @@ public class AssetInjector {
         while (runAgain) {
         	 List<AssetEvent> buffer = kafkaConsumer.consume();
 	        // commit offset only when persisted in DB.
-			    if (buffer.size() >= getMinBatchSize()) {
+			    if (buffer.size() >= minBatchSize) {
 			    	try {
-			    		sendAssetsToDataSource(buffer);
+			    		insertIntoDb(buffer);
 				    	kafkaConsumer.commitOffset();
 			        buffer.clear();
 			    	} catch (Exception e) {
@@ -65,29 +70,10 @@ public class AssetInjector {
 	}
 
 
-	private void sendAssetsToDataSource( List<AssetEvent> buffer) throws Exception{
+	private void insertIntoDb( List<AssetEvent> buffer) throws Exception{
 		for (AssetEvent a  : buffer) {
-			assertManager.saveAsset(a);
+			logger.info("Get asset "+a.getId()+"....persist it!");
+			assetDAO.persistAsset(a);
 		}
-	}
-
-	public boolean isRunAgain() {
-		return runAgain;
-	}
-
-	public void setRunAgain(boolean runAgain) {
-		this.runAgain = runAgain;
-	}
-
-	public int getMinBatchSize() {
-		return minBatchSize;
-	}
-
-	public AssetTopicConsumer getKafkaConsumer() {
-		return kafkaConsumer;
-	}
-
-	public AssetEventMgrClient getAssertManager() {
-		return assertManager;
 	}
 }

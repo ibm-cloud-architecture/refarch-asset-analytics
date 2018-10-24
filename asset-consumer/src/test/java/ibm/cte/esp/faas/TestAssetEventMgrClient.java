@@ -3,36 +3,28 @@ package ibm.cte.esp.faas;
 import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import ibm.cte.esp.ApplicationConfig;
 import ibm.cte.esp.client.AssetEventMgrClient;
 import ibm.cte.esp.model.AssetEvent;
 
 
 public class TestAssetEventMgrClient {
 
-	@Test
-	public void testGetAllAssets(){
-		AssetEventMgrClient client = new AssetEventMgrClient();
-		List<AssetEvent> ael = null;;
-		try {
-			ael = client.getAllAssets();
-			Assert.assertNotNull(ael);
-			for (AssetEvent ae : ael) {
-				System.out.println(ae.toString());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Exception in test");
-		}
+	ApplicationConfig cfg ;
+	AssetEventMgrClient client;
+	@Before
+	public void init() {
+		cfg = new ApplicationConfig();
+		client = new AssetEventMgrClient(cfg);
 	}
 	
-	//@Test 
+	@Test 
 	public void testSaveAsset() {
-		AssetEventMgrClient client = new AssetEventMgrClient();
 		AssetEvent a = new AssetEvent();
 		a.setId("PUMP03");
 		a.setAntivirus("v3.0");
@@ -57,10 +49,9 @@ public class TestAssetEventMgrClient {
 	
 	@Test
 	public void testAccessById() {
-		AssetEventMgrClient client = new AssetEventMgrClient();
 		AssetEvent ae = null;;
 		try {
-			ae = client.getAssetById("PUMP01");
+			ae = client.getAssetById("ND01");
 			Assert.assertNotNull(ae);
 			System.out.println(ae.toString());
 		} catch (Exception e) {

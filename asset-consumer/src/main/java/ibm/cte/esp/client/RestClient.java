@@ -61,14 +61,10 @@ public  class RestClient {
 		setHttpClient(HttpClients.createDefault());
 	}
 	
-	public RestClient(String protocol,String hn) {
+	public RestClient(String hn,String port,String protocol) {
 		setHostName(hn);
+		setPort(Integer.parseInt(port));
 		setProtocol(protocol);
-		if ("https".equals(protocol)) {
-			setPort(443);
-		} else {
-			setPort(80);
-		}
 		setHost( new HttpHost(getHostName(),getPort(),getProtocol()));
 		setHttpClient(HttpClients.createDefault());
 	}
@@ -146,6 +142,7 @@ public  class RestClient {
 			displayResponse(method.getURI().toString(), statusCode, response);
 			
 			if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_NO_CONTENT && statusCode != HttpStatus.SC_CREATED ) {
+				System.err.println(httpResponse.getEntity().toString());
 				throw new RuntimeException ("Method failed: " + httpResponse.getStatusLine());
 			  
 			}
@@ -172,11 +169,12 @@ public  class RestClient {
 
 	
 	public String executePostMethod(String url,String json) throws Exception {
-		HttpPost postMethod = new HttpPost(buildCompleteUrl(url,null));
+		 HttpPost postMethod = new HttpPost(buildCompleteUrl(url,null));
+		 logger.info(json);
 		 StringEntity entity = new StringEntity(json);
 		 postMethod.setEntity(entity);
 		 postMethod.setHeader("Accept", "application/json");
-		 postMethod.setHeader("Content-type", "application/json");
+		 postMethod.setHeader("Content-Type", "application/json");
 		return executeMethod(postMethod);
 	}
 	
