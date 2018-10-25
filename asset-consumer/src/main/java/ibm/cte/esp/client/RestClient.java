@@ -107,9 +107,9 @@ public  class RestClient {
 	}
 	
 	protected void displayResponse(String url, int statusCode, String response) {
-		System.out.println(">> URL " + url);
-		System.out.println("<< RESPONSE - Status code " + statusCode + "\n");
-		System.out.println("<< PAYLOAD -"+response);
+		logger.info(">> URL " + url);
+		logger.info("<< RESPONSE - Status code " + statusCode + "\n");
+		logger.info("<< PAYLOAD -"+response);
 	}
 
 	protected String getResponse(InputStream stream) {

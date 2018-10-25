@@ -23,7 +23,7 @@ import ibm.cte.esp.spring.AppConfig;
 public class TestSimpleSpringProducerConsumer {
 
 	public static Logger logger = Logger.getLogger(TestSimpleSpringProducerConsumer.class);
-	public static final String topic1 = "test-topic" ;
+	public static final String topic1 = "text-topic" ;
 	public static String group = "consumergroup01";
 
 	

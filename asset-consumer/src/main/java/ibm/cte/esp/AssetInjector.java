@@ -24,7 +24,7 @@ public class AssetInjector {
 
 	final static Logger logger = LoggerFactory.getLogger("AssetIngestor");
 
-	private int minBatchSize = 2;
+	private int minBatchSize = 1;
     private AssetTopicConsumer kafkaConsumer;
     private AssetEventMgrClient assertManager;
     private boolean runAgain = true;
@@ -53,7 +53,7 @@ public class AssetInjector {
 			    	try {
 			    		sendAssetsToDataSource(buffer);
 				    	kafkaConsumer.commitOffset();
-			        buffer.clear();
+				    	buffer.clear();
 			    	} catch (Exception e) {
 			    		e.printStackTrace();
 			    		runAgain = false;

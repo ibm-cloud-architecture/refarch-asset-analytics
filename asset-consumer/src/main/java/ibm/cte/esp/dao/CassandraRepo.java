@@ -43,11 +43,19 @@ public class CassandraRepo implements AssetDAO {
         createKeyspace(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE),
         		cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_STRATEGY),
         		Integer.parseInt(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_REPLICAS)));
-        createTable();
+        createTable(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE),
+        		cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME));
 	}
 	
    
-    public void close() {
+    public CassandraRepo(Session inSession,String keySpace,String tableName) {
+		this.session = inSession;
+		createKeyspace(keySpace, "SimpleStrategy", 1);
+		createTable(keySpace,tableName);
+	}
+
+
+	public void close() {
         session.close();
         cluster.close();
     }
@@ -66,11 +74,11 @@ public class CassandraRepo implements AssetDAO {
 	    session.execute(query);
 	}
     
-    private void createTable() {
+    private void createTable(String keySpace,String tableName) {
         StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
-          .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+          .append(keySpace
         		  + "." 
-        		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME)).append("(")
+        		  + tableName).append("(")
           .append("id text PRIMARY KEY, ")
           .append("os text,")
           .append("version text,")
@@ -99,12 +107,12 @@ public class CassandraRepo implements AssetDAO {
 		a.setType(r.getString("type"));
 		a.setAntivirus(r.getString("antivirus"));
 		a.setIpAddress(r.getString("ipAddress"));
-		a.setCurrent(r.getDecimal("current"));
-		a.setRotation(r.getDecimal("rotation"));
-		a.setPressure(r.getDecimal("pressure"));
-		a.setFlowRate(r.getDecimal("flowRate"));
-		a.setTemperature(r.getDecimal("temperature"));
-		a.setRiskRating(r.getDecimal("riskRating"));
+		a.setCurrent(r.getDouble("current"));
+		a.setRotation(r.getInt("rotation"));
+		a.setPressure(r.getInt("pressure"));
+		a.setFlowRate(r.getLong("flowRate"));
+		a.setTemperature(r.getInt("temperature"));
+		a.setRiskRating(r.getInt("riskRating"));
 		a.setLatitude(r.getString("latitude"));
 		a.setLongitude(r.getString("longitude"));
 		a.setCreationDate(r.getTimestamp("creationDate"));

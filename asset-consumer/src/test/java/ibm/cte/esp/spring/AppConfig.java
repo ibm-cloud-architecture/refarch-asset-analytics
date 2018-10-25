@@ -19,7 +19,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 public class AppConfig {
 	// see application.yml file in resource folder
 	@Value("${kafka.bootstrap-servers}")
-	public String BOOTSTRAP_SERVERS = "docker.for.mac.host.internal:30092";
+	public String BOOTSTRAP_SERVERS = "gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local:32224";
 	public static String CONSUMER_GROUP = "consumergroup01";
 	public static final String INTOPIC = "test-topic";
 	public static final String OUTTOPIC = "output-topic";

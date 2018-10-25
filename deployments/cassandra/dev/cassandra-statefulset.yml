@@ -3,14 +3,9 @@ apiVersion: "apps/v1"
 kind: StatefulSet
 metadata:
   name: cassandra
-  labels:
-    app: cassandra
 spec:
   serviceName: cassandra
   replicas: 1
-  selector:
-    matchLabels:
-      app: cassandra
   template:
     metadata:
       labels:
@@ -30,20 +25,6 @@ spec:
           name: jmx
         - containerPort: 9042
           name: cql
-        resources:
-          limits:
-            cpu: "500m"
-            memory: 1Gi
-          requests:
-            cpu: "500m"
-            memory: 1Gi
-        lifecycle:
-          preStop:
-            exec:
-              command:
-              - /bin/sh
-              - -c
-              - nodetool drain
         env:
           - name: CASSANDRA_SEEDS
             value: cassandra-0.cassandra.greencompute.svc.cluster.local
@@ -52,27 +33,22 @@ spec:
           - name: HEAP_NEWSIZE
             value: 100M
           - name: CASSANDRA_CLUSTER_NAME
-            value: "GreenCassandra"
+            value: "Cassandra"
           - name: CASSANDRA_DC
             value: "DC1"
           - name: CASSANDRA_RACK
             value: "Rack1"
           - name: CASSANDRA_ENDPOINT_SNITCH
             value: GossipingPropertyFileSnitch
-        readinessProbe:
-          exec:
-            command:
-            - /bin/bash
-            - -c
-            - /ready-probe.sh
-          initialDelaySeconds: 15
-          timeoutSeconds: 5
         volumeMounts:
         - name: cassandra-data
           mountPath: /var/lib/cassandra/data
   volumeClaimTemplates:
     - metadata:
         name: cassandra-data
+        annotations:  # comment line if you want to use a StorageClass
+          # or specify which StorageClass
+          volume.beta.kubernetes.io/storage-class: "" 
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:

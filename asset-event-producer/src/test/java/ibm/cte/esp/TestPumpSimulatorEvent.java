@@ -2,10 +2,10 @@ package ibm.cte.esp;
 
 import org.junit.Test;
 
-class TestPumpSimulatorEvent {
+public class TestPumpSimulatorEvent {
 
 	@Test
-	void testPumpEventEmission() {
+	public void testPumpEventEmission() {
 		ApplicationConfig cfg = new ApplicationConfig();
 		cfg.getConfig().setProperty(ApplicationConfig.NB_OF_EVENTS,  "6");
 		PumpSimulator ps = new PumpSimulator();

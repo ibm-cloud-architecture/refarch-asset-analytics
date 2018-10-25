@@ -2,22 +2,23 @@ package ibm.cte.esp;
 
 import static org.junit.Assert.fail;
 
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
 
 import ibm.cte.esp.model.AssetEvent;
 
-class TestPumpSimulatorAsset {
+public class TestPumpSimulatorAsset {
 
 	@Test
-	void testAddOneAsset() {
+	public void testAddOneAsset() {
 		ApplicationConfig cfg = new ApplicationConfig();
 
 		PumpSimulator ps = new PumpSimulator(cfg);
 		ps.prepareProducer();
 		AssetEvent a = new AssetEvent();
-		a.setId("PUMP01");
+		a.setId("PUMP06");
 		a.setAntivirus("v3.0");
 		a.setCurrent((long)(110*Math.random()+10));
 		a.setFlowRate((long)(100*Math.random()));
@@ -30,6 +31,8 @@ class TestPumpSimulatorAsset {
 		a.setVersion("0.0.1");
 		a.setLatitude("30.307182");
 		a.setLongitude("-97.755996");
+		a.setRiskRating(-1);
+		a.setCreationDate(new Date());
 		try {
 			ps.publishAsset(a);
 		} catch (InterruptedException e) {
