@@ -9,7 +9,6 @@
 	<configs>
 	</configs>
 	<autoconfigs>
-		<config>java:ibm.cte.kafka.test.GenerateEventApp</config>
 	</autoconfigs>
 	<configSets>
 	</configSets>

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS assetmonitoring.assets(
     current double, 
     rotation int, 
     pressure int,
-    flowRate bigint 
+    flowRate bigint, 
     temperature int,
     riskRating double, 
     latitude double, 

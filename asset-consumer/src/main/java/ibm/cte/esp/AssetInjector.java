@@ -10,7 +10,7 @@ import ibm.cte.esp.model.AssetEvent;
 
 /**
  * Read Asset published on a kafka topic and call remote service to persist to cassandra
- *
+ * 
  * The characteristics of this consumer:
  *  - will be unique consumer with its group
  *  - subscribe to a unique topic

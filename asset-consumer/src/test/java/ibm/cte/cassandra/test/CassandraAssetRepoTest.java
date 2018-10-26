@@ -1,6 +1,5 @@
 package ibm.cte.cassandra.test;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.AfterClass;
@@ -8,7 +7,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ibm.cte.esp.ApplicationConfig;
 import ibm.cte.esp.dao.CassandraRepo;
 import ibm.cte.esp.model.AssetEvent;
 

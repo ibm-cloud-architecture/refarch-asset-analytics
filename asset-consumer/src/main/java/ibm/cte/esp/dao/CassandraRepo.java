@@ -49,7 +49,7 @@ public class CassandraRepo implements AssetDAO {
 	
    
     public CassandraRepo(Session inSession,String keySpace,String tableName) {
-		this.session = inSession;
+		CassandraRepo.session = inSession;
 		createKeyspace(keySpace, "SimpleStrategy", 1);
 		createTable(keySpace,tableName);
 	}
