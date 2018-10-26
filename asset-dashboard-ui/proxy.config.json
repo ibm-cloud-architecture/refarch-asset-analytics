@@ -1,6 +1,8 @@
 {
-	"/assetmanager/assets": {
-		"target": "http://localhost:8080",
+	"/assets": {
+		"target": "http://assetmgr.greencompute.ibmcase.com/assetmanager/assets",
 		"secure": false
-	}
+	},
+	"changeOrigin": true,
+	"logLevel": "debug"
 }

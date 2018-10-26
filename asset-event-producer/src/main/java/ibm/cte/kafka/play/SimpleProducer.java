@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
 import application.kafka.Producer;
+import ibm.cte.esp.ApplicationConfig;
 
 
 /**
@@ -19,22 +20,21 @@ public class SimpleProducer  extends SimpleKafkaBase  {
 	                                      "no at least the bye bye. line" };
 	
 	public static void main(String[] args)  {
-		String topic = TOPICNAME;
-		String broker = BOOTSTRAP_SERVERS;
+		String topic = config.getConfig().getProperty(ApplicationConfig.KAFKA_TEXT_TOPIC_NAME);
+		String brokers= config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS);
 		if(args.length == 2) {
 			topic = args[0].toString();
-			broker = args[1].toString();
+			brokers = args[1].toString();
 		}
-		System.out.println("############ Text Producer to topic: "+ topic +" on server "+ broker +" ####### ");
+		System.out.println("############ Text Producer to topic: "+ topic +" on servers "+ brokers +" ####### ");
 		Producer producer = null;
 		try {
-			producer =  new Producer(broker,topic);
+			producer =  new Producer(brokers,topic);
 			 for (String line : textToSend) {
 	        	 System.out.print(line);
 	        	 RecordMetadata recordMetadata= producer.produce(line);
 	        	 System.out.println(" -> sent" + recordMetadata.offset());
 	         }
-	         producer.shutdown();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (ConnectException e) {

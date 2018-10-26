@@ -16,8 +16,8 @@ public class AssetEventSimplestConsumer {
 	
 	public static void main(String[] args) throws InstantiationException, ConnectException{
 		ApplicationConfig cfg = new ApplicationConfig();
-		String brokers = cfg.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS);
-		String topic = cfg.getConfig().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME);
+		String brokers = cfg.getProperties().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS);
+		String topic = cfg.getProperties().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME);
 		
 		if(args.length == 2) {
 			topic = args[0].toString();

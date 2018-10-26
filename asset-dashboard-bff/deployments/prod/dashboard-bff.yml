@@ -1,0 +1,22 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: dashboard-bff
+  name: dashboard-bff
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dashboard-bff
+    spec:
+      containers:
+      - image: ibmcase/gc-dashboard-bff
+        imagePullPolicy: IfNotPresent
+        name: dashboard-bff
+        ports:
+        - containerPort: 8081
+          protocol: TCP
+ 

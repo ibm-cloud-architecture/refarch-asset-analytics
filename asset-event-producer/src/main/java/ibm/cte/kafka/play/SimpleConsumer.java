@@ -1,11 +1,11 @@
 package ibm.cte.kafka.play;
 
 import java.net.ConnectException;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import application.kafka.Consumer;
+import ibm.cte.esp.ApplicationConfig;
 
 
 
@@ -19,8 +19,8 @@ public class SimpleConsumer extends SimpleKafkaBase {
 
 	
 	public static void main(String[] args) throws InstantiationException, ConnectException{
-		String brokers = BOOTSTRAP_SERVERS;
-		String topic = TOPICNAME;
+		String topic = config.getConfig().getProperty(ApplicationConfig.KAFKA_TEXT_TOPIC_NAME);
+		String brokers = config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS);
 		
 		if(args.length == 2) {
 			topic = args[0].toString();

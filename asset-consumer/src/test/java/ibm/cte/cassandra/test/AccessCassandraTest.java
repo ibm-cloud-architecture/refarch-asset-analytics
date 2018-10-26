@@ -15,8 +15,7 @@ public class AccessCassandraTest {
 		try {
 			// cluster holds metadata about cassandra cluster - create one instance of this class per app.
 		    cluster = Cluster.builder()                                                    
-		            .addContactPoint("127.0.0.1")
-		            .build();
+		            .addContactPoint("localhost").withPort(Integer.parseInt("32042")).build();
 		    // session should be reused
 		    Session session = cluster.connect();                                          
 		    // send query to cassandra

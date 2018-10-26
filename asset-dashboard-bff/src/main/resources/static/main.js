@@ -450,10 +450,13 @@ Get the current top 50 assets from backend.
 Subscribe to new asset events
 */
 var AssetsService = /** @class */ (function () {
+    //private assetUrl = 'http://assetmgr.greencompute.ibmcase.com/assetmanager/assets'
     function AssetsService(http) {
         this.http = http;
         this.assetEvents = [];
-        this.assetUrl = '/dashboardbff/assets';
+        //private assetUrl = 'http://localhost:3000/assets';
+        this.assetUrl = '/assets';
+        this.riskScoringUrl = '/asset/scoring';
     }
     AssetsService.prototype.getAssets = function () {
         var _this = this;
@@ -461,11 +464,38 @@ var AssetsService = /** @class */ (function () {
             return this.http.get(this.assetUrl)
                 .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (data) {
                 _this.assetEvents = data;
-                return data;
+                for (var _i = 0, _a = _this.assetEvents; _i < _a.length; _i++) {
+                    var asset = _a[_i];
+                    _this.getRiskFactor(asset);
+                }
+                return _this.assetEvents;
             }));
         }
         else {
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])(this.assetEvents);
+        }
+    };
+    AssetsService.prototype.getRiskFactor = function (asset) {
+        if (asset.riskRating === -1) {
+            // TODO call remote service for maintenance scoring service.
+            /**
+            this.http.get<Asset>(this.riskScoringUrl+"/"+asset.id);
+            */
+            asset.riskRating = Math.floor(Math.random() * 100) + 1;
+        }
+        if (asset.riskRating <= 60) {
+            asset.riskColor = "#42744b";
+            asset.riskRatingClass = 'Low';
+        }
+        else {
+            if (asset.riskRating <= 80) {
+                asset.riskColor = "#f48942";
+                asset.riskRatingClass = 'Medium';
+            }
+            else {
+                asset.riskColor = "#f44b42";
+                asset.riskRatingClass = 'High';
+            }
         }
     };
     AssetsService = __decorate([
@@ -504,7 +534,8 @@ var Asset = /** @class */ (function () {
         this.pressure = 0;
         this.flowRate = 0;
         this.temperature = 0;
-        this.riskRating = '';
+        this.riskRating = -1;
+        this.riskRatingClass = '';
         this.riskColor = '';
         this.longitude = '';
         this.latitude = '';
@@ -570,7 +601,7 @@ var AssetsComponent = /** @class */ (function () {
         this.service = service;
         this.service.getAssets().subscribe(function (data) {
             _this.assets = data;
-        });
+        }, function (error) { _this.assets = [{ id: "0001", type: "pump-mock", version: "v.12", pressure: 100, flowRate: 20, temperature: 70 }]; });
     }
     AssetsComponent.prototype.ngOnInit = function () {
         /**
@@ -645,6 +676,29 @@ var AssetsModule = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/features/dashboard/Counter.ts":
+/*!***********************************************!*\
+  !*** ./src/app/features/dashboard/Counter.ts ***!
+  \***********************************************/
+/*! exports provided: RiskCounters */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RiskCounters", function() { return RiskCounters; });
+var RiskCounters = /** @class */ (function () {
+    function RiskCounters() {
+        this.low = 0;
+        this.medium = 0;
+        this.high = 0;
+    }
+    return RiskCounters;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/features/dashboard/dashboard-chart/dashboard-chart.component.css":
 /*!**********************************************************************************!*\
   !*** ./src/app/features/dashboard/dashboard-chart/dashboard-chart.component.css ***!
@@ -695,8 +749,12 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+/* UI in two parts, one form entry to select a time period and a type of attribute to select
+ and a chart representing the evolution of the selected attribute over time
+ */
 var DashboardChartComponent = /** @class */ (function () {
     function DashboardChartComponent() {
+        // Define the attributes we want to track
         this.attributes = [
             { value: 'temperature', viewValue: 'temperature' },
             { value: 'pressure', viewValue: 'pressure' },
@@ -707,6 +765,20 @@ var DashboardChartComponent = /** @class */ (function () {
         this.startDate = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](new Date());
         this.endDate = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](new Date());
     }
+    DashboardChartComponent.prototype.ngOnInit = function () {
+        //console.log(this.dataSource);
+        this.historyMap = this.initHistoryMap(this.dataSource);
+        var data = {};
+        data.labels = [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050];
+        data.datasets = [];
+        data.datasets.push({
+            data: [6, 3, 2, 2, 7, 26, 82, 172, 312, 433],
+            label: "FillerData",
+            borderColor: "#c45850",
+            fill: false
+        });
+        this.buildChart(data);
+    };
     // initialize map of form <pump id, list of different timestamp objects>
     DashboardChartComponent.prototype.initHistoryMap = function (assets) {
         var historyMap = new Map();
@@ -741,29 +813,27 @@ var DashboardChartComponent = /** @class */ (function () {
         // init data
         var dataset = [];
         var label = [];
-        var attributeSelect = this.selectedAttribute;
-        if (attributeSelect === undefined) {
-            attributeSelect = 'temperature';
+        if (this.selectedAttribute === undefined) {
+            this.selectedAttribute = { value: 'temperature', viewValue: 'temperature' };
         }
-        console.log("selected attribute: " + attributeSelect);
         for (var i = 0; i < pumpHistory.length; i++) {
             var pumpTimeStamp = new Date(pumpHistory[i].timestamp).getTime();
             // filter values
             if (pumpTimeStamp >= minDate - 86400000 && pumpTimeStamp <= maxDate) {
                 // decide which attribute
-                if (attributeSelect === 'temperature') {
+                if (this.selectedAttribute.value === 'temperature') {
                     dataset.push(pumpHistory[i].temperature);
                 }
-                else if (attributeSelect === 'pressure') {
+                else if (this.selectedAttribute.value === 'pressure') {
                     dataset.push(pumpHistory[i].pressure);
                 }
-                else if (attributeSelect === 'flow') {
+                else if (this.selectedAttribute.value === 'flow') {
                     dataset.push(pumpHistory[i].flowRate);
                 }
-                else if (attributeSelect === 'current') {
+                else if (this.selectedAttribute.value === 'current') {
                     dataset.push(pumpHistory[i].current);
                 }
-                else if (attributeSelect === 'rotation') {
+                else if (this.selectedAttribute.value === 'rotation') {
                     dataset.push(pumpHistory[i].rotation);
                 }
                 label.push(pumpHistory[i].timestamp);
@@ -774,28 +844,28 @@ var DashboardChartComponent = /** @class */ (function () {
             document.getElementById('errorMessage').value = "No data points in specified range!";
         }
         // add unit of measurement
-        if (attributeSelect === 'temperature') {
-            attributeSelect += ' (°F)';
+        if (this.selectedAttribute.value === 'temperature') {
+            this.selectedAttribute.value += ' (°F)';
         }
-        else if (attributeSelect === 'pressure') {
-            attributeSelect += ' (Pa)';
+        else if (this.selectedAttribute.value === 'pressure') {
+            this.selectedAttribute.value += ' (Pa)';
             ;
         }
-        else if (attributeSelect === 'flow') {
-            attributeSelect += ' (m3/s)';
+        else if (this.selectedAttribute.value === 'flow') {
+            this.selectedAttribute.value += ' (m3/s)';
         }
-        else if (attributeSelect === 'current') {
-            attributeSelect += ' (A)';
+        else if (this.selectedAttribute.value === 'current') {
+            this.selectedAttribute.value += ' (A)';
         }
-        else if (attributeSelect === 'rotation') {
-            attributeSelect += ' (rad/s)';
+        else if (this.selectedAttribute.value === 'rotation') {
+            this.selectedAttribute.value += ' (rad/s)';
         }
         var data = {};
         data.labels = label;
         data.datasets = [];
         data.datasets.push({
             data: dataset,
-            label: attributeSelect,
+            label: this.selectedAttribute.value,
             borderColor: "#c45850",
             fill: false
         });
@@ -813,20 +883,6 @@ var DashboardChartComponent = /** @class */ (function () {
                 }
             }
         });
-    };
-    DashboardChartComponent.prototype.ngOnInit = function () {
-        //console.log(this.dataSource);
-        this.historyMap = this.initHistoryMap(this.dataSource);
-        var data = {};
-        data.labels = [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050];
-        data.datasets = [];
-        data.datasets.push({
-            data: [6, 3, 2, 2, 7, 26, 82, 172, 312, 433],
-            label: "FillerData",
-            borderColor: "#c45850",
-            fill: false
-        });
-        this.buildChart(data);
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
@@ -897,15 +953,16 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var DashboardTableComponent = /** @class */ (function () {
     function DashboardTableComponent() {
+        // so return the selected asset
         this.selectedAsset = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
         this.displayedColumns = ['riskColor', 'id', 'type', 'version', 'pressure', 'flowRate', 'temperature'];
     }
-    DashboardTableComponent.prototype.tableClick = function (asset) {
-        this.selectedAsset.emit(asset);
-    };
     DashboardTableComponent.prototype.ngOnInit = function () {
         this.dataSource = new _angular_material__WEBPACK_IMPORTED_MODULE_1__["MatTableDataSource"](this.data);
         this.dataSource.sort = this.sort;
+    };
+    DashboardTableComponent.prototype.tableClick = function (asset) {
+        this.selectedAsset.emit(asset);
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
@@ -951,7 +1008,7 @@ module.exports = ".wrapper {\nwidth:100%;\nmargin : 0;\n}\n\n.riskCategory{\nwid
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div id ='top'>\n   <div class=\"row\">\n      <div class=\"col-md-6\">\n         <div id = 'map'>\n            <div id = 'mapSummary'>\n               <leafletMap [assets] = \"assets\"></leafletMap>\n            </div>\n         </div>\n      </div>\n      <div class=\"col-md-6\">\n        <div id = 'pumpSummary'>\n            <div id = 'riskCategories' class=\"row\">\n                <assetRisk id ='high' count = {{riskAnalysis.highRiskCount}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>\n                <assetRisk id ='medium' count = {{riskAnalysis.mediumRiskCount}} riskName = 'Medium Risk' color = 'yellow' class = 'riskCategory'> </assetRisk>\n                <assetRisk id ='low' count = {{riskAnalysis.lowRiskCount}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>\n            </div>\n            <dashboard-table class=\"row\" (selectedAsset)=\"getSelectedAsset($event)\" [data]=\"uniqueAssets\"></dashboard-table>\n        </div>\n      </div>\n   </div>\n</div>\n\n\n<div id = 'bottom'>\n   <div class=\"row\">\n      <div class=\"col-md-3\">\n         <assetAnalysis [asset] = \"selectedAssetAnalysis\"></assetAnalysis>\n      </div>\n      <div class=\"col-md-9\">\n         <dashboard-chart [selectedAsset] = \"selectedAssetAnalysis\" [dataSource] = \"assets\"></dashboard-chart>\n      </div>\n   </div>\n</div>\n"
+module.exports = "\n<div id ='top'>\n   <div class=\"row\">\n      <div class=\"col-md-6\">\n         <div id = 'map'>\n            <div id = 'mapSummary'>\n                <leafletMap [assets] = \"assets\"></leafletMap>\n            </div>\n         </div>\n      </div>\n      <div class=\"col-md-6\">\n        <div id = 'pumpSummary'>\n            <div id = 'riskCategories' class=\"row\">\n                <assetRisk id ='high' count = {{riskCounters.high}} riskName = 'High Risk' color = 'red' class = 'riskCategory'> </assetRisk>\n                <assetRisk id ='medium' count = {{riskCounters.medium}} riskName = 'Medium Risk' color = '#f48942' class = 'riskCategory'> </assetRisk>\n                <assetRisk id ='low' count = {{riskCounters.low}} riskName = 'Low Risk' color = 'green' class = 'riskCategory'> </assetRisk>\n            </div>\n            <!-- present the assets information in table format -->\n            <div *ngIf='assets'>\n              <dashboard-table class=\"row\" (selectedAsset)=\"getSelectedAsset($event)\" [data]=\"assets\"></dashboard-table>\n            </div>\n        </div>\n      </div>\n   </div>\n</div>\n\n\n<div id = 'bottom'>\n   <div class=\"row\">\n      <div class=\"col-md-3\">\n         <assetAnalysis [asset] = \"selectedAssetAnalysis\"></assetAnalysis>\n      </div>\n      <div class=\"col-md-9\">\n         <dashboard-chart [selectedAsset] = \"selectedAssetAnalysis\" [dataSource] = \"assets\"></dashboard-chart>\n      </div>\n   </div>\n</div>\n"
 
 /***/ }),
 
@@ -967,6 +1024,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardComponent", function() { return DashboardComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _assets_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../assets.service */ "./src/app/features/assets.service.ts");
+/* harmony import */ var _assets_asset__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../assets/asset */ "./src/app/features/assets/asset.ts");
+/* harmony import */ var _Counter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Counter */ "./src/app/features/dashboard/Counter.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -979,34 +1038,42 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 //Import Data points
 
+
+
+/*
+The dashboard is the main page to content map, table of assets and widgets about real time Data
+*/
 var DashboardComponent = /** @class */ (function () {
     function DashboardComponent(service) {
-        var _this = this;
         this.service = service;
-        this.riskAnalysis = {
-            highRiskCount: 0,
-            mediumRiskCount: 0,
-            lowRiskCount: 0
-        };
+        // Data to consolidate the number of pump in each risk category
+        this.riskCounters = new _Counter__WEBPACK_IMPORTED_MODULE_3__["RiskCounters"]();
+    }
+    DashboardComponent.prototype.ngOnInit = function () {
+        var _this = this;
         //Pull Assets and Unique Assets from our Data Service
         this.service.getAssets().subscribe(function (data) {
             _this.assets = data;
-        });
-        /*
-    
-        this.uniqueAssets = service.getUniqueAssets().uniqueAssets;
-        this.riskAnalysis = {};
-        this.riskAnalysis.lowRiskCount = 0;
-        this.riskAnalysis.mediumRiskCount = 0;
-        this.riskAnalysis.highRiskCount = 0;
-        this.selectedAssetAnalysis = {};
-        this.riskAnalysis = service.getUniqueAssets().riskAnalysis
-        */
-    }
+            _this.modifyCounters();
+        }, function (error) { console.log(JSON.stringify(error)); });
+        this.selectedAssetAnalysis = new _assets_asset__WEBPACK_IMPORTED_MODULE_2__["Asset"]();
+    };
     DashboardComponent.prototype.getSelectedAsset = function (data) {
         this.selectedAssetAnalysis = data;
     };
-    DashboardComponent.prototype.ngOnInit = function () {
+    DashboardComponent.prototype.modifyCounters = function () {
+        for (var _i = 0, _a = this.assets; _i < _a.length; _i++) {
+            var asset = _a[_i];
+            if (asset.riskRatingClass === "High") {
+                this.riskCounters.high += 1;
+            }
+            else if (asset.riskRatingClass === "Medium") {
+                this.riskCounters.medium += 1;
+            }
+            else {
+                this.riskCounters.low += 1;
+            }
+        }
     };
     DashboardComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1041,8 +1108,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/material/button */ "./node_modules/@angular/material/esm5/button.es5.js");
 /* harmony import */ var _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/material/datepicker */ "./node_modules/@angular/material/esm5/datepicker.es5.js");
 /* harmony import */ var _dashboard_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./dashboard.component */ "./src/app/features/dashboard/dashboard.component.ts");
-/* harmony import */ var _dashboard_table_dashboard_table_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./dashboard-table/dashboard-table.component */ "./src/app/features/dashboard/dashboard-table/dashboard-table.component.ts");
-/* harmony import */ var _dashboard_chart_dashboard_chart_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./dashboard-chart/dashboard-chart.component */ "./src/app/features/dashboard/dashboard-chart/dashboard-chart.component.ts");
+/* harmony import */ var _shared_shared_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../shared/shared.module */ "./src/app/shared/shared.module.ts");
+/* harmony import */ var _dashboard_table_dashboard_table_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./dashboard-table/dashboard-table.component */ "./src/app/features/dashboard/dashboard-table/dashboard-table.component.ts");
+/* harmony import */ var _dashboard_chart_dashboard_chart_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./dashboard-chart/dashboard-chart.component */ "./src/app/features/dashboard/dashboard-chart/dashboard-chart.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1063,6 +1131,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
 var DashboardModule = /** @class */ (function () {
     function DashboardModule() {
     }
@@ -1070,6 +1139,7 @@ var DashboardModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
+                _shared_shared_module__WEBPACK_IMPORTED_MODULE_8__["SharedModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatTableModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatSortModule"],
                 _angular_material_button__WEBPACK_IMPORTED_MODULE_5__["MatButtonModule"],
@@ -1080,7 +1150,7 @@ var DashboardModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormsModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_2__["ReactiveFormsModule"],
             ],
-            declarations: [_dashboard_component__WEBPACK_IMPORTED_MODULE_7__["DashboardComponent"], _dashboard_table_dashboard_table_component__WEBPACK_IMPORTED_MODULE_8__["DashboardTableComponent"], _dashboard_chart_dashboard_chart_component__WEBPACK_IMPORTED_MODULE_9__["DashboardChartComponent"]]
+            declarations: [_dashboard_component__WEBPACK_IMPORTED_MODULE_7__["DashboardComponent"], _dashboard_table_dashboard_table_component__WEBPACK_IMPORTED_MODULE_9__["DashboardTableComponent"], _dashboard_chart_dashboard_chart_component__WEBPACK_IMPORTED_MODULE_10__["DashboardChartComponent"]]
         })
     ], DashboardModule);
     return DashboardModule;
@@ -1310,7 +1380,7 @@ var AssetAnalysis = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".riskCategory{\n   margin: auto;\n   border-width : 2px;\n   border-radius: 8px;\n   padding : 10px;\n   background-color : lightgrey;\n}\n\n.circle {\n  width : 40px;\n  border-radius: 50%;\n  color: darkgray;\n  line-height: 40px;\n  text-align: center;\n  margin: auto\n}\n"
+module.exports = ".riskCategory{\n   margin: auto;\n   border-width : 2px;\n   border-radius: 8px;\n   padding : 10px;\n   background-color : lightgrey;\n}\n\n.circle {\n  width : 40px;\n  border-radius: 50%;\n  color: black;\n  line-height: 40px;\n  text-align: center;\n  margin: auto\n}\n"
 
 /***/ }),
 
@@ -1431,7 +1501,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var FooterComponent = /** @class */ (function () {
     function FooterComponent() {
-        this.version = "v0.0.2";
+        this.version = "v0.0.3";
     }
     FooterComponent.prototype.ngOnInit = function () {
     };
@@ -1468,7 +1538,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"jumbotron\" style=\"background-image: url(assets/images/banner2.png)\">\n  <h2 style=\"color:white\">{{title}}</h2>\n</div>\n<div class=\"container\">\n  <ul class=\"breadcrumb\">\n    <li><a id=\"home\" class=\"fas fa-home\" [routerLink]=\"['/home']\"></a></li>\n\n    <li><a id=\"assets\" [routerLink]=\"['/assets']\">Asset Dashboard</a></li>\n\n  </ul>\n<div>\n"
+module.exports = "<div class=\"jumbotron\" style=\"background-image: url(assets/images/banner2.png)\">\n  <h2 style=\"color:white\">{{title}}</h2>\n</div>\n<div class=\"container\">\n  <ul class=\"breadcrumb\">\n    <li><a id=\"home\" class=\"fas fa-home\" [routerLink]=\"['/home']\"></a></li>\n  </ul>\n<div>\n"
 
 /***/ }),
 
@@ -1530,7 +1600,7 @@ module.exports = __webpack_require__.p + "greenMapIcon.svg";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "#mapid {\n   width: 100%;\n   height: 35em;\n   max-height: 450px;\n   border: 2px solid;\n}"
+module.exports = "#mapid {\n   width: 100%;\n   height: 35em;\n   max-height: 450px;\n   border: 2px solid;\n}\n"
 
 /***/ }),
 
@@ -1541,7 +1611,7 @@ module.exports = "#mapid {\n   width: 100%;\n   height: 35em;\n   max-height: 45
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n             <div id=\"mapid\"></div>            "
+module.exports = "\n<div id=\"mapid\"></div>            \n"
 
 /***/ }),
 
@@ -1556,6 +1626,8 @@ module.exports = "\n             <div id=\"mapid\"></div>            "
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LeafletMap", function() { return LeafletMap; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_1__);
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1566,50 +1638,67 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
 var redMapIcon = __webpack_require__(/*! ./redMapIcon.svg */ "./src/app/shared/leafletMap/redMapIcon.svg");
 var greenMapIcon = __webpack_require__(/*! ./greenMapIcon.svg */ "./src/app/shared/leafletMap/greenMapIcon.svg");
 var yellowMapIcon = __webpack_require__(/*! ./yellowMapIcon.svg */ "./src/app/shared/leafletMap/yellowMapIcon.svg");
 var LeafletMap = /** @class */ (function () {
     function LeafletMap() {
         this.id = '';
+        this.basicIcon = leaflet__WEBPACK_IMPORTED_MODULE_1__["icon"]({
+            iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/images/marker-icon.png'
+        });
+        this.redIcon = leaflet__WEBPACK_IMPORTED_MODULE_1__["icon"]({
+            iconUrl: redMapIcon,
+            iconSize: [20, 20],
+            iconAnchor: [0, 0],
+            shadowAnchor: [4, 62],
+            popupAnchor: [-3, -76]
+        });
+        this.greenIcon = leaflet__WEBPACK_IMPORTED_MODULE_1__["icon"]({
+            iconUrl: greenMapIcon,
+            iconSize: [20, 20],
+            iconAnchor: [0, 0],
+            shadowAnchor: [4, 62],
+            popupAnchor: [-3, -76]
+        });
+        this.yellowIcon = leaflet__WEBPACK_IMPORTED_MODULE_1__["icon"]({
+            iconUrl: yellowMapIcon,
+            iconSize: [20, 20],
+            iconAnchor: [0, 0],
+            shadowAnchor: [4, 62],
+            popupAnchor: [-3, -76]
+        });
     }
     LeafletMap.prototype.ngOnInit = function () {
-        //Render Map
-        var myMap = L.map('mapid').setView([40, -100], 3.3);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}', { foo: 'bar' }).addTo(myMap);
-        //Build Icon Types
-        var LeafIcon = L.Icon.extend({
-            options: {
-                iconSize: [20, 20],
-                iconAnchor: [0, 0],
-                shadowAnchor: [4, 62],
-                popupAnchor: [-3, -76]
-            }
-        });
-        var redIcon = new LeafIcon({ iconUrl: redMapIcon });
-        var greenIcon = new LeafIcon({ iconUrl: greenMapIcon });
-        var yellowIcon = new LeafIcon({ iconUrl: yellowMapIcon });
-        L.icon = function (options) {
-            return new L.Icon(options);
-        };
-        //Place markers
-        for (var i = 0; i < this.assets.length; i++) {
-            var associatedIcon = {};
-            if (this.assets[i].riskRating == 'High') {
-                associatedIcon = redIcon;
-            }
-            if (this.assets[i].riskRating == 'Medium') {
-                associatedIcon = yellowIcon;
-            }
-            if (this.assets[i].riskRating == 'Low') {
-                associatedIcon = greenIcon;
-            }
-            this.addMarker(this.assets[i].latitude, this.assets[i].longitude, associatedIcon, this.assets[i].id, myMap);
-        }
-    };
+        // Render Map centered on USA, with a zoom high enough to fit the usa map
+        // all mouse and touch interactions on the map are enabled, and it has zoom and attribution controls.
+        this.usaMap = leaflet__WEBPACK_IMPORTED_MODULE_1__["map"]('mapid').setView([40, -100], 4);
+        leaflet__WEBPACK_IMPORTED_MODULE_1__["tileLayer"]('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}', { foo: 'bar', attribution: 'OpenStreet map &copy;'
+        }).addTo(this.usaMap);
+    }; // onInit
     LeafletMap.prototype.addMarker = function (lat, long, iconType, assetID, myMap) {
         console.log('Add Marker run');
-        L.marker([lat, long], { icon: iconType, title: 'Asset ' + assetID }).addTo(myMap);
+        leaflet__WEBPACK_IMPORTED_MODULE_1__["marker"]([lat, long], { icon: iconType, title: 'Asset ' + assetID }).addTo(myMap);
+    };
+    LeafletMap.prototype.ngOnChanges = function (assetUpdates) {
+        console.log(JSON.stringify(assetUpdates));
+        this.assets = assetUpdates.assets.currentValue;
+        this.placeMarkers();
+    };
+    LeafletMap.prototype.placeMarkers = function () {
+        for (var _i = 0, _a = this.assets; _i < _a.length; _i++) {
+            var asset = _a[_i];
+            if (asset.riskRatingClass === "High") {
+                this.addMarker(asset.latitude, asset.longitude, this.redIcon, asset.id, this.usaMap);
+            }
+            else if (asset.riskRatingClass === "Medium") {
+                this.addMarker(asset.latitude, asset.longitude, this.yellowIcon, asset.id, this.usaMap);
+            }
+            else {
+                this.addMarker(asset.latitude, asset.longitude, this.greenIcon, asset.id, this.usaMap);
+            }
+        }
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),

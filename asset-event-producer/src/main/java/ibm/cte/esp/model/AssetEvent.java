@@ -20,8 +20,9 @@ public class AssetEvent implements Serializable {
 	protected long pressure;
 	protected long flowRate;
 	protected long temperature;
-	protected double latitude;
-	protected double longitude;
+	protected long riskRating = -1;
+	protected String latitude;
+	protected String longitude;
 	protected Date creationDate;
 	
 	public AssetEvent() {
@@ -120,22 +121,6 @@ public class AssetEvent implements Serializable {
 		this.temperature = temperature;
 	}
 
-	public double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-
-	public double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
-
 	
 	public Date getCreationDate() {
 		return creationDate;
@@ -145,5 +130,29 @@ public class AssetEvent implements Serializable {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public long getRiskRating() {
+		return riskRating;
+	}
+
+	public void setRiskRating(long riskRating) {
+		this.riskRating = riskRating;
 	}
 }

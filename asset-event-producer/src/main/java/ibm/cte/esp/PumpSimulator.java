@@ -48,7 +48,7 @@ public class PumpSimulator {
 		PumpSimulator simulator= new PumpSimulator();
 		simulator.processArgument(args);
 		simulator.prepareProducer();
-		logger.info("Kafka server: " + simulator.config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER));
+		logger.info("Kafka server: " + simulator.config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS));
 		if (simulator.isEvent()) {
 			simulator.generateEvents();
 		} else {
@@ -86,7 +86,7 @@ public class PumpSimulator {
 	public void prepareProducer() {
 		Properties properties = new Properties();
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-        		config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER));
+        		config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS));
         properties.put(ProducerConfig.CONNECTIONS_MAX_IDLE_MS_CONFIG, 10000);
         properties.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 4000);
         properties.put(ProducerConfig.RETRIES_CONFIG, 3);  // retries in case of failure
@@ -99,11 +99,11 @@ public class PumpSimulator {
 
 		if (event) {
 			logger.info("Pump Simulator sending pump event to "
-		    + config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER)
+		    + config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS)
 		    + " every " + timeGap + " ms");
 		} else {
 			logger.info("Pump Simulator sending " + numberOfAssets
-					+ " new asset event to "+ config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER)  +" every " + timeGap + " ms");
+					+ " new asset event to "+ config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS)  +" every " + timeGap + " ms");
 		}
 	}
 
@@ -121,7 +121,7 @@ public class PumpSimulator {
 	public void processArgument(String[] args) {
 		if (args.length >= 3) {
 			config.getConfig().setProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME, args[0]);
-			config.getConfig().setProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVER, args[1]);
+			config.getConfig().setProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS, args[1]);
 			if (args[2].contains("event")) {
 				event = true;
 				config.getConfig().setProperty(ApplicationConfig.EVENT_PATTERN, args[3]);
@@ -149,8 +149,8 @@ public class PumpSimulator {
 			a.setType("ESP");
 			a.setRotation((long)(360*Math.random()));
 			a.setVersion("0.0.1");
-			a.setLatitude(30.307182);
-			a.setLongitude(-97.755996);
+			a.setLatitude("30.307182");
+			a.setLongitude("-97.755996");
 
 			publishAsset(a,config.getConfig().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME));
 			Thread.sleep(1000);

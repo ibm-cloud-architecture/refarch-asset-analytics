@@ -5,8 +5,9 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ApplicationConfig {
-	public static final String KAFKA_BOOTSTRAP_SERVER = "kafka.bootstrap.server";
+	public static final String KAFKA_BOOTSTRAP_SERVERS = "kafka.bootstrap.servers";
 	public static final String KAFKA_ASSET_TOPIC_NAME = "kafka.asset.topic.name";
+	public static final String KAFKA_TEXT_TOPIC_NAME = "kafka.text.topic.name";
 	public static final String EVENT_PATTERN = "pump.event.pattern";
 	public static final String METRICS_TRENT = "pump.metric.trent";
 	public static final String EVENT_FREQ = "pump.event.frequency";
@@ -39,7 +40,7 @@ public class ApplicationConfig {
 	}
 
 	private  void setDefaults() {
-		 p.setProperty(KAFKA_BOOTSTRAP_SERVER, "gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local:32224");
+		 p.setProperty(KAFKA_BOOTSTRAP_SERVERS, "gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local:32224");
 		 p.setProperty(KAFKA_ASSET_TOPIC_NAME,"asset-topic");
 	}
 }

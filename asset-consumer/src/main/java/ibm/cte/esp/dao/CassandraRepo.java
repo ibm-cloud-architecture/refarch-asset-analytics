@@ -26,7 +26,7 @@ public class CassandraRepo implements AssetDAO {
 	public CassandraRepo(ApplicationConfig cfg) {
 		this.cfg = cfg;
 		Builder b;
-		String ep = cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_ENDPOINTS);
+		String ep = cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_ENDPOINTS);
 		if (ep.contains(",")) {
 			b = Cluster.builder().addContactPoints(ep.split(","));
 		} else {
@@ -34,20 +34,28 @@ public class CassandraRepo implements AssetDAO {
 		}
 		
 		
-		port = new Integer(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_PORT));
+		port = new Integer(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_PORT));
 		if (port != null) {
             b.withPort(port);
         }
         cluster = b.build();
         session = cluster.connect();
-        createKeyspace(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE),
-        		cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_STRATEGY),
-        		Integer.parseInt(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_REPLICAS)));
-        createTable();
+        createKeyspace(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE),
+        		cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_STRATEGY),
+        		Integer.parseInt(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_REPLICAS)));
+        createTable(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE),
+        		cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME));
 	}
 	
    
-    public void close() {
+    public CassandraRepo(Session inSession,String keySpace,String tableName) {
+		CassandraRepo.session = inSession;
+		createKeyspace(keySpace, "SimpleStrategy", 1);
+		createTable(keySpace,tableName);
+	}
+
+
+	public void close() {
         session.close();
         cluster.close();
     }
@@ -66,11 +74,11 @@ public class CassandraRepo implements AssetDAO {
 	    session.execute(query);
 	}
     
-    private void createTable() {
+    private void createTable(String keySpace,String tableName) {
         StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
-          .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+          .append(keySpace
         		  + "." 
-        		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME)).append("(")
+        		  + tableName).append("(")
           .append("id text PRIMARY KEY, ")
           .append("os text,")
           .append("version text,")
@@ -99,13 +107,14 @@ public class CassandraRepo implements AssetDAO {
 		a.setType(r.getString("type"));
 		a.setAntivirus(r.getString("antivirus"));
 		a.setIpAddress(r.getString("ipAddress"));
-		a.setCurrent(r.getDecimal("current"));
-		a.setRotation(r.getDecimal("rotation"));
-		a.setPressure(r.getDecimal("pressure"));
-		a.setFlowRate(r.getDecimal("flowRate"));
-		a.setTemperature(r.getDecimal("temperature"));
-		a.setLatitude(r.getDouble("latitude"));
-		a.setLongitude(r.getDouble("longitude"));
+		a.setCurrent(r.getDouble("current"));
+		a.setRotation(r.getInt("rotation"));
+		a.setPressure(r.getInt("pressure"));
+		a.setFlowRate(r.getLong("flowRate"));
+		a.setTemperature(r.getInt("temperature"));
+		a.setRiskRating(r.getInt("riskRating"));
+		a.setLatitude(r.getString("latitude"));
+		a.setLongitude(r.getString("longitude"));
 		a.setCreationDate(r.getTimestamp("creationDate"));
     }
     
@@ -118,9 +127,9 @@ public class CassandraRepo implements AssetDAO {
 	public AssetEvent getAssetById(String assetId) throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
-			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
 			    		  + "." 
-			    		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
+			    		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
 			      .append(" WHERE id='")
 			      .append(assetId)
 			      .append("';");
@@ -136,9 +145,9 @@ public class CassandraRepo implements AssetDAO {
 	public List<AssetEvent> getAllAssets() throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
-			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
 			    		  + "." 
-			    		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
+			    		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
 			      .append(";");
 		String query = sb.toString();
 		ResultSet rs = session.execute(query);
@@ -151,9 +160,9 @@ public class CassandraRepo implements AssetDAO {
 	
 	public void persistAsset(AssetEvent a) throws Exception {
 		StringBuilder sb = new StringBuilder("INSERT INTO ")
-			      .append(cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
 			    		  + "." 
-			    		  + cfg.getConfig().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
+			    		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
 			      .append("(id, os, version, type, ipAddress, antivirus, rotation, current, pressure, flowRate, temperature,latitude,longitude, creationDate ) ")
 			      .append("VALUES ('").append(a.getId())
 			      .append("','").append(a.getOs())

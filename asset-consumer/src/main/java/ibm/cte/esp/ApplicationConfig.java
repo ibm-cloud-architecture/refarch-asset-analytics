@@ -17,7 +17,8 @@ public class ApplicationConfig {
 	public static final String KAFKA_GROUPID = "kafka.groupid";
 	public static final String KAFKA_POLL_DURATION = "kafka.poll.duration";
 	public static final String VERSION = "version";
-	
+	public static final String ASSET_MGR_HOST = "assetmanager.host";
+	public static final String ASSET_MGR_PORT = "assetmanager.port";
 	
 	private Properties p;
 		
@@ -41,7 +42,7 @@ public class ApplicationConfig {
 		}
 	}
 	
-	public Properties getConfig() {
+	public Properties getProperties() {
 		return p;
 	}
 
@@ -57,5 +58,7 @@ public class ApplicationConfig {
 		 p.setProperty(KAFKA_GROUPID,"assetinjectors");
 		 p.setProperty(KAFKA_POLL_DURATION, "10000");
 		 p.setProperty(VERSION, "v0.0.1");
+		 p.setProperty(ASSET_MGR_HOST, "assetmgr.greencompute.ibmcase.com");
+		 p.setProperty(ASSET_MGR_PORT, "32544");
 	}
 }

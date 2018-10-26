@@ -12,7 +12,7 @@ import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
-import ibm.cte.pot.BffSocketHandler;
+import ibm.cte.esp.web.BffSocketHandler;
 
 /**
  * Subscribe to kafka topic to get asset events. Two types of event:
@@ -25,7 +25,7 @@ public class KafkaAssetConsumer {
 	 private static final Logger logger = Logger.getLogger(KafkaAssetConsumer.class.getName());
 	private static String TOPICNAME = "asset-topic";
 	private static String GROUPID = "BFFConsumers";
-	private static String BOOTSTRAP_SERVERS = "docker.for.mac.host.internal:30092";
+	private static String BOOTSTRAP_SERVERS = "gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local:32224";
     private static final long POLL_DURATION = 1000;
     
 	private String brokers = BOOTSTRAP_SERVERS;

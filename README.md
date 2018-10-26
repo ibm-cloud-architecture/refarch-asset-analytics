@@ -56,13 +56,171 @@ The processing starts by the continuous event flow emitted by a set of monitored
 ![](docs/dashboard-wireframe.png)  
 and the project is under the [asset-dashboard-ui](./asset-dashboard-ui) folder.
 1. Manage CRUD operation on the assets. See [the Asset manager microservice code.](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice)
-1. Pump Simulator is a java program running on developer laptop or on a server but external to ICP. The approach is to address communication to brokers deployed on ICP. The code and guidance are in the [asset-event-producer project](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/tree/master/asset-event-producer#pump-simulator). 
+1. Pump Simulator is a java program running on developer laptop or on a server but external to ICP. The approach is to address communication to brokers deployed on ICP. The code and guidance are in the [asset-event-producer project](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/tree/master/asset-event-producer#pump-simulator).
 
 The following diagram illustrates the IBM Cloud Private, kubernetes deployment we are using in this solution. You will find the same components as in the system context above, with added elements for data management and data scientists using [ICP for Data](https://www.ibm.com/analytics/cloud-private-for-data).
 
 ![](docs/icp-deployment.png)
 
 ## Deployment
+We propose two deployments: one for quick validation in a development laptop (tested on Mac) and one on IBM Cloud Private cluster.
+### Pre-requisites
+* Clone this project to get all the kubernetes deployment files and source code of the different components.
+* Clone the master project ([Reference Architecture Analytics](https://github.com/ibm-cloud-architecture/refarch-analytics))to get Zookeeper and Kafka deployment manifests.
+* Clone the [asset management microservice using the microprofile branch](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice) implementation.
+  ```
+  git clone https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice.git
+  git checkout microprofile
+  ```
+* Access to a kubernetes deployment for development, for example on Mac, we use [Docker Edge](https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac) distribution. You can use [this article](https://rominirani.com/tutorial-getting-started-with-kubernetes-with-docker-on-mac-7f58467203fd) to install Docker Edge and enable kubernetes.
+
+For test and 'production' deployment you need to have access to a kubernetes cluster like IBM Cloud Private.
+* Login to your cluster
+We are providing a script `./scripts/validateConfig.sh` to help you assessing the dependencies, and create the 'greencompute' namespace if it does not exist.
+
+### Install Zookeeper for development
+The zookeeper manifests are defined in the project [refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-asset-analytics) under the `deployments/zookeeper/dev` folder. We are using our own docker images and the Dockerfile to build this image is in `deployments/zookeeper`. The image is already pushed to the Docker Hub under ibmcase account.
+
+We are providing a script to install zookeeper as a kubernetes Deployment. Run the following command:
+```
+$ pwd
+> ...../refarch-analytics/deployments/zookeeper
+$ ./deployZoopeeker.sh
+
+$ kubectl get pods -n greencompute
+NAME                            READY     STATUS    RESTARTS   AGE
+gc-zookeeper-57dc5679bb-bh29q   1/1       Running   0          1m
+```
+
+Once installed you do not need to reinstall it. We are also delivering a script to remove zookeeper when you are done using it. (./removeZookeeper.sh)
+
+### Install Kafka for development
+For kafka the manifests are in the same [project](https://github.com/ibm-cloud-architecture/refarch-asset-analytics) under the `deployments/kafka/dev` folder. We are using the google image: `gcr.io/google_samples/k8skafka:v1`.
+
+We are also providing the same type of script to deploy Kafka:
+```
+$ pwd
+> ...../refarch-analytics/deployments/kafka
+$ ./deployKafka.sh
+$ kubectl get pods -n greencompute
+NAME                            READY     STATUS    RESTARTS   AGE
+gc-kafka-0                      1/1       Running   0          2m
+gc-zookeeper-57dc5679bb-bh29q   1/1       Running   0          10m
+```
+
+### Verify Kafka is connected to zookeeper
+Connect to kafka container and use the scripts inside kafka bin folder:
+
+```
+$ kubectl exec  -ti gc-kafka-0 /bin/bash -n greencompute
+kafka@gc-kafka-0:/$ cd /opt/kafka/bin
+kafka@gc-kafka-0:/$./kafka-topics.sh --create  --zookeeper gc-client-zookeeper-svc.greencompute.svc.cluster.local:2181 --replication-factor 1 --partitions 1 --topic text-topic
+```
+This previous command create a `text-topic` and to assess existing topics use:
+```
+kafka@gc-kafka-0:/$./kafka-topics.sh --list --zookeeper gc-client-zookeeper-svc.greencompute.svc.cluster.local:2181
+```
+
+The URL of the zookeeper match the hostname defined when deploying zookeeper service:
+```
+$ kubectl describe svc gc-client-zookeeper-svc
+```
+
+### Verify pub/sub works with text messages
+Two scripts exist in the `scripts` folder that are using kafkacat tool. You need to add the following in your hostname resolution configuration (DSN or /etc/hosts), matching you ip adress of your laptop.
+```
+192.168.1.89 gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local
+```
+
+Start the consumer in a terminal window
+```
+$ ./scripts/consumetext.sh
+```
+And start the producer in a second terminal:
+```
+$ ./script/producetext.sh
+```
+You should see the text:
+```
+try to send some text
+to the text-topic
+Let see...
+% Reached end of topic text-topic [0] at offset 3
+```
+
+### Deploy Cassandra
+The manifests for cassandra are in this project under the `deployment/cassandra` folder. One script is also delivered to deploy automatically Cassandra for development purpose.
+```
+$ ./scripts/deployCassandra.sh
+
+$ kubectl describe statefulset cassandra -n greencompute
+$ kubectl get pods -n greencompute
+```
+We also recommend to be familiar with [this kubernetes tutorial on how to deploy Cassandra with Stateful Sets](https://kubernetes.io/docs/tutorials/stateful-application/cassandra/).
+
+### Deploy the solution
+The steps are not yet automated:
+* We need to deploy the asset manager microservice first. The docker image is pushed to docker hub so the manifests under `refarch-asset-manager-microservice/manifests` is using this image.
+
+the script: `scripts/deployLocal.sh` should deploy to your local kubernetes cluster.
+
+* Deploy the BFF: this will includes the angular app and the SpringBoot app. Under the The code is compile and packaged as war using:
+ ```
+ $ mvn package
+ ```
+ Then a docker image can be built. It is pushed to docker hub so no need to compile, package and build the image. In case you want to build it use:
+ ```
+ $ docker build -t ibmcase/gc-dashboard-bff .
+ ```
+
+ Finally we are providing a tool to deploy the service and the deployment to your local kubernetes cluster
+ ```
+ $ ./scripts/deployBff.sh
+ ```
+
+ Once deployed the web application can be seen at the URL: http://localhost:31986, The port number is the nodeport defined when deploying the dashboard service.
+
+  ```
+  $ kubectl get pods -o wide
+  NAME                             READY     STATUS    RESTARTS   AGE       IP           NODE
+ assetmanager-5784b9d845-z5m9h    1/1       Running   0          3h        10.1.0.226   docker-for-desktop
+ cassandra-0                      0/1       Running   0          3h        10.1.0.225   docker-for-desktop
+ dashboard-bff-684bd9c7cb-65pbf   1/1       Running   0          2m        10.1.0.228   docker-for-desktop
+ gc-kafka-0                       1/1       Running   0          10h       10.1.0.216   docker-for-desktop
+ gc-zookeeper-57dc5679bb-bh29q    1/1       Running   0          10h       10.1.0.215   docker-for-desktop
+
+  $ kubectl logs dashboard-bff-684bd9c7cb-65pbf
+  $ 2018-10-23 04:34:42.132  INFO 1 --- [io-8081-exec-10] RestClient                               : http://assetmgr.greencompute.ibmcase.com:32544/assetmanager/assets/
+>> URL http://assetmgr.greencompute.ibmcase.com:32544/assetmanager/assets/
+<< RESPONSE - Status code 200
+
+<< PAYLOAD -[]
+  ```
+
+* Populate the Cassandra with some assets
+The project https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice has one script to do a `curl post` with json file representing pumps. You can change the URL to match your asset manager microservice endpoint, and then deploy the pump once the asset manager is deployed.
+```
+$ cd scripts
+$ ./addAsset.sh pumpDAL01.json
+$ ./addAsset.sh pumpHOU1.json
+$ ./addAsset.sh pumpLA1.json
+$ ./addAsset.sh pumpLA2.json
+$ ./addAsset.sh pumpLA3.json
+$ ./addAsset.sh pumpND1.json
+$ ./getAssets.sh
+```
+
+The dashboard reports the imported pumps:
+![](./docs/somepump.png)
+
+* Deploy Asset Injector
+TBD
+* Start Pump Simulator to add one asset
+TBD
+* Start Pump Simulator to generate metrics event on existing pumps
+TBD
+
+### ICP Deployment
 We want within this project to dig into the detail of workload deployment and address resiliency for each of those components. The diagram below presents the deployment of runtime components as well as Zookeeper, Kafka and Cassandra clusters deployment inside k8s:
 
 ![](docs/asset-sol-k8s-depl.png)
@@ -74,12 +232,6 @@ We want within this project to dig into the detail of workload deployment and ad
 This constraint explains the 6 workers.
 * The component of the solution are deployed with at least 3 replicas: Asset manager microservice, dashboard BFF, and asset consumer/cassandra-injector.
 
-### Pre-requisites
-* Clone this project to get all the kubernetes deployment files and source code of the different components.
-* Clone the [asset management microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice) implementation
-You need to have access to a kubernetes cluster like IBM Cloud Private. We are providing a script under ./scripts/validateConfig.sh to help you validate the prerequisites.
-
-* If not done already create a namespace named `greencompute`
 * Get the admin security token and then use it in the set-credentials command below:
 
 ```
