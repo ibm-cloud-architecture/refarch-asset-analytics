@@ -3,9 +3,9 @@
 This project is part of the 'IBM Hybrid Analytics and Big Data Architecture' reference architecture implementation, available at https://github.com/ibm-cloud-architecture/refarch-analytics. This set of projects presents an end to end solution to enable predictive maintenance capabilities on manufacturing assets.
 The problem space is related to continuous operation and service on manufacturing asset like [Electrical Submersible Pump](https://en.wikipedia.org/wiki/Submersible_pump), but any assets with sensors can be considered with the same of solution.
 
-The use case is also adaptable and the architecture, solution components can be used for a security treat analysis on a park of devices or assets connected to a company intranet: real time events come from device that need to be aggregated and correlated and analytics run can be performed on historical data to assess security risk. Alert can be published to dashboard user interface.  
+The use case is also adaptable and the architecture, solution components can be used for a security threat analysis on a park of devices or assets connected to a company intranet: real time events come from device that need to be aggregated and correlated and analytics run can be performed on historical data to assess security risk. Alert can be published to dashboard user interface.  
 
-We are presenting best practices around data management, real team streaming, cassandra high availability, microservices and serverless implementation.    
+We are presenting best practices around data management, real-time streaming, cassandra high availability, microservices and serverless implementation.    
 
 ## Table of contents
 <details><summary><h2> </h2></summary>
