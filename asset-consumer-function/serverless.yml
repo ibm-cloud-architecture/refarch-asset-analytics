@@ -23,5 +23,6 @@ plugins:
   - serverless-kubeless
 
 functions:
-  capitalize:
+  consumeasset:
     handler: handler.consumeAssetEvent
+    namespace: greencompute
