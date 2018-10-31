@@ -23,5 +23,8 @@ plugins:
   - serverless-kubeless
 
 functions:
-  capitalize:
+  consumeasset:
     handler: handler.consumeAssetEvent
+    namespace: greencompute
+    environment:
+      ASSET_URL: http://assetmanager-service:9080/assetmanager/assets

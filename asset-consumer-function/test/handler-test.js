@@ -27,7 +27,7 @@ describe('Basic Mocha String Test', function () {
 
   it('should return 200 if Post is successful', function(done) {
         this.timeout(10000);
-        var result = consumeAsset.testasset(event);
+        var result = consumeAsset.consumeAssetEvent(event, context);
 
         result.then(function(data){
           expect(data).to.equal(200);
