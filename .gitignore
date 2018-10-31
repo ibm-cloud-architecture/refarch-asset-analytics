@@ -7,4 +7,7 @@ asset-itests/.settings/
 asset-itests/target/
 asset-consumer-spring/target/
 asset-consumer-spring/.settings/
+asset-consumer-function/bin/
+asset-consumer-function/node_modules/
+asset-consumer-function/.serverless/
 

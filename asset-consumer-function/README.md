@@ -2,7 +2,7 @@
 The goal of this project is to develop a kafka listener in nodejs which consumes asset event posted on Kafka asset-topic, then call the asset-manager-microservice deployed in a kubernetess cluster. The function is implemented in nodejs abd deployed to [kubeless]().
 
 ## Pre-requisite
-Install the serverless framework with the command
+Install the serverless framework with the command. 
 ```
 $ npm install -g serverless
 $ npm install -g serverless-kubeless
@@ -15,7 +15,7 @@ kubeless function deploy assetconsumerfct --runtime nodejs6 --handler handler --
 kubeless trigger kafka create assetconsumerfct --function-selector created-by=kubeless,function=assetconsumerfct --trigger-topic asset-topic
 
  ```
- 
+
 ## Validating the consumeAssetEvent
 
 Before validating this function, make sure (Asset Manager Microservice)[https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile] is up and running.
