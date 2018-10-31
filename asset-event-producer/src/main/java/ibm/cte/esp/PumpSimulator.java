@@ -1,5 +1,8 @@
 package ibm.cte.esp;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
@@ -15,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ibm.cte.esp.model.AssetEvent;
+import ibm.cte.esp.model.MetricEvent;
 
 /**
  * Simulate a Electrical Pump generating events for rotator, preassure and temperature metrics.
@@ -29,6 +33,7 @@ public class PumpSimulator {
 	final static Logger logger = LoggerFactory.getLogger("PumpSimulator");
 	private int numberOfAssets = 5;
 	private int timeGap = 10000;
+	private String pumpId = "ND01";
 	private boolean event = false;
 	private ApplicationConfig config;
 
@@ -60,25 +65,96 @@ public class PumpSimulator {
 
 
 	/**
-	 * Generate pump event every n seconds using one of the available pattern:
+	 * Generate pump events every n seconds using one of the available pattern:
 	 - temperature decrease
 	 - preassure decrease over time
 	 - preassure increase
 	 */
-	public void generateEvents() {
+	public List<MetricEvent> generateEvents() {
 		int baseT = 60;
 		int baseP = 100;
+		int baseFlowRate = 100;
+		int baseRotation = 0;
+		int baseC =110;
+		
 		int nbOfEvents = Integer.parseInt(config.getConfig().getProperty(ApplicationConfig.NB_OF_EVENTS));
-		for (int i = 0; i < nbOfEvents ; i++) {
-			AssetEvent ae = new AssetEvent();
+		List<MetricEvent> lme = new ArrayList<MetricEvent>(nbOfEvents);
+		while (lme.size() < nbOfEvents) {
+			MetricEvent ae = new MetricEvent();
+			ae.setAssetId(pumpId);
 			ae.setTemperature(baseT);
 			ae.setPressure(baseP);
-			// TODO add attributes
-			logger.info(ae.toString());
+			ae.setFlowRate(baseFlowRate);
+			ae.setRotation(baseRotation);
+			ae.setCurrent(baseC);
+			switch (config.getConfig().getProperty(ApplicationConfig.EVENT_PATTERN)) {
+				case "TDrop":
+				case "PDrop":
+				case "CDrop":
+				case "FDrop":
+				case "RDrop":
+					lme.addAll(metricDropPattern(ae,nbOfEvents,config.getConfig().getProperty(ApplicationConfig.EVENT_PATTERN)));
+				 	break;	
+				default: lme.add(ae);
+			}
 		}
-
+		return lme;
 	}
 
+	
+	
+	private List<MetricEvent> metricDropPattern(MetricEvent ae, int nbevents, String pattern) {
+		List<MetricEvent> lme = new ArrayList<MetricEvent>();
+		lme.add(ae);
+		long stepT = stepper(ae,nbevents,pattern);
+		MetricEvent me = ae;
+		for (int i = 1; i< nbevents; i++) {
+			me = fromEvent(me);
+			switch (pattern) {
+				case "TDrop" :  
+					me.setTemperature(ae.getTemperature() - i * stepT);
+					break;
+				case "PDrop" :
+					me.setPressure(ae.getPressure() - i * stepT);
+					break;
+				case "RDrop" :
+					me.setRotation(ae.getRotation() - i * stepT);
+					break;
+				case "FDrop" :
+					me.setFlowRate(ae.getFlowRate() - i * stepT);
+					break;
+				case "CDrop" :
+					me.setCurrent(ae.getCurrent() - i * stepT);
+					break;
+			}
+			
+			lme.add(me);
+		}
+		return lme;
+	}
+	
+	private long stepper(MetricEvent ae, int nbevents, String pattern) {
+		switch (pattern) {
+			case "TDrop" : return Math.floorDiv(ae.getTemperature(),nbevents);
+			case "PDrop" : return Math.floorDiv(ae.getPressure(),nbevents);
+			case "RDrop" : return Math.floorDiv(ae.getRotation(),nbevents);
+			case "FDrop" : return Math.floorDiv(ae.getFlowRate(),nbevents);
+			case "CDrop" : return Math.floorDiv(ae.getCurrent(),nbevents);
+		}
+		return 10;
+	}
+	
+	private MetricEvent fromEvent(MetricEvent e) {
+		MetricEvent me = new MetricEvent();
+		me.setAssetId(e.getAssetId());
+		me.setCurrent(e.getCurrent());
+		me.setTemperature(e.getTemperature());
+		me.setFlowRate(e.getFlowRate());
+		me.setPressure(e.getPressure());
+		me.setRotation(e.getRotation());
+		me.setTimeStamp(new Date(e.getTimeStamp().getTime()+1000));
+		return me;
+	}
 	public void shutdown() {
 		this.kafkaProducer.close();
 	}
@@ -113,10 +189,11 @@ public class PumpSimulator {
 	 1 -> kafka server name or ip address
 	 2 -> number of events to be produce or "--event"
 	    in case of event
-			3 -> temperature or preassure
+			3 -> pattern
 			4 -> increase or decrease
 			5 -> event frequency
 			6 -> number of event to generate
+			7 -> pumpid
 	*/
 	public void processArgument(String[] args) {
 		if (args.length >= 3) {
@@ -128,6 +205,7 @@ public class PumpSimulator {
 				config.getConfig().setProperty(ApplicationConfig.METRICS_TRENT, args[4]);
 				config.getConfig().setProperty(ApplicationConfig.EVENT_FREQ, args[5]);
 				config.getConfig().setProperty(ApplicationConfig.NB_OF_EVENTS, args[6]);
+				pumpId=args[7];
 			} else {
 				numberOfAssets = Integer.parseInt(args[2]);
 			}

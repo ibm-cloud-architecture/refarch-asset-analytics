@@ -1,0 +1,18 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: asset-consumer
+  name: asset-consumer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: asset-consumer
+    spec:
+      containers:
+      - image: ibmcase/gc-asset-injector:latest
+        imagePullPolicy: Always
+        name: asset-consumer

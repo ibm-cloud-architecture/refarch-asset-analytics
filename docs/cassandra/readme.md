@@ -1,9 +1,23 @@
 # Cassandra Summary
-In this article we are presenting Cassandra integration within the asset predictive maintenance solution, and how to support deployment to IBM Cloud private, addressing high availability and resiliency.
+In this article we are presenting [Cassandra](http://cassandra.apache.org/) integration within the asset predictive maintenance solution, and how to support deployment to IBM Cloud private, addressing high availability and resiliency.
 
-Cassandra addresses scalability and high availability to persist a huge data set. It uses replication to multiple nodes managed in cluster, even deployed cross data centers.
+Cassandra addresses linear scalability and high availability to persist a huge data set. It uses replication to multiple nodes managed in cluster, even deployed cross data centers.
 
 ## Concepts
+Cassandra uses a ring based Distributed Hash Table servers but without finger or routing tables. Keys are stored as in DHT to the next server with key > key id, replicated on the 2 next servers too.  There is one ring per data center.  The coordinator forward the query to a subset of replicas for a particular key. Every server that could be a coordinator needs to know the 'key to server' assignment.  
+Two data placement strategies:
+* simple strategy: use two kinds of partitioners:
+  * random, which does chord like hashing
+  * byte ordered, which assigns range of keys to servers: easier for range queries
+* network topology strategy for multiple data centers: it supports different configuration, like 2 replicas of each key per decision center.
+
+First  replica is placed according to the Partitioner logic, and make sure to store the other replica to different rack, to avoid a rack failure will make all copies of key not available.  Go around the ring clockwise until encountering a server in a different rack.
+
+*Snitches: is a mechanism to map ip addresses to racks in DC. Cassandra support such configuration.*
+
+Client sends write to one coordinator node in Cassandra cluster. Coordinator may per key or per client or per query. It uses partitioner to send query to all replica nodes responsible for key. The process to write should be fast and not involving lock on resource. It should not involve read and disk seeks.
+Write operations are always successful, even in case of failure: the coordinator uses the Hinted Handoff mechanism (it assumes ownership of the key until being sure it is supported by the replica), as it writes to other replicas and keeps the write locally until the down replica comes back up. If all the replicas are done, the Coordinator buffers writes for few hours.
+
 Here are some key concepts of Cassandra to keep in mind for this implementation:
 * **Cluster**:  the set of nodes potentially deployed cross data centers, organized as a 'ring'.
 * **Keyspace**: like a schema in SQL DB. It is the higher abstraction object to contain data. The important keyspace attributes are the Replication Factor, the Replica Placement Strategy and the Column Families.

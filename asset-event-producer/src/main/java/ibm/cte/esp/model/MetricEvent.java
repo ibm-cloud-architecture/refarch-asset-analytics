@@ -1,4 +1,4 @@
-package ibm.cte.esp.model;
+ package ibm.cte.esp.model;
 
 import java.util.Date;
 
@@ -16,7 +16,7 @@ public class MetricEvent {
 	}
 	
 	public String toString() {
-		return "Id:" + getAssetId() + " C:" + getCurrent() + " P:" + getPressure() + " T:" + getTemperature() + "Flow:" + getFlowRate();
+		return "Id:" + getAssetId() + " at "+ getTimeStamp() + " C:" + getCurrent() + " P:" + getPressure() + " T:" + getTemperature() + " Flow:" + getFlowRate();
 	}
 
 	public String getAssetId() {
