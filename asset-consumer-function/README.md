@@ -22,10 +22,15 @@ Before validating this function, make sure (Asset Manager Microservice)[https://
 
 ```
 $ git clone https://github.com/ibm-cloud-architecture/refarch-asset-analytics.git
+
 $ cd refarch-asset-analytics
+
 $ cd asset-consumer-function
+
 $ npm install
+
 $ serverless deploy function -f consumeasset
+
 $ serverless invoke --function consumeasset --data '{"id":"DAL01", "ipAddress": "172.16.0.1", "type": "ESP", "version": "v.12", "os":"Raspbian","latitude": "32.7767", "longitude": "-96.7970", "antivirus":"v3.0","rotation":209,"pressure": 90, "flowRate": 33, "flowRate":40,"temperature": 72}' -l
 ```
 
