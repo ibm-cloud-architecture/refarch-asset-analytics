@@ -31,4 +31,8 @@ export class DashboardTableComponent {
         this.selectedAsset.emit(asset);
     }
 
+    monitor() {
+      
+    }
+
 }

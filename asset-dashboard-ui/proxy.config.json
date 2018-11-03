@@ -1,6 +1,6 @@
 {
 	"/assets": {
-		"target": "http://assetmgr.greencompute.ibmcase.com/assetmanager/assets",
+		"target": "http://assetmgr.greencompute.ibmcase.com:32544/assetmanager/assets",
 		"secure": false
 	},
 	"changeOrigin": true,

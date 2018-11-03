@@ -1,3 +1,6 @@
+<div class="dash-row">
+    <button mat-raised-button (click)="monitor()">Start Monitoring Asset</button>
+</div>
 <div class="dashboard-table">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="riskColor">
@@ -28,9 +31,9 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Temp. </th>
             <td mat-cell *matCellDef="let asset"> {{asset.temperature}} </td>
         </ng-container>
-        
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click) = tableClick(row);></tr>
-    
+
     </table>
 </div>

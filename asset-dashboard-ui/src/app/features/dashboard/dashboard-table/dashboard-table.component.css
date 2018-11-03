@@ -7,6 +7,10 @@
     margin: 1vh 0 -1vh 0;
   }
 
+.dash-row {
+   padding: 10px 5px;
+}
+
 .mat-table {
 /*    padding: 1vh 2vh;*/
 /*    margin: auto;*/

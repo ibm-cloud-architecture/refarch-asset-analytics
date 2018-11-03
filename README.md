@@ -255,7 +255,7 @@ When the pods are up and running use the [following commands](https://github.com
 We are presenting different deployment models, all based on container: with docker, docker Edge with local kubernetes for your development environment, IBM Cloud Private for dev or staging. See details [in this note.](
   https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka#run-kafka-in-docker)
 
-For ICP, the new [IBM Event Stream]() product is used, as it is built on top of Kafka and brings very nice capabilities.
+For ICP, the new [IBM Event Streams]() product is used, as it is built on top of Kafka and brings very nice capabilities.
 
 ### Solution Deployment on ICP
 Each component of the solution is compiled and packaged as container. Here is the list of supported deployment:
