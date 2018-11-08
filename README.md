@@ -78,75 +78,15 @@ For test and 'production' deployment you need to have access to a kubernetes clu
 * Login to your cluster
 We are providing a script `./scripts/validateConfig.sh` to help you assessing the dependencies, and create the 'greencompute' namespace if it does not exist.
 
+### Install IBM Event Streams
+[Read instructions in this article](https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/deployments/eventstreams/README.md)
+
+Or...
 ### Install Zookeeper for development
-The zookeeper manifests are defined in the project [refarch-analytics](https://github.com/ibm-cloud-architecture/refarch-asset-analytics) under the `deployments/zookeeper/dev` folder. We are using our own docker images and the Dockerfile to build this image is in `deployments/zookeeper`. The image is already pushed to the Docker Hub under ibmcase account.
-
-We are providing a script to install zookeeper as a kubernetes Deployment. Run the following command:
-```
-$ pwd
-> ...../refarch-analytics/deployments/zookeeper
-$ ./deployZoopeeker.sh
-
-$ kubectl get pods -n greencompute
-NAME                            READY     STATUS    RESTARTS   AGE
-gc-zookeeper-57dc5679bb-bh29q   1/1       Running   0          1m
-```
-
-Once installed you do not need to reinstall it. We are also delivering a script to remove zookeeper when you are done using it. (./removeZookeeper.sh)
+[Read instructions in this article](https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/deployments/zookeeper/README.md)
 
 ### Install Kafka for development
-For kafka the manifests are in the same [project](https://github.com/ibm-cloud-architecture/refarch-asset-analytics) under the `deployments/kafka/dev` folder. We are using the google image: `gcr.io/google_samples/k8skafka:v1`.
-
-We are also providing the same type of script to deploy Kafka:
-```
-$ pwd
-> ...../refarch-analytics/deployments/kafka
-$ ./deployKafka.sh
-$ kubectl get pods -n greencompute
-NAME                            READY     STATUS    RESTARTS   AGE
-gc-kafka-0                      1/1       Running   0          2m
-gc-zookeeper-57dc5679bb-bh29q   1/1       Running   0          10m
-```
-
-### Verify Kafka is connected to zookeeper
-Connect to kafka container and use the scripts inside kafka bin folder:
-
-```
-$ kubectl exec  -ti gc-kafka-0 /bin/bash -n greencompute
-kafka@gc-kafka-0:/$ cd /opt/kafka/bin
-kafka@gc-kafka-0:/$./kafka-topics.sh --create  --zookeeper gc-client-zookeeper-svc.greencompute.svc.cluster.local:2181 --replication-factor 1 --partitions 1 --topic text-topic
-```
-This previous command create a `text-topic` and to assess existing topics use:
-```
-kafka@gc-kafka-0:/$./kafka-topics.sh --list --zookeeper gc-client-zookeeper-svc.greencompute.svc.cluster.local:2181
-```
-
-The URL of the zookeeper match the hostname defined when deploying zookeeper service:
-```
-$ kubectl describe svc gc-client-zookeeper-svc
-```
-
-### Verify pub/sub works with text messages
-Two scripts exist in the `scripts` folder that are using kafkacat tool. You need to add the following in your hostname resolution configuration (DSN or /etc/hosts), matching you ip adress of your laptop.
-```
-192.168.1.89 gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local
-```
-
-Start the consumer in a terminal window
-```
-$ ./scripts/consumetext.sh
-```
-And start the producer in a second terminal:
-```
-$ ./script/producetext.sh
-```
-You should see the text:
-```
-try to send some text
-to the text-topic
-Let see...
-% Reached end of topic text-topic [0] at offset 3
-```
+[Read instructions in this article](https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/deployments/kafka/README.md)
 
 ### Deploy Cassandra
 The manifests for cassandra are in this project under the `deployment/cassandra` folder. One script is also delivered to deploy automatically Cassandra for development purpose.
@@ -251,11 +191,6 @@ You can use our yaml files to deploy to ICP. (See the files under `deployments/c
 
 When the pods are up and running use the [following commands](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/blob/master/docs/cassandra/readme.md#define-assets-table-structure-with-cql) to create the needed keyspace and tables for the solution to run.
 
-### Deploying Kafka
-We are presenting different deployment models, all based on container: with docker, docker Edge with local kubernetes for your development environment, IBM Cloud Private for dev or staging. See details [in this note.](
-  https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka#run-kafka-in-docker)
-
-For ICP, the new [IBM Event Streams]() product is used, as it is built on top of Kafka and brings very nice capabilities.
 
 ### Solution Deployment on ICP
 Each component of the solution is compiled and packaged as container. Here is the list of supported deployment:

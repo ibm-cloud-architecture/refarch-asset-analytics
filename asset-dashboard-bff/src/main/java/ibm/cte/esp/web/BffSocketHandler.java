@@ -53,8 +53,7 @@ public class BffSocketHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session,
-            CloseStatus status)
-     throws java.lang.Exception {
+            CloseStatus status) throws java.lang.Exception {
 		if (consumer != null) {
 			// TODO to revisit to the last consumer 
 			consumer.close();
