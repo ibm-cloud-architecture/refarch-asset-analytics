@@ -14,7 +14,7 @@ public class TestPumpSimulatorEvent {
 		ApplicationConfig cfg = new ApplicationConfig();
 		cfg.getConfig().setProperty(ApplicationConfig.NB_OF_EVENTS,  "6");
 		PumpSimulator ps = new PumpSimulator(cfg);
-		ps.generateEvents();
+		ps.generateAssetMetricEvents();
 	}
 	
 	@Test
@@ -23,7 +23,7 @@ public class TestPumpSimulatorEvent {
 		cfg.getConfig().setProperty(ApplicationConfig.NB_OF_EVENTS,  "15");
 		cfg.getConfig().setProperty(ApplicationConfig.EVENT_PATTERN, "TDrop");
 		PumpSimulator ps = new PumpSimulator(cfg);
-		List<MetricEvent> l = ps.generateEvents();
+		List<MetricEvent> l = ps.generateAssetMetricEvents();
 		for (MetricEvent e: l) {
 			System.out.println(e.toString());
 		}
@@ -36,7 +36,7 @@ public class TestPumpSimulatorEvent {
 		cfg.getConfig().setProperty(ApplicationConfig.NB_OF_EVENTS,  "10");
 		cfg.getConfig().setProperty(ApplicationConfig.EVENT_PATTERN, "PDrop");
 		PumpSimulator ps = new PumpSimulator(cfg);
-		List<MetricEvent> l = ps.generateEvents();
+		List<MetricEvent> l = ps.generateAssetMetricEvents();
 		for (MetricEvent e: l) {
 			System.out.println(e.toString());
 		}
@@ -49,7 +49,7 @@ public class TestPumpSimulatorEvent {
 		cfg.getConfig().setProperty(ApplicationConfig.NB_OF_EVENTS,  "2");
 		cfg.getConfig().setProperty(ApplicationConfig.EVENT_PATTERN, "PDrop");
 		PumpSimulator ps = new PumpSimulator(cfg);	
-		List<MetricEvent> l = ps.generateEvents();
+		List<MetricEvent> l = ps.generateAssetMetricEvents();
 		Assert.assertTrue(l.size() == 2 );
 		Assert.assertTrue(l.get(1).getPressure() == 50);
 	}
@@ -60,7 +60,7 @@ public class TestPumpSimulatorEvent {
 		cfg.getConfig().setProperty(ApplicationConfig.NB_OF_EVENTS,  "2");
 		cfg.getConfig().setProperty(ApplicationConfig.EVENT_PATTERN, "FDrop");
 		PumpSimulator ps = new PumpSimulator(cfg);	
-		List<MetricEvent> l = ps.generateEvents();
+		List<MetricEvent> l = ps.generateAssetMetricEvents();
 		Assert.assertTrue(l.size() == 2 );
 		MetricEvent e = l.get(1);
 		System.out.println(e.toString());
@@ -73,7 +73,8 @@ public class TestPumpSimulatorEvent {
 		cfg.getConfig().setProperty(ApplicationConfig.NB_OF_EVENTS,  "2");
 		cfg.getConfig().setProperty(ApplicationConfig.EVENT_PATTERN, "CDrop");
 		PumpSimulator ps = new PumpSimulator(cfg);	
-		List<MetricEvent> l = ps.generateEvents();
+		List<MetricEvent> l = ps.generateAssetMetricEvents();
+		
 		Assert.assertTrue(l.size() == 2 );
 		MetricEvent e = l.get(1);
 		System.out.println(e.toString());

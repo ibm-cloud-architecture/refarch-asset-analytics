@@ -55,7 +55,8 @@ public class PumpSimulator {
 		simulator.prepareProducer();
 		logger.info("Kafka server: " + simulator.config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS));
 		if (simulator.isEvent()) {
-			simulator.generateEvents();
+			logger.info("");
+			simulator.generateAssetMetricEvents();
 		} else {
 			simulator.generateAssets();
 
@@ -70,7 +71,7 @@ public class PumpSimulator {
 	 - preassure decrease over time
 	 - preassure increase
 	 */
-	public List<MetricEvent> generateEvents() {
+	public List<MetricEvent> generateAssetMetricEvents() {
 		int baseT = 60;
 		int baseP = 100;
 		int baseFlowRate = 100;
@@ -248,6 +249,21 @@ public class PumpSimulator {
 	public void publishAsset(AssetEvent a) throws InterruptedException, ExecutionException {
 		publishAsset(a,config.getConfig().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME));
 	}
+	
+	public void publishAssetMetric(MetricEvent a) throws InterruptedException, ExecutionException {
+		publishMetricEvent(a,config.getConfig().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME));
+	}
+	
+	public  void publishMetricEvent(MetricEvent a, String topic) throws InterruptedException, ExecutionException {
+		GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        String s = gson.toJson(a);
+		logger.info("Send Asset: " + s);
+		ProducerRecord<String, Object> record = new ProducerRecord<>(topic, a.getAssetId(), s);
+	    RecordMetadata recordMetadata = kafkaProducer.send(record).get();
+	    logger.info("Receive partition id= " + recordMetadata.partition() + " offset= " + recordMetadata.offset());
+	}
+	
 
 	public int getNumberOfAssets() {
 		return numberOfAssets;

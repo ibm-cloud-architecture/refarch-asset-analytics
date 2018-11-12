@@ -3,6 +3,7 @@ package ibm.cte.esp.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,15 @@ public class AssetController {
 			e.printStackTrace();
 			return new ArrayList<Asset>();
 		}
+	}
+	
+	@RequestMapping("/stream")
+	@SendTo("/bfftopic/dashboard")
+	public Asset newAssetEvent() {
+		// use kafka consumer to get asset from topic
+		Asset a = new Asset();
+		a.setId("Event Asset");
+		return a;
 	}
 	
 }

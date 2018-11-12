@@ -2,9 +2,13 @@ package ibm.cte.esp.web;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -21,6 +25,7 @@ import ibm.cte.pot.msg.KafkaAssetConsumer;
  * @author jerome boyer
  *
  */
+@MessageMapping("/assetmetricstream")
 public class BffSocketHandler extends TextWebSocketHandler {
 
 	Logger logger = Logger.getLogger(BffSocketHandler.class.getName());
@@ -55,19 +60,24 @@ public class BffSocketHandler extends TextWebSocketHandler {
 	public void afterConnectionClosed(WebSocketSession session,
             CloseStatus status) throws java.lang.Exception {
 		if (consumer != null) {
-			// TODO to revisit to the last consumer 
 			consumer.close();
 		}
 	}
 
 	public void broadcastMessage( String message) {
-		for(WebSocketSession webSocketSession : sessions) {
-			try {
-				webSocketSession.sendMessage(new TextMessage(message));
-			} catch (IOException e) {
-				// may be dropping message is not an issue
-				logger.severe("message not sent to " + webSocketSession.getRemoteAddress());
-			}
-		}
+		 TimerTask timerTask = new TimerTask() {
+	            @Override
+	            public void run() {
+	            	for(WebSocketSession webSocketSession : sessions) {
+		                try {
+		                	webSocketSession.sendMessage(new TextMessage(message));
+		                } catch (IOException ex) {
+		                    logger.log(Level.SEVERE, null, ex);
+		                }
+	            	}
+	            }
+	        };
+	        Timer timer = new Timer(true);
+	        timer.scheduleAtFixedRate(timerTask, 0, 3 * 1000);
 	}
 }
