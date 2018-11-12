@@ -16,7 +16,7 @@ public class TestWebSocket {
 		WebsocketClientEndpoint clientEndPoint;
 		try {
             // open websocket
-            clientEndPoint = new WebsocketClientEndpoint(new URI("ws://" + SERVERNAME + ":" + PORT + "/assetstream"));
+            clientEndPoint = new WebsocketClientEndpoint(new URI("ws://" + SERVERNAME + ":" + PORT + "/assetmanager/push"));
 
             // add listener
             clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
@@ -30,6 +30,7 @@ public class TestWebSocket {
             while (true) {
 	            // wait 5 seconds for messages from websocket to come
 	            Thread.sleep(5000);
+	            
             }
         } catch (InterruptedException ex) {
             System.err.println("InterruptedException exception: " + ex.getMessage());
