@@ -42,7 +42,7 @@ public class PumpSimulator {
 	public PumpSimulator() {
 		config = new ApplicationConfig();
 	}
-	
+
 	public PumpSimulator(ApplicationConfig cfg) {
 		config = cfg;
 	}
@@ -76,7 +76,7 @@ public class PumpSimulator {
 		int baseFlowRate = 100;
 		int baseRotation = 0;
 		int baseC =110;
-		
+
 		int nbOfEvents = Integer.parseInt(config.getConfig().getProperty(ApplicationConfig.NB_OF_EVENTS));
 		List<MetricEvent> lme = new ArrayList<MetricEvent>(nbOfEvents);
 		while (lme.size() < nbOfEvents) {
@@ -94,15 +94,15 @@ public class PumpSimulator {
 				case "FDrop":
 				case "RDrop":
 					lme.addAll(metricDropPattern(ae,nbOfEvents,config.getConfig().getProperty(ApplicationConfig.EVENT_PATTERN)));
-				 	break;	
+				 	break;
 				default: lme.add(ae);
 			}
 		}
 		return lme;
 	}
 
-	
-	
+
+
 	private List<MetricEvent> metricDropPattern(MetricEvent ae, int nbevents, String pattern) {
 		List<MetricEvent> lme = new ArrayList<MetricEvent>();
 		lme.add(ae);
@@ -111,7 +111,7 @@ public class PumpSimulator {
 		for (int i = 1; i< nbevents; i++) {
 			me = fromEvent(me);
 			switch (pattern) {
-				case "TDrop" :  
+				case "TDrop" :
 					me.setTemperature(ae.getTemperature() - i * stepT);
 					break;
 				case "PDrop" :
@@ -127,12 +127,12 @@ public class PumpSimulator {
 					me.setCurrent(ae.getCurrent() - i * stepT);
 					break;
 			}
-			
+
 			lme.add(me);
 		}
 		return lme;
 	}
-	
+
 	private long stepper(MetricEvent ae, int nbevents, String pattern) {
 		switch (pattern) {
 			case "TDrop" : return Math.floorDiv(ae.getTemperature(),nbevents);
@@ -143,7 +143,7 @@ public class PumpSimulator {
 		}
 		return 10;
 	}
-	
+
 	private MetricEvent fromEvent(MetricEvent e) {
 		MetricEvent me = new MetricEvent();
 		me.setAssetId(e.getAssetId());
@@ -237,7 +237,7 @@ public class PumpSimulator {
 
 	public  void publishAsset(AssetEvent a, String topic) throws InterruptedException, ExecutionException {
 		GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
+        Gson gson = builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create();
         String s = gson.toJson(a);
 		logger.info("Send Asset: " + s);
 		ProducerRecord<String, Object> record = new ProducerRecord<>(topic, a.getId(), s);
