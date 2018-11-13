@@ -11,7 +11,7 @@
 
 ## Introduction
 
-This project is built to demonstrate how to build develop a kafka listener in NodeJS which consumes asset event posted on Kafka `asset-topic`. This application in turns call the [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) to persist the assets in Cassandra. The function is implemented in NodeJS and deployed to [kubeless](https://kubeless.io/).
+This project is built to demonstrate how to build develop a kafka listener in NodeJS which consumes asset event posted on Kafka `asset-topic`. This application in turn calls the [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) to persist the assets in Cassandra. The function is implemented in NodeJS and deployed to [kubeless](https://kubeless.io/).
 
 - Based on NodeJS.
 - Interacts with the Kafka and cosumes the assets.
@@ -50,7 +50,7 @@ Cosume Asset function is a [kubeless](https://kubeless.io/) function defined in 
 - It consumes assets that are posted on Kafka topic `asset-topic` and these are posted by [Asset Event Producer](../asset-event-producer)
 - Once the assets are consumed by this function, it hits the POST API `/assetmanager/assets` of [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) which in turn persists this data in [Cassandra](http://cassandra.apache.org/). 
 
-This function is deployed on Kubeless and you can install it following the instruction [here](https://kubeless.io/docs/quick-start/).
+This function is deployed on Kubeless and you can install it following the instructions [here](https://kubeless.io/docs/quick-start/).
 
 To deploy the function, follow the below steps.
 
@@ -108,8 +108,36 @@ This installs ZooKeeper and Kafka on your Docker Edge.
 127.0.0.1       gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local
 ```
 
-To test if your Kafka cluster is configured correctly, follow the instructions [here](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/deployments/kafka/README.md)
+To test if your Kafka cluster is configured correctly, follow the instructions [here](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/deployments/kafka/README.md).
 
+#### Creating Kafka trigger
+
+To use the existing kafka cluster with kubeless, we need to deploy the below Kafka consumer and the Kafka Trigger CRD. Make sure `KAFKA_BROKERS` pointing to the right URL of your Kafka service.
+
+```
+$ cd refarch-asset-analytics
+
+$ cd asset-consumer-function
+
+$ kubectl create -f KafkaTrigger/ConsumerAndTrigger.yml
+```
+
+Now let us create a Kafka topic `asset-topic` which the [Asset Event Producer](../asset-event-producer) and [Asset Consumer function](./) uses to produce and consume assets.
+
+Run the below command to create `asset-topic`
+
+```
+$ kubeless trigger kafka create consumeasset --function-selector created-by=kubeless,function=consumeasset --trigger-topic asset-topic -n greencompute
+```
+You will then see something like below.
+
+```
+INFO[0000] Kafka trigger consumeasset created in namespace greencompute successfully!
+```
+
+#### Validating the consumeAssetEvent
+
+**TBD**
 
 ## Compendium
 * [Serverless kubeless template](https://medium.com/bitnami-perspectives/deploying-a-kubeless-function-using-serverless-templates-2d03f49b70e2)
