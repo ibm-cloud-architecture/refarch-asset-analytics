@@ -10,15 +10,15 @@ module.exports = {
     return new Promise(function(resolve,reject){
       require('dotenv').config();
       Request.post({
-             "headers": {"content-type": "application/json"},
-             "url": process.env.ASSET_URL,
-             "body": event.data
+             headers: {"content-type": "application/json"},
+             url: process.env.ASSET_URL,
+             body: JSON.stringify(event.data) //event.data
            }, function(error, response, body) {
              if (error) {
                reject(error);
              }
              else{
-               console.log(body);
+               console.log(JSON.parse(body)); //(body)
                resolve(response.statusCode);
              }
            });
