@@ -7,6 +7,7 @@
 * [Deploying the App](#deploying-the-app)
     + [IBM Cloud Private](#ibm-cloud-private)
     + [Docker Edge](#docker-edge)
+* [Validating the consumeAssetEvent](validating-the-consumeassetevent)
 * [Compendium](#compendium)
 
 ## Introduction
@@ -24,6 +25,21 @@ This project is built to demonstrate how to build develop a kafka listener in No
 
 You can find the installation steps [here](https://kubeless.io/docs/quick-start/)
 
+Note: If you are installing Kubless on IBM Private Cloud 3.1.0 or higher, run the below command after creating the namespace `kubeless` and before creating the kubeless on your IBM Cloud Private Cluster.
+
+```
+$ git clone https://github.com/ibm-cloud-architecture/refarch-asset-analytics.git
+
+$ cd refarch-asset-analytics
+
+$ cd static
+
+$ kubectl apply -f image_policy.yaml -n kubeless
+
+$ cd ..
+
+```
+
 2. Install the serverless framework with the command. 
 ```
 $ npm install -g serverless
@@ -34,7 +50,130 @@ $ npm install -g serverless-kubeless
 
 ### IBM Cloud Private
 
-**TBD**
+To deploy the application on [IBM Cloud Private](https://www.ibm.com/cloud/private), please follow the below instructions.
+
+#### Asset Manager Microservice
+
+Before deploying the consume asset function, make sure [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) is up and running. This is important because `Consume Asset function` interacts with the `POST   /assetmanager/assets` API to post the Asset data that comes from the [Asset Event Producer](../asset-event-producer). To deploy the [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) on IBM Cloud Private, follow the instructions [here](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/blob/microprofile/docs/icp.md).
+
+#### Deploying the Consume Asset function
+
+Cosume Asset function is a [kubeless](https://kubeless.io/) function defined in NodeJS. To deploy this fuction, we need kubeless and serverless framework which can be installed as shown in the [Pre-requisite](#pre-requisite).
+
+*How it works?*
+
+- The Cosume Asset function is a Kafka listener defined in NodeJS.
+- It consumes assets that are posted on Kafka topic `asset-topic` and these are posted by [Asset Event Producer](../asset-event-producer)
+- Once the assets are consumed by this function, it hits the POST API `/assetmanager/assets` of [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) which in turn persists this data in [Cassandra](http://cassandra.apache.org/). 
+
+This function is deployed on Kubeless and you can install it following the instructions [here](https://kubeless.io/docs/quick-start/).
+
+Clone the repository if you didnot do it before.
+
+```
+$ git clone https://github.com/ibm-cloud-architecture/refarch-asset-analytics.git
+```
+
+To deploy the function, follow the below steps.
+
+```
+$ cd refarch-asset-analytics
+
+$ cd asset-consumer-function
+
+$ kubeless function deploy consumeasset --runtime nodejs6 --from-file handler.js  --handler handler.consumeAssetEvent --namespace greencompute --env ASSET_URL=http://assetmanager-service:9080/assetmanager/assets --dependencies package.json
+```
+
+Once deployed you can access the logs using the below command.
+
+```
+$ kubeless function logs consumeasset -n greencompute
+```
+
+You can also see the list of kubeless functions as follows.
+
+```
+$ kubeless function list -n greencompute
+NAME        	NAMESPACE   	HANDLER                  	RUNTIME	DEPENDENCIES               	STATUS
+consumeasset	greencompute	handler.consumeAssetEvent	nodejs6	lodash: ^4.17.11           	1/1 READY
+            	            	                         	       	mocha: ^5.2.0
+            	            	                         	       	request: ^2.88.0
+            	            	                         	       	serverless-kubeless: ^0.4.0
+            	            	                         	       	sinon: ^7.1.0
+            	            	                         	       	dotenv: ^6.1.0
+```
+
+#### Deploying the Kafka Cluster
+
+You can find detailed instructions on how to deploy ZooKeeper [here](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/deployments/zookeeper/README.md) and Kafka [here](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/deployments/kafka/README.md)
+
+To keep it simple, follow below steps.
+
+```
+$ git clone https://github.com/ibm-cloud-architecture/refarch-eda.git
+
+$ cd refarch-eda
+
+$ cd deployments/zookeeper
+
+$ ./deployZookeeper.sh
+
+$ cd ../kafka/
+
+$ ./deployKafka.sh
+
+$ cd ../..
+```
+
+**Note**: If you are deploying to IBM Cloud Private 3.1.0 or higher, make sure you deploed the image policy. If not, run the below command.
+
+```
+$ kubectl apply -f ./static/image_policy.yaml -n greencompute
+```
+
+This installs ZooKeeper and Kafka on your Docker Edge.
+
+- Add the below entry in `/etc/hosts` 
+```
+<Your Host IP>       gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local
+```
+
+To test if your Kafka cluster is configured correctly, follow the instructions [here](https://github.com/ibm-cloud-architecture/refarch-eda/blob/master/deployments/kafka/README.md).
+
+#### Creating Kafka trigger
+
+To use the existing kafka cluster with kubeless, we need to deploy the below Kafka consumer and the Kafka Trigger CRD. Make sure `KAFKA_BROKERS` pointing to the right URL of your Kafka service.
+
+Come back to `refarch-asset-analytics/asset-consumer-function` and deploy the trigger.
+
+```
+$ cd refarch-asset-analytics
+
+$ cd asset-consumer-function
+
+$ kubectl create -f KafkaTrigger/ConsumerAndTrigger.yml
+```
+
+Now let us create a Kafka topic `asset-topic` which the [Asset Event Producer](../asset-event-producer) and [Asset Consumer function](./) uses to produce and consume assets.
+
+Run the below command to create `asset-topic`
+
+```
+$ kubeless trigger kafka create consumeasset --function-selector created-by=kubeless,function=consumeasset --trigger-topic asset-topic -n greencompute
+```
+You will then see something like below.
+
+```
+INFO[0000] Kafka trigger consumeasset created in namespace greencompute successfully!
+```
+
+To validate the function, see [Validating the consumeAssetEvent](validating-the-consumeassetevent)
+
+To delete the function, run the below command.
+
+```
+$ kubeless function delete consumeasset --namespace greencompute
+```
 
 ### Docker Edge
 
@@ -56,24 +195,26 @@ Cosume Asset function is a [kubeless](https://kubeless.io/) function defined in 
 
 This function is deployed on Kubeless and you can install it following the instructions [here](https://kubeless.io/docs/quick-start/).
 
-To deploy the function, follow the below steps.
+Clone the repository if you didnot do it before.
 
 ```
 $ git clone https://github.com/ibm-cloud-architecture/refarch-asset-analytics.git
+```
 
+To deploy the function, follow the below steps.
+
+```
 $ cd refarch-asset-analytics
 
 $ cd asset-consumer-function
 
-$ npm install
-
-$ serverless deploy function -f consumeasset
+$ kubeless function deploy consumeasset --runtime nodejs6 --from-file handler.js  --handler handler.consumeAssetEvent --namespace greencompute --env ASSET_URL=http://assetmanager-service:9080/assetmanager/assets --dependencies package.json
 ```
 
 Once deployed you can access the logs using the below command.
 
 ```
-$ serverless logs -f consumeasset -t
+$ kubeless function logs consumeasset -n greencompute
 ```
 
 You can also see the list of kubeless functions as follows.
@@ -81,12 +222,12 @@ You can also see the list of kubeless functions as follows.
 ```
 $ kubeless function list -n greencompute
 NAME        	NAMESPACE   	HANDLER                  	RUNTIME	DEPENDENCIES               	STATUS
-consumeasset	greencompute	handler.consumeAssetEvent	nodejs6	request: ^2.88.0           	1/1 READY
+consumeasset	greencompute	handler.consumeAssetEvent	nodejs6	lodash: ^4.17.11           	1/1 READY
+            	            	                         	       	mocha: ^5.2.0
+            	            	                         	       	request: ^2.88.0
             	            	                         	       	serverless-kubeless: ^0.4.0
             	            	                         	       	sinon: ^7.1.0
             	            	                         	       	dotenv: ^6.1.0
-            	            	                         	       	lodash: ^4.17.11
-            	            	                         	       	mocha: ^5.2.0
 ```
 
 #### Deploying the Kafka Cluster
@@ -147,7 +288,7 @@ You will then see something like below.
 INFO[0000] Kafka trigger consumeasset created in namespace greencompute successfully!
 ```
 
-#### Validating the consumeAssetEvent
+## Validating the consumeAssetEvent
 
 To validate the above function, you can send the asset data from the [Asset Event Producer](../asset-event-producer) and see if it is persisted in your Cassandra database.
 
@@ -204,10 +345,11 @@ cqlsh:assetmonitoring> select * from assets;
 
 You see the above assets in your database.
 
-
 ## Compendium
 * [Deploy Kubeless to Kubernetes cluster](https://kubeless.io/docs/quick-start/)
 * [Use an existing Kafka cluster with Kubeless](https://kubeless.io/docs/use-existing-kafka/)
 * [Kubeless - Quick Start](https://serverless.com/framework/docs/providers/kubeless/guide/quick-start/)
 * [Serverless framework](https://www.npmjs.com/package/serverless)
 * [Serverless kubeless template](https://medium.com/bitnami-perspectives/deploying-a-kubeless-function-using-serverless-templates-2d03f49b70e2)
+* [IBM Cloud Private version 3.1.0 Helm instructions](https://www.ibm.com/support/knowledgecenter/SSBS6K_3.1.0/app_center/create_helm_cli.html)
+* [IBM Cloud Private CLI tools](https://www.ibm.com/support/knowledgecenter/SSBS6K_3.1.0/manage_cluster/cli_commands.html)
