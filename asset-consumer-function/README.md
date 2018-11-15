@@ -288,6 +288,14 @@ You will then see something like below.
 INFO[0000] Kafka trigger consumeasset created in namespace greencompute successfully!
 ```
 
+To validate the function, see [Validating the consumeAssetEvent](validating-the-consumeassetevent)
+
+To delete the function, run the below command.
+
+```
+$ kubeless function delete consumeasset --namespace greencompute
+```
+
 ## Validating the consumeAssetEvent
 
 To validate the above function, you can send the asset data from the [Asset Event Producer](../asset-event-producer) and see if it is persisted in your Cassandra database.
