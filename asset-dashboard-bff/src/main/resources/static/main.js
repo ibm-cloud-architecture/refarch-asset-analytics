@@ -476,7 +476,7 @@ var AssetsService = /** @class */ (function () {
         }
     };
     AssetsService.prototype.getRiskFactor = function (asset) {
-        if (asset.riskRating === -1) {
+        if (asset.riskRating == undefined || asset.riskRating === -1) {
             // TODO call remote service for maintenance scoring service.
             /**
             this.http.get<Asset>(this.riskScoringUrl+"/"+asset.id);
@@ -913,7 +913,7 @@ var DashboardChartComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".dot {\n    height: 25px;\n    width: 25px;\n    background-color: #bbb;\n    border-radius: 50%;\n    display: inline-block;\n    margin: 1vh 0 -1vh 0;\n  }\n\n.mat-table {\n/*    padding: 1vh 2vh;*/\n/*    margin: auto;*/\n    width: 100%;\n    display: table;\n}\n\nth.mat-header-cell {\n\n    padding: 10px 15px;\n}\n\n.dashboard-table {\n    max-height: 300px;\n    height: auto;\n    overflow: auto;\n\n    /*border: 1px solid black;*/\n}\n\nth {\n    text-align: center;\n}\n\ntd {\n    text-align: center;\n}\n\ntd.mat-cell:first-of-type {\n    padding: 0px;\n}"
+module.exports = ".dot {\n    height: 25px;\n    width: 25px;\n    background-color: #bbb;\n    border-radius: 50%;\n    display: inline-block;\n    margin: 1vh 0 -1vh 0;\n  }\n\n.dash-row {\n   padding: 10px 5px;\n}\n\n.mat-table {\n/*    padding: 1vh 2vh;*/\n/*    margin: auto;*/\n    width: 100%;\n    display: table;\n}\n\nth.mat-header-cell {\n\n    padding: 10px 15px;\n}\n\n.dashboard-table {\n    max-height: 300px;\n    height: auto;\n    overflow: auto;\n\n    /*border: 1px solid black;*/\n}\n\nth {\n    text-align: center;\n}\n\ntd {\n    text-align: center;\n}\n\ntd.mat-cell:first-of-type {\n    padding: 0px;\n}\n"
 
 /***/ }),
 
@@ -924,7 +924,7 @@ module.exports = ".dot {\n    height: 25px;\n    width: 25px;\n    background-co
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"dashboard-table\">\n    <table mat-table [dataSource]=\"dataSource\" matSort class=\"mat-elevation-z8\">\n        <ng-container matColumnDef=\"riskColor\">\n            <th mat-header-cell *matHeaderCellDef> Risk </th>\n            <td mat-cell *matCellDef=\"let asset\"><span class=\"dot\" [ngStyle] = \"{'background-color':asset.riskColor}\"></span></td>\n        </ng-container>\n        <ng-container matColumnDef=\"id\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.id}} </td>\n        </ng-container>\n        <ng-container matColumnDef=\"type\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.type}} </td>\n        </ng-container>\n        <ng-container matColumnDef=\"version\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> Version </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.version}} </td>\n        </ng-container>\n        <ng-container matColumnDef=\"pressure\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> Pressure </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.pressure}} </td>\n        </ng-container>\n        <ng-container matColumnDef=\"flowRate\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> Flow Rate </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.flowRate}} </td>\n        </ng-container>\n        <ng-container matColumnDef=\"temperature\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> Temp. </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.temperature}} </td>\n        </ng-container>\n        \n        <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\n        <tr mat-row *matRowDef=\"let row; columns: displayedColumns;\" (click) = tableClick(row);></tr>\n    \n    </table>\n</div>"
+module.exports = "<div class=\"dash-row\">\n    <button mat-raised-button (click)=\"monitor()\">Start Monitoring Asset</button>\n</div>\n<div class=\"dashboard-table\">\n    <table mat-table [dataSource]=\"dataSource\" matSort class=\"mat-elevation-z8\">\n        <ng-container matColumnDef=\"riskColor\">\n            <th mat-header-cell *matHeaderCellDef> Risk </th>\n            <td mat-cell *matCellDef=\"let asset\"><span class=\"dot\" [ngStyle] = \"{'background-color':asset.riskColor}\"></span></td>\n        </ng-container>\n        <ng-container matColumnDef=\"id\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.id}} </td>\n        </ng-container>\n        <ng-container matColumnDef=\"type\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.type}} </td>\n        </ng-container>\n        <ng-container matColumnDef=\"version\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> Version </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.version}} </td>\n        </ng-container>\n        <ng-container matColumnDef=\"pressure\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> Pressure </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.pressure}} </td>\n        </ng-container>\n        <ng-container matColumnDef=\"flowRate\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> Flow Rate </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.flowRate}} </td>\n        </ng-container>\n        <ng-container matColumnDef=\"temperature\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header> Temp. </th>\n            <td mat-cell *matCellDef=\"let asset\"> {{asset.temperature}} </td>\n        </ng-container>\n\n        <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\n        <tr mat-row *matRowDef=\"let row; columns: displayedColumns;\" (click) = tableClick(row);></tr>\n\n    </table>\n</div>\n"
 
 /***/ }),
 
@@ -963,6 +963,8 @@ var DashboardTableComponent = /** @class */ (function () {
     };
     DashboardTableComponent.prototype.tableClick = function (asset) {
         this.selectedAsset.emit(asset);
+    };
+    DashboardTableComponent.prototype.monitor = function () {
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),

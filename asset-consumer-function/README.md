@@ -3,36 +3,32 @@
 ## Table of Contents
 
 * [Introduction](#introduction)
-* [Pre-requisite](#pre-requisite)
+* [Pre-requisite](#pre-requisites)
 * [Deploying the App](#deploying-the-app)
-    + [IBM Cloud Private](#ibm-cloud-private)
-    + [Docker Edge](#docker-edge)
+    + [On IBM Cloud Private](#ibm-cloud-private)
+    + [Locally on Docker Edge](#docker-edge)
 * [Validating the consumeAssetEvent](validating-the-consumeassetevent)
 * [Compendium](#compendium)
 
 ## Introduction
 
-This project is built to demonstrate how to build develop a kafka listener in NodeJS which consumes asset event posted on Kafka `asset-topic`. This application in turn calls the [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) to persist the assets in Cassandra. The function is implemented in NodeJS and deployed to [kubeless](https://kubeless.io/).
+This project aims to demonstrate how to develop a kafka listener in NodeJS as a function as a service which consumes asset events posted on a Kafka topic named `asset-topic`. This application in turn calls the [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) to persist the assets in [***Cassandra***](http://cassandra.apache.org/). The function is implemented in NodeJS and deployed to [kubeless](https://kubeless.io/).
 
-- Based on NodeJS.
-- Interacts with the Kafka and cosumes the assets.
-- Posts the assets to [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) which in turn persists them in [***Cassandra***](http://cassandra.apache.org/).
-- Deployment options for Docker Edge (local kubernetes cluster) and ICP.
 
-## Pre-requisite
+## Pre-requisites
 
 1. Install Kubeless CLI and Kubeless on your Kubernetes cluster.
 
 You can find the installation steps [here](https://kubeless.io/docs/quick-start/)
 
-Note: If you are installing Kubless on IBM Private Cloud 3.1.0 or higher, run the below command after creating the namespace `kubeless` and before creating the kubeless on your IBM Cloud Private Cluster.
+Note: If you are installing Kubeless on IBM Private Cloud 3.1.0 or higher, run the below command after creating the namespace `kubeless` and before deploying the kubeless on your IBM Cloud Private Cluster.
 
 ```
 $ git clone https://github.com/ibm-cloud-architecture/refarch-asset-analytics.git
 
 $ cd refarch-asset-analytics
 
-$ cd static
+$ cd deployments
 
 $ kubectl apply -f image_policy.yaml -n kubeless
 
@@ -40,7 +36,7 @@ $ cd ..
 
 ```
 
-2. Install the serverless framework with the command. 
+2. Install the serverless framework with the command.
 ```
 $ npm install -g serverless
 $ npm install -g serverless-kubeless
@@ -64,7 +60,7 @@ Cosume Asset function is a [kubeless](https://kubeless.io/) function defined in 
 
 - The Cosume Asset function is a Kafka listener defined in NodeJS.
 - It consumes assets that are posted on Kafka topic `asset-topic` and these are posted by [Asset Event Producer](../asset-event-producer)
-- Once the assets are consumed by this function, it hits the POST API `/assetmanager/assets` of [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) which in turn persists this data in [Cassandra](http://cassandra.apache.org/). 
+- Once the assets are consumed by this function, it hits the POST API `/assetmanager/assets` of [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) which in turn persists this data in [Cassandra](http://cassandra.apache.org/).
 
 This function is deployed on Kubeless and you can install it following the instructions [here](https://kubeless.io/docs/quick-start/).
 
@@ -191,7 +187,7 @@ Cosume Asset function is a [kubeless](https://kubeless.io/) function defined in 
 
 - The Cosume Asset function is a Kafka listener defined in NodeJS.
 - It consumes assets that are posted on Kafka topic `asset-topic` and these are posted by [Asset Event Producer](../asset-event-producer)
-- Once the assets are consumed by this function, it hits the POST API `/assetmanager/assets` of [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) which in turn persists this data in [Cassandra](http://cassandra.apache.org/). 
+- Once the assets are consumed by this function, it hits the POST API `/assetmanager/assets` of [Asset Manager Microservice](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice/tree/microprofile) which in turn persists this data in [Cassandra](http://cassandra.apache.org/).
 
 This function is deployed on Kubeless and you can install it following the instructions [here](https://kubeless.io/docs/quick-start/).
 

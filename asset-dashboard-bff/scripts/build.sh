@@ -3,8 +3,14 @@ set p = $(echo $PWD | awk -v h="scripts" '$0 ~h')
 if [[ $PWD = */scripts ]]; then
  cd ..
 fi
+echo "1. Get Angular App to Static folder"
 ./scripts/getAngularDist.sh
+echo "2. Package the BFF spring app"
 mvn package
-docker build -t ibmcase/asset-dashboard-bff .
+echo "3. Build the docker images"
+docker build -t ibmcase/gc-dashboard-bff .
+echo "4 Push to docker hub"
 docker images
-# docker run --rm -p 8080:8080 --name asset-dashboard-bff ibmcase/asset-dashboard-bff
+docker login
+docker push ibmcase/gc-dashboard-bff
+

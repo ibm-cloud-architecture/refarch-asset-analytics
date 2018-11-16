@@ -6,6 +6,9 @@ metadata:
 spec:
   serviceName: cassandra
   replicas: 1
+  selector:
+      matchLabels:
+        app: cassandra
   template:
     metadata:
       labels:
@@ -48,7 +51,7 @@ spec:
         name: cassandra-data
         annotations:  # comment line if you want to use a StorageClass
           # or specify which StorageClass
-          volume.beta.kubernetes.io/storage-class: "" 
+          volume.beta.kubernetes.io/storage-class: ""
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:

@@ -34,7 +34,7 @@ if [ -z "$sfs" ]; then
     kubectl apply -f ./deployments/prod/dashboard-bff.yml --namespace $nspace
   fi
 fi
-echo "Found dashboard-bff statefulset "
+echo "Found dashboard-bff Deployment "
 kubectl get deployment -n $nspace
 
 kubectl get pods -o wide -n $nspace

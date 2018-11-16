@@ -1,4 +1,8 @@
 #!/bin/bash
+echo ##############################################
+echo # Deploy cassandra to k8s
+echo ##############################################
+
 set p = $(echo $PWD | awk -v h="scripts" '$0 ~h')
 if [[ $PWD = */scripts ]]; then
  cd ..
@@ -10,9 +14,10 @@ else
   mode="dev"
 fi
 nspace="greencompute"
+echo "Verify cassandra not deployed under namespace: " $nspace
 svc=$(kubectl get svc  --namespace $nspace | grep cassandra-svc)
 if [ -z "$svc" ]; then
-  echo "Cassandra service not found under namespace " $nspace
+  echo "Cassandra service not found under namespace " $nspace "...install it"
   if [ "$mode" = "dev"  ]
   then
     kubectl apply -f ./deployments/cassandra/dev/cassandra-service.yml --namespace $nspace
@@ -26,7 +31,7 @@ echo "Found cassandra service: " $svc " under namespace " $nspace
 
 pvs=$(kubectl get pv  --namespace $nspace | grep cassandra-data )
 if [ -z "$pvs" ]; then
-  echo "Cassandra Persistence volume not found... "
+  echo "Cassandra Persistence volumes not found... install them"
   if [ "$mode" = "dev"  ]
   then
     kubectl apply -f ./deployments/cassandra/dev/cassandra-volumes.yml --namespace $nspace
@@ -41,7 +46,7 @@ fi
 echo "Found cassandra PVs "
 echo $pvs
 
-
+echo "Search for statefuleset"
 sfs=$(kubectl get statefulset --namespace $nspace | grep cassandra)
 if [ -z "$sfs" ]; then
   echo "Cassandra Statefulset not found... "
