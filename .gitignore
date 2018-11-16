@@ -2,7 +2,7 @@ asset-event-producer/target/
 asset-consumer/target/
 asset-consumer/.settings/
 asset-dashboard-bff/target/
-asset-dashboard-ui/node_module/
+asset-dashboard-ui/node_modules/
 asset-itests/.settings/
 asset-itests/target/
 asset-consumer-spring/target/
