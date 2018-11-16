@@ -82,27 +82,37 @@ We propose two possible deployments: one for quick validation in a development l
 * Clone this project to get all the kubernetes deployment files and source code of the different components.
 
 * Clone the Event Driven Architecture reference project: [EDA](https://github.com/ibm-cloud-architecture/refarch-eda) to get Zookeeper and Kafka deployment manifests. As an alternate solution you can use the IBM Event Streams Helm chart from the ICP Catalog.
- ```
+ 
+ ```shell
  git clone https://github.com/ibm-cloud-architecture/refarch-eda.git
  ```
+
 * Clone the [asset management microservice using the microprofile branch](https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice) implementation.
-  ```
+ 
+  ```shell
   git clone https://github.com/ibm-cloud-architecture/refarch-asset-manager-microservice.git
   git checkout microprofile
   ```
+
 * Access to a kubernetes deployment for development, for example on Mac, we use [Docker Edge](https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac) distribution. You can use [this article](https://rominirani.com/tutorial-getting-started-with-kubernetes-with-docker-on-mac-7f58467203fd) to install Docker Edge and enable kubernetes.
 
 For test and 'production' deployments you need to have access to a kubernetes cluster like IBM Cloud Private.
+
 * Login to your cluster
-We are providing multiple scripts to support connection and configuration validation:
+ We are providing multiple scripts to support connection and configuration validation:
  * To connect to your cluster: `./scripts/connectToCluster.sh`
  * To validate your dependencies: `./scripts/validateConfig.sh`. It may create the 'greencompute' namespace if it does not exist.
 
 ### Installing the Event Backbone
+
 For your local environment install Zookeeper and Kafka using our development manifests:
+
 #### Install Zookeeper for development
+
 [Read instructions in this article](https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/deployments/zookeeper/README.md)
+
 #### Install Kafka for development
+
 [Read instructions in this article](https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/deployments/kafka/README.md)
 
 For production we recommend to install IBM Events Streams  
@@ -132,7 +142,7 @@ See instructions [in the project repository](https://github.com/ibm-cloud-archit
 
 #### Deploy UI with BFF
 
-To deploy the BFF: the scripts and manifests are under the asset-dashboard-bff folder of this project. We document the deployment and build process in [these instructions](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/tree/master/asset-dashboard-bff#build)
+To deploy the BFF: the scripts and manifests are under the asset-dashboard-bff folder of this project. We document the deployment and build process in [these instructions.](https://github.com/ibm-cloud-architecture/refarch-asset-analytics/tree/master/asset-dashboard-bff#build)
 
 #### Populate the Cassandra with some assets
 
@@ -150,41 +160,46 @@ $ ./getAssets.sh
 ```
 
 The dashboard reports the imported pumps:
-![](./docs/somepumps.png)
+![Pump added](./docs/somepumps.png)
 
 #### Deploy Asset Injector
+
 TBD
+
 #### Start Pump Simulator to add one asset
+
 TBD
+
 #### Start Pump Simulator to generate metrics event on existing pumps
 
 Finally the [pump simulator](asset-event-producer/readme.md) is a standalone java application used to produce different types of event. It does not need to be deployed to kubernetes.
 
 ### ICP Deployment
+
 The diagram below presents the deployment of the runtime components as well as Zookeeper, Kafka and Cassandra clusters deployed inside k8s:
 
-![](docs/asset-sol-k8s-depl.png)
+![icp deployment](docs/asset-sol-k8s-depl.png)
 
 * For high availability we need three masters, three proxies, 3 managers and at least 6 workers.
 * Cassandra is deployed with 3 replicas and uses NFS based persistence volume so leverage shareable filesystems.
 * Kafka is deployed with 3 replicas with anti affinity to avoid to have two pods on same node and also on the same node as Zookeeper's ones.
-* Zookeeper is deployed with 3 replicas with anti affinity to avoid to have two pods on same node and on the same node as Kafka.   
-This constraint explains the 6 workers.
+* Zookeeper is deployed with 3 replicas with anti affinity to avoid to have two pods on same node and on the same node as Kafka. This constraint explains the 6 workers.
 * The component of the solution are deployed with at least 3 replicas: Asset manager microservice, dashboard BFF, and asset consumer/cassandra-injector.
 
 * Get the admin security token and then use it in the set-credentials command below:
 
-```
+```shell
 kubectl config set-cluster green-cluster --server=https://169.47.77.137:8001 --insecure-skip-tls-verify=true
 kubectl config set-context green-cluster-context --cluster=green-cluster
 kubectl config set-credentials admin --token=eyJ0...Ptg
 kubectl config set-context green-cluster-context --user=admin --namespace=greencompute
 kubectl config use-context green-cluster-context
 ```
+
 We have added a script to support those commands so, once you run the script, just getting the security token for the admin user should be enough. See script named `scripts/connectToCluster.sh`
 
-
 ### Troubleshooting
+
 As we are deploying different solutions into kubernetes we group [Troubleshooting notes here](https://github.com/ibm-cloud-architecture/refarch-integration/blob/master/docs/icp/troubleshooting.md) and [a technology summary here](https://jbcodeforce.github.io/#/studies)
 
 ## Contributors
