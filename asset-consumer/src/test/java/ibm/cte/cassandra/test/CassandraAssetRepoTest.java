@@ -8,7 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ibm.cte.esp.dao.CassandraRepo;
-import ibm.cte.esp.model.AssetEvent;
+import ibm.cte.esp.model.MetricEvent;
 
 public class CassandraAssetRepoTest extends BaseTest {
 	
@@ -26,31 +26,26 @@ public class CassandraAssetRepoTest extends BaseTest {
 
 	@Test
 	public void shouldAddNewAsset() throws Exception {
-		AssetEvent a = new AssetEvent();
+		MetricEvent a = new MetricEvent();
 		a.setId("Asset022");
-		a.setOs("Raspbian");
-		a.setAntivirus("v2.3");
 		a.setCurrent(110*Math.random()+10);
-		a.setFlowRate((long) (100*Math.random()));
-		a.setIpAddress("172.16.0.0");
+		a.setFlowRate((int) (100*Math.random()));
+
 		a.setPressure((int) (1000*Math.random()));
 		a.setTemperature((int) (300*Math.random()));
-		a.setType("ESP");
+
 		a.setRotation((int) (360*Math.random()));
-		a.setVersion("0.0.1");
-		a.setLatitude("30.307182");
-		a.setLongitude("-97.755996");
-		repo.persistAsset(a);
-		AssetEvent aOut=repo.getAssetById("Asset022");
+		repo.persistMetricEvent(a);
+		MetricEvent aOut=repo.getAssetById("Asset022");
 		Assert.assertNotNull(aOut);
-		System.out.println(aOut.getOs());
+		System.out.println(aOut.getTemperature());
 	}
 	
 	@Test
 	public void shouldGetAllAssets() throws Exception {
-		List<AssetEvent> l=repo.getAllAssets();
+		List<MetricEvent> l=repo.getAllAssets();
 		Assert.assertTrue(l.size() >= 1);
-		for (AssetEvent a : l) {
+		for (MetricEvent a : l) {
 			System.out.println(a.toString());
 		}
 	}

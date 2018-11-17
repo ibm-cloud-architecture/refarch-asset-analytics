@@ -6,7 +6,7 @@ fi
 echo "1. Get Angular App to Static folder"
 ./scripts/getAngularDist.sh
 echo "2. Package the BFF spring app"
-mvn package
+mvn install
 echo "3. Build the docker images"
 docker build -t ibmcase/gc-dashboard-bff .
 echo "4 Push to docker hub"

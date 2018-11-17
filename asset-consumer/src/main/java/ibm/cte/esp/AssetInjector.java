@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ibm.cte.esp.client.AssetEventMgrClient;
-import ibm.cte.esp.model.AssetEvent;
+import ibm.cte.esp.model.MetricEvent;
 
 /**
  * Read Asset published on a kafka topic and call remote service to persist to cassandra
@@ -47,7 +47,7 @@ public class AssetInjector {
 
 	public void run() {
         while (runAgain) {
-        	 List<AssetEvent> buffer = kafkaConsumer.consume();
+        	 List<MetricEvent> buffer = kafkaConsumer.consume();
 	        // commit offset only when persisted in DB.
 			    if (buffer.size() >= getMinBatchSize()) {
 			    	try {
@@ -65,8 +65,8 @@ public class AssetInjector {
 	}
 
 
-	private void sendAssetsToDataSource( List<AssetEvent> buffer) throws Exception{
-		for (AssetEvent a  : buffer) {
+	private void sendAssetsToDataSource( List<MetricEvent> buffer) throws Exception{
+		for (MetricEvent a  : buffer) {
 			assertManager.saveAsset(a);
 		}
 	}

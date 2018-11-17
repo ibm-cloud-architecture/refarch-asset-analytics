@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import ibm.cte.esp.dao.AssetDAO;
 import ibm.cte.esp.dao.CassandraRepo;
-import ibm.cte.esp.model.AssetEvent;
+import ibm.cte.esp.model.MetricEvent;
 
 /**
  * Read Asset published on a kafka topic and call remote service to persist to cassandra
@@ -52,7 +52,7 @@ public class AssetInjectorCassandra {
 
 	public void run() {
         while (runAgain) {
-        	 List<AssetEvent> buffer = kafkaConsumer.consume();
+        	 List<MetricEvent> buffer = kafkaConsumer.consume();
 	        // commit offset only when persisted in DB.
 			    if (buffer.size() >= minBatchSize) {
 			    	try {
@@ -70,10 +70,10 @@ public class AssetInjectorCassandra {
 	}
 
 
-	private void insertIntoDb( List<AssetEvent> buffer) throws Exception{
-		for (AssetEvent a  : buffer) {
+	private void insertIntoDb( List<MetricEvent> buffer) throws Exception{
+		for (MetricEvent a  : buffer) {
 			logger.info("Get asset "+a.getId()+"....persist it!");
-			assetDAO.persistAsset(a);
+			assetDAO.persistMetricEvent(a);
 		}
 	}
 }

@@ -55,13 +55,17 @@ public class PumpSimulator {
 		simulator.prepareProducer();
 		logger.info("Kafka server: " + simulator.config.getConfig().getProperty(ApplicationConfig.KAFKA_BOOTSTRAP_SERVERS));
 		if (simulator.isEvent()) {
-			logger.info("");
+			logger.info(" simulator for sending metrics");
 			simulator.generateAssetMetricEvents();
+			List<MetricEvent> l = simulator.generateAssetMetricEvents();
+			for (MetricEvent me : l) {
+				simulator.publishAssetMetric(me);
+			}
 		} else {
 			simulator.generateAssets();
-
-			simulator.shutdown();
 		}
+		simulator.shutdown();
+
 	}
 
 
@@ -258,7 +262,7 @@ public class PumpSimulator {
 		GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String s = gson.toJson(a);
-		logger.info("Send Asset: " + s);
+		logger.info("Send Asset Metric: " + s);
 		ProducerRecord<String, Object> record = new ProducerRecord<>(topic, a.getAssetId(), s);
 	    RecordMetadata recordMetadata = kafkaProducer.send(record).get();
 	    logger.info("Receive partition id= " + recordMetadata.partition() + " offset= " + recordMetadata.offset());

@@ -3,9 +3,7 @@
   <groupId>asset-analytics</groupId>
   <artifactId>asset-consumer</artifactId>
   <version>0.0.1</version>
-  <description>A set of consumers for integrating with Kafka. One of them is a Springboot app
-  to consume new asset event and event measurement and ingest them to a Cassandra data base.
-  Other are to test kafka deployment.
+  <description>A set of consumers for integrating with Kafka.
   </description>
   <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -87,10 +85,6 @@
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
-       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>

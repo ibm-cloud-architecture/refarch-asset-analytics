@@ -14,7 +14,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import ibm.cte.esp.ApplicationConfig;
-import ibm.cte.esp.model.AssetEvent;
+import ibm.cte.esp.model.MetricEvent;
 
 public class AssetEventMgrClient {
 	protected RestClient restClient;
@@ -51,17 +51,17 @@ public class AssetEventMgrClient {
 		 
 	}
 	
-	public AssetEvent getAssetById(String id) throws Exception {
+	public MetricEvent getAssetById(String id) throws Exception {
 		//List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		//nvps.add(new BasicNameValuePair("id",id));
-		String resp = restClient.executeGetMethod(this.baseUrl+"/assets/"+id, null);
-		AssetEvent[] lae = parser.fromJson(resp, AssetEvent[].class);
+		String resp = restClient.executeGetMethod(this.baseUrl+"/events/"+id, null);
+		MetricEvent[] lae = parser.fromJson(resp, MetricEvent[].class);
 		if (lae.length == 1) return lae[0];
 		return null;
 	}
 
-	public void saveAsset(AssetEvent ae) throws Exception {
+	public void saveAsset(MetricEvent ae) throws Exception {
 		String json = parser.toJson(ae);
-		restClient.executePostMethod(this.baseUrl+"/assets/",json);
+		restClient.executePostMethod(this.baseUrl+"/events/",json);
 	}
 }

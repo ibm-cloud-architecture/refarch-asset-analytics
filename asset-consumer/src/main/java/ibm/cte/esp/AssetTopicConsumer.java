@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import com.google.gson.Gson;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -14,9 +16,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-
-import ibm.cte.esp.model.AssetEvent;
+import ibm.cte.esp.model.MetricEvent;
 
 /**
  * subscriber to asset topic
@@ -57,13 +57,13 @@ public class AssetTopicConsumer {
         kafkaConsumer.subscribe(Arrays.asList(config.getProperties().getProperty(ApplicationConfig.KAFKA_ASSET_TOPIC_NAME)));
 	}
     
-    public List<AssetEvent>  consume() {
-    	List<AssetEvent> buffer = new ArrayList<>();
+    public List<MetricEvent>  consume() {
+    	List<MetricEvent> buffer = new ArrayList<MetricEvent>();
     	ConsumerRecords<String, String> records = kafkaConsumer.poll(
     			Long.parseLong(config.getProperties().getProperty(ApplicationConfig.KAFKA_POLL_DURATION)));
     	
 	    for (ConsumerRecord<String, String> record : records) {
-	    	AssetEvent a = gson.fromJson(record.value(), AssetEvent.class);
+	    	MetricEvent a = gson.fromJson(record.value(), MetricEvent.class);
 	    		logger.info((new Date()).toString() + " " + a.toString());
 	            buffer.add(a);
 	    }

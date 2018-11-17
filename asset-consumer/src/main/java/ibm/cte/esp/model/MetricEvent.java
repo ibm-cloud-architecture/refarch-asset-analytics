@@ -3,67 +3,68 @@ package ibm.cte.esp.model;
 import java.util.Date;
 
 public class MetricEvent {
-	protected String assetId;
-	protected long rotation;
-	protected long current;
-	protected long pressure;
-	protected long flowRate;
-	protected long temperature;
+	protected String id;
+	protected int rotation;
+	protected double current;
+	protected int pressure;
+	protected int flowRate;
+	protected int temperature;
 	protected Date timeStamp;
+
 	
 	public MetricEvent() {
 		this.timeStamp = new Date();
 	}
 	
 	public String toString() {
-		return "Id:" + getAssetId() + " C:" + getCurrent() + " P:" + getPressure() + " T:" + getTemperature() + "Flow:" + getFlowRate();
+		return "Id:" + getId() + " C:" + getCurrent() + " P:" + getPressure() + " T:" + getTemperature() + "Flow:" + getFlowRate();
 	}
 
-	public String getAssetId() {
-		return assetId;
+	public String getId() {
+		return id;
 	}
 
-	public void setAssetId(String assetId) {
-		this.assetId = assetId;
+	public void setId(String assetId) {
+		this.id = assetId;
 	}
 
-	public long getRotation() {
+	public int getRotation() {
 		return rotation;
 	}
 
-	public void setRotation(long rotation) {
+	public void setRotation(int rotation) {
 		this.rotation = rotation;
 	}
 
-	public long getCurrent() {
+	public double getCurrent() {
 		return current;
 	}
 
-	public void setCurrent(long current) {
+	public void setCurrent(double current) {
 		this.current = current;
 	}
 
-	public long getPressure() {
+	public int getPressure() {
 		return pressure;
 	}
 
-	public void setPressure(long pressure) {
+	public void setPressure(int pressure) {
 		this.pressure = pressure;
 	}
 
-	public long getFlowRate() {
+	public int getFlowRate() {
 		return flowRate;
 	}
 
-	public void setFlowRate(long flowRate) {
+	public void setFlowRate(int flowRate) {
 		this.flowRate = flowRate;
 	}
 
-	public long getTemperature() {
+	public int getTemperature() {
 		return temperature;
 	}
 
-	public void setTemperature(long temperature) {
+	public void setTemperature(int temperature) {
 		this.temperature = temperature;
 	}
 

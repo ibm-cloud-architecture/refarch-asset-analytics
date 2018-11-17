@@ -2,7 +2,7 @@ package ibm.cte.esp;
 
 import java.net.ConnectException;
 
-import ibm.cte.esp.model.AssetEvent;
+import ibm.cte.esp.model.MetricEvent;
 
 /**
  * Consume AssetEvent, and print to stdout, this is for verifying kafka integration and serialization
@@ -27,8 +27,8 @@ public class AssetEventSimplestConsumer {
 		 
 		AssetTopicConsumer consumer = new AssetTopicConsumer(cfg);
 		while (true) {
-			for ( AssetEvent a : consumer.consume()) {
-	        	 System.out.println("AssetEvent :"+ a.toString());
+			for ( MetricEvent a : consumer.consume()) {
+	        	 System.out.println("MetricEvent :"+ a.toString());
 	        }
 			try {
 				Thread.sleep(3000);

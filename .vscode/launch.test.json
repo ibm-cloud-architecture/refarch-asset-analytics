@@ -1,0 +1,84 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "asset-itests",
+                "projectName": "asset-itests",
+                "workingDirectory": "/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-itests",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            },
+            {
+                "name": "asset-consumer",
+                "projectName": "asset-consumer",
+                "workingDirectory": "/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-consumer",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            },
+            {
+                "name": "asset-event-producer",
+                "projectName": "asset-event-producer",
+                "workingDirectory": "/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-event-producer",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            },
+            {
+                "name": "asset-dashboard-bff",
+                "projectName": "asset-dashboard-bff",
+                "workingDirectory": "/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-dashboard-bff",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "asset-itests",
+                "projectName": "asset-itests",
+                "workingDirectory": "/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-itests",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            },
+            {
+                "name": "asset-consumer",
+                "projectName": "asset-consumer",
+                "workingDirectory": "/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-consumer",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            },
+            {
+                "name": "asset-event-producer",
+                "projectName": "asset-event-producer",
+                "workingDirectory": "/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-event-producer",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            },
+            {
+                "name": "asset-dashboard-bff",
+                "projectName": "asset-dashboard-bff",
+                "workingDirectory": "/Users/jeromeboyer/Code/GreenCompute/refarch-asset-analytics/asset-dashboard-bff",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}

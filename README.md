@@ -164,19 +164,40 @@ The dashboard reports the imported pumps:
 
 #### Deploy Asset Injector
 
-TBD
+We have developed two types of asset injector. We propose to use a function as service as the base one. So see the instruction to install kubeless and the consume asset function in [this note](./asset-consumer-function/README.md)
+
+The second asset injector is part of the [asset-consumer](./asset-consumer) project and is the Springboot app which can be built and executed with the commands:
+
+```shell
+mvn compile
+mvn exec:java@AssetInjector
+```
+
+Be sure to modify the config/config.properties file to match the server endpoint for Kafka and Asset Manager Microservice.
 
 #### Start Pump Simulator to add one asset
 
-TBD
+Finally the [pump simulator](asset-event-producer/readme.md) is a standalone java application used to produce different types of event. It does not need to be deployed to kubernetes. It can run in two modes:
+
+* add new asset: this is when a pump is added to a location.
+
+```shell
+mvn compile
+mvn exec:java@Simulator
+```
+
+* run pump metrics
+
+```shell
+mvn compile
+mvn exec:java@Simulator -Dexec.args="asset-topic gc-kafka-0.gc-kafka-hl-svc.greencompute.svc.cluster.local event PDrop 2000 4 pump01"
+```
 
 #### Start Pump Simulator to generate metrics event on existing pumps
 
-Finally the [pump simulator](asset-event-producer/readme.md) is a standalone java application used to produce different types of event. It does not need to be deployed to kubernetes.
-
 ### ICP Deployment
 
-The diagram below presents the deployment of the runtime components as well as Zookeeper, Kafka and Cassandra clusters deployed inside k8s:
+The diagram below presents the deployment of the solution components as well as the Zookeeper, Kafka and Cassandra products deployed inside kubernetes:
 
 ![icp deployment](docs/asset-sol-k8s-depl.png)
 
@@ -184,19 +205,7 @@ The diagram below presents the deployment of the runtime components as well as Z
 * Cassandra is deployed with 3 replicas and uses NFS based persistence volume so leverage shareable filesystems.
 * Kafka is deployed with 3 replicas with anti affinity to avoid to have two pods on same node and also on the same node as Zookeeper's ones.
 * Zookeeper is deployed with 3 replicas with anti affinity to avoid to have two pods on same node and on the same node as Kafka. This constraint explains the 6 workers.
-* The component of the solution are deployed with at least 3 replicas: Asset manager microservice, dashboard BFF, and asset consumer/cassandra-injector.
-
-* Get the admin security token and then use it in the set-credentials command below:
-
-```shell
-kubectl config set-cluster green-cluster --server=https://169.47.77.137:8001 --insecure-skip-tls-verify=true
-kubectl config set-context green-cluster-context --cluster=green-cluster
-kubectl config set-credentials admin --token=eyJ0...Ptg
-kubectl config set-context green-cluster-context --user=admin --namespace=greencompute
-kubectl config use-context green-cluster-context
-```
-
-We have added a script to support those commands so, once you run the script, just getting the security token for the admin user should be enough. See script named `scripts/connectToCluster.sh`
+* The following components of the solution are deployed with at least 3 replicas: Asset manager microservice, dashboard BFF.
 
 ### Troubleshooting
 

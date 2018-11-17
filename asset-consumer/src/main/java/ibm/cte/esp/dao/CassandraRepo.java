@@ -13,7 +13,7 @@ import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 
 import ibm.cte.esp.ApplicationConfig;
-import ibm.cte.esp.model.AssetEvent;
+import ibm.cte.esp.model.MetricEvent;
 
 public class CassandraRepo implements AssetDAO {
 	private static Logger logger = Logger.getLogger("CassandraRepo");
@@ -80,51 +80,35 @@ public class CassandraRepo implements AssetDAO {
         		  + "." 
         		  + tableName).append("(")
           .append("id text PRIMARY KEY, ")
-          .append("os text,")
-          .append("version text,")
-          .append("type text,")
-          .append("ipAddress text,")
-          .append("antivirus text,")
-          .append("rotation decimal,")
-          .append("current decimal,")
-          .append("pressure decimal,")
-          .append("flowRate decimal,")
-          .append("temperature decimal,")
-          .append("latitude double,")
-          .append("longitude double,")
-          .append("creationDate timestamp);");
+          .append("rotation in,")
+          .append("current double,")
+          .append("pressure int,")
+          .append("flowRate int,")
+          .append("temperature int,")
+          .append("timecreated timestamp);");
         
-     
         String query = sb.toString();
         
         session.execute(query);
     }
     
-    private void updateAssetFromRow(Row r,AssetEvent a) {
+    private void updateAssetFromRow(Row r,MetricEvent a) {
     	a.setId(r.getString("id"));
-		a.setOs(r.getString("os"));
-		a.setVersion(r.getString("version"));
-		a.setType(r.getString("type"));
-		a.setAntivirus(r.getString("antivirus"));
-		a.setIpAddress(r.getString("ipAddress"));
 		a.setCurrent(r.getDouble("current"));
 		a.setRotation(r.getInt("rotation"));
 		a.setPressure(r.getInt("pressure"));
-		a.setFlowRate(r.getLong("flowRate"));
+		a.setFlowRate(r.getInt("flowRate"));
 		a.setTemperature(r.getInt("temperature"));
-		a.setRiskRating(r.getInt("riskRating"));
-		a.setLatitude(r.getString("latitude"));
-		a.setLongitude(r.getString("longitude"));
-		a.setCreationDate(r.getTimestamp("creationDate"));
+		a.setTimeStamp(r.getTimestamp("timecreated"));
     }
     
-    private AssetEvent rowToAsset(Row r) {
-    	AssetEvent a = new AssetEvent();
-    	updateAssetFromRow(r,a);
+    private MetricEvent rowToAsset(Row row) {
+		MetricEvent a = new MetricEvent();
+		updateAssetFromRow(row,a);
 		return a;
     }
 
-	public AssetEvent getAssetById(String assetId) throws Exception {
+	public MetricEvent getAssetById(String assetId) throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
 			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
@@ -134,7 +118,7 @@ public class CassandraRepo implements AssetDAO {
 			      .append(assetId)
 			      .append("';");
 		String query = sb.toString();
-		AssetEvent a = new AssetEvent();
+		MetricEvent a = new MetricEvent();
 		ResultSet rs = session.execute(query);
 		if (rs.isFullyFetched()) {
 			updateAssetFromRow(rs.one(),a);	
@@ -142,7 +126,7 @@ public class CassandraRepo implements AssetDAO {
 		return a;
 	}
 
-	public List<AssetEvent> getAllAssets() throws Exception {
+	public List<MetricEvent> getAllAssets() throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
 			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
@@ -151,33 +135,26 @@ public class CassandraRepo implements AssetDAO {
 			      .append(";");
 		String query = sb.toString();
 		ResultSet rs = session.execute(query);
-		List<AssetEvent> l = new ArrayList<AssetEvent>();
+		List<MetricEvent> l = new ArrayList<MetricEvent>();
 		while (! rs.isExhausted()) {
 			l.add(rowToAsset(rs.one()));	
 		}
 		return l;
 	}
 	
-	public void persistAsset(AssetEvent a) throws Exception {
+	public void persistMetricEvent(MetricEvent a) throws Exception {
 		StringBuilder sb = new StringBuilder("INSERT INTO ")
 			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
 			    		  + "." 
 			    		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
-			      .append("(id, os, version, type, ipAddress, antivirus, rotation, current, pressure, flowRate, temperature,latitude,longitude, creationDate ) ")
+			      .append("(id, rotation, current, pressure, flowRate, temperature, timeStamp ) ")
 			      .append("VALUES ('").append(a.getId())
-			      .append("','").append(a.getOs())
-			      .append("','").append(a.getVersion())
-			      .append("','").append(a.getType())
-			      .append("','").append(a.getIpAddress())
-			      .append("','").append(a.getAntivirus())
 			      .append("',").append(a.getRotation())
 			      .append(",").append(a.getCurrent())
 			      .append(",").append(a.getPressure())
 			      .append(",").append(a.getFlowRate())
 			      .append(",").append(a.getTemperature())
-			      .append(",").append(a.getLatitude())
-			      .append(",").append(a.getLongitude())
-			      .append(",").append(a.getCreationDate())
+			      .append(",").append(a.getTimeStamp())
 			      .append(");");
 			 
 			    String query = sb.toString();

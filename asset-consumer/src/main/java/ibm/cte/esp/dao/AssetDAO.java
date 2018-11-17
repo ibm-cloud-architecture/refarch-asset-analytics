@@ -2,12 +2,13 @@ package ibm.cte.esp.dao;
 
 import java.util.List;
 
-import ibm.cte.esp.model.AssetEvent;
+import ibm.cte.esp.model.MetricEvent;
 
 public interface AssetDAO {
-	public AssetEvent getAssetById(String assetId) throws Exception;
+	public MetricEvent getAssetById(String assetId) throws Exception;
 	
-	public List<AssetEvent> getAllAssets() throws Exception;
+	public List<MetricEvent> getAllAssets() throws Exception;
 	
-	public void persistAsset(AssetEvent a) throws Exception;
+	public void persistMetricEvent(MetricEvent a) throws Exception;
+
 }
