@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS assetmonitoring.event_metrics(
     rotation int,
     pressure int,
     temperature int,
-    timecreated timestamp
+    timeStamp timestamp
 );
 
 CREATE INDEX IF NOT EXISTS ON assetmonitoring.event_metrics(timecreated);

@@ -1,0 +1,157 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch)",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-AssetEventSimplestConsumer<asset-consumer>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.esp.AssetEventSimplestConsumer",
+            "args": "",
+            "projectName": "asset-consumer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-AssetInjector<asset-consumer>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.esp.AssetInjector",
+            "args": "",
+            "projectName": "asset-consumer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-AssetInjectorCassandra<asset-consumer>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.esp.AssetInjectorCassandra",
+            "args": "",
+            "projectName": "asset-consumer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-BffApplication<asset-dashboard-bff>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.esp.BffApplication",
+            "args": "",
+            "projectName": "asset-dashboard-bff"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-TestWebSocket<asset-dashboard-bff>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.esp.TestWebSocket",
+            "args": "",
+            "projectName": "asset-dashboard-bff"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-LoadNewPumpsFromFile<asset-event-producer>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.esp.LoadNewPumpsFromFile",
+            "args": "",
+            "projectName": "asset-event-producer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-PumpSimulator<asset-event-producer>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.esp.PumpSimulator",
+            "args": "",
+            "projectName": "asset-event-producer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-SimpleConsumer<asset-event-producer>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.kafka.play.SimpleConsumer",
+            "args": "",
+            "projectName": "asset-event-producer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-SimpleProducer<asset-event-producer>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.kafka.play.SimpleProducer",
+            "args": "",
+            "projectName": "asset-event-producer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-WordCount<asset-event-producer>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.kafka.play.WordCount",
+            "args": "",
+            "projectName": "asset-event-producer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-WordCountConsumer<asset-event-producer>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.kafka.play.WordCountConsumer",
+            "args": "",
+            "projectName": "asset-event-producer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-CassandraAssetWriter<asset-itests>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "ibm.cte.pot.cassandra.CassandraAssetWriter",
+            "args": "",
+            "projectName": "asset-itests"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Attach)",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": "<debug port of remote debuggee>"
+        }
+    ]
+}

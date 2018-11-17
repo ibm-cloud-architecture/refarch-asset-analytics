@@ -20,12 +20,10 @@ public class TestAssetEventMgrClient {
 		client = new AssetEventMgrClient(cfg);
 	}
 	
-	@Test 
+	//@Test 
 	public void testSaveAsset() {
 		MetricEvent a = new MetricEvent();
 		a.setId("PUMP03");
-	
-
 		a.setCurrent(110*Math.random()+10);
 		a.setFlowRate((int) (100*Math.random()));
 		a.setPressure((int) (1000*Math.random()));
@@ -40,7 +38,7 @@ public class TestAssetEventMgrClient {
 		}
 	}
 	
-	@Test
+	//@Test
 	public void testAccessById() {
 		MetricEvent ae = null;;
 		try {

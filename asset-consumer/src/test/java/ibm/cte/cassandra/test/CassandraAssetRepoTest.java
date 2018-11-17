@@ -15,7 +15,8 @@ public class CassandraAssetRepoTest extends BaseTest {
 	static CassandraRepo repo = null;
 	@BeforeClass
 	public static void init() {
-		repo = new CassandraRepo(cassandra.session,"assetmonitoring","assets");
+		
+		repo = new CassandraRepo(cassandra.session,"assetmonitoring","event_metrics");
 	}
 	
 	@AfterClass

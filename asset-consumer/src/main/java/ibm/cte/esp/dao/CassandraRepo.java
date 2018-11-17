@@ -22,6 +22,7 @@ public class CassandraRepo implements AssetDAO {
 	public static Session session ;	
 	public static Integer port; 
 	public ApplicationConfig cfg;
+	public String keySpace, tableName;
 	
 	public CassandraRepo(ApplicationConfig cfg) {
 		this.cfg = cfg;
@@ -44,13 +45,17 @@ public class CassandraRepo implements AssetDAO {
         		cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_STRATEGY),
         		Integer.parseInt(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_REPLICAS)));
         createTable(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE),
-        		cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME));
+				cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME));
+		this.keySpace = cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE);
+		this.tableName = cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME);
 	}
 	
    
     public CassandraRepo(Session inSession,String keySpace,String tableName) {
 		CassandraRepo.session = inSession;
 		createKeyspace(keySpace, "SimpleStrategy", 1);
+		this.keySpace = keySpace;
+		this.tableName = tableName;
 		createTable(keySpace,tableName);
 	}
 
@@ -80,7 +85,7 @@ public class CassandraRepo implements AssetDAO {
         		  + "." 
         		  + tableName).append("(")
           .append("id text PRIMARY KEY, ")
-          .append("rotation in,")
+          .append("rotation int,")
           .append("current double,")
           .append("pressure int,")
           .append("flowRate int,")
@@ -111,9 +116,9 @@ public class CassandraRepo implements AssetDAO {
 	public MetricEvent getAssetById(String assetId) throws Exception {
 		StringBuilder sb = 
 			      new StringBuilder("SELECT * FROM ")
-			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			      .append(this.keySpace 
 			    		  + "." 
-			    		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
+			    		  + this.tableName)
 			      .append(" WHERE id='")
 			      .append(assetId)
 			      .append("';");
@@ -128,11 +133,11 @@ public class CassandraRepo implements AssetDAO {
 
 	public List<MetricEvent> getAllAssets() throws Exception {
 		StringBuilder sb = 
-			      new StringBuilder("SELECT * FROM ")
-			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
+			    new StringBuilder("SELECT * FROM ")
+			    	.append(this.keySpace
 			    		  + "." 
-			    		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
-			      .append(";");
+			    		  + this.tableName)
+			    	.append(";");
 		String query = sb.toString();
 		ResultSet rs = session.execute(query);
 		List<MetricEvent> l = new ArrayList<MetricEvent>();
@@ -144,18 +149,18 @@ public class CassandraRepo implements AssetDAO {
 	
 	public void persistMetricEvent(MetricEvent a) throws Exception {
 		StringBuilder sb = new StringBuilder("INSERT INTO ")
-			      .append(cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_KEYSPACE) 
-			    		  + "." 
-			    		  + cfg.getProperties().getProperty(ApplicationConfig.CASSANDRA_TABLE_NAME))
-			      .append("(id, rotation, current, pressure, flowRate, temperature, timeStamp ) ")
-			      .append("VALUES ('").append(a.getId())
-			      .append("',").append(a.getRotation())
-			      .append(",").append(a.getCurrent())
-			      .append(",").append(a.getPressure())
-			      .append(",").append(a.getFlowRate())
-			      .append(",").append(a.getTemperature())
-			      .append(",").append(a.getTimeStamp())
-			      .append(");");
+				.append(this.keySpace
+					+ "." 
+					+ this.tableName)
+			    .append("(id, rotation, current, pressure, flowRate, temperature, timeStamp ) ")
+			    .append("VALUES ('").append(a.getId())
+			    .append("',").append(a.getRotation())
+			    .append(",").append(a.getCurrent())
+			    .append(",").append(a.getPressure())
+			    .append(",").append(a.getFlowRate())
+			    .append(",").append(a.getTemperature())
+			    .append(",").append(a.getTimeStamp())
+			    .append(");");
 			 
 			    String query = sb.toString();
 			    logger.info(query);

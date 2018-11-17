@@ -1,5 +1,6 @@
 package application.kafka;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.UUID;
@@ -77,7 +78,7 @@ public class Consumer {
     }
 
     public ConsumerRecords<String, String> consume() {
-        ConsumerRecords<String, String> records = kafkaConsumer.poll(POLL_DURATION);
+        ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(POLL_DURATION));
         return records;
     }
     
