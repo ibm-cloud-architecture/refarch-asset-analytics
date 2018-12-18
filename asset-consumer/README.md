@@ -6,6 +6,8 @@ This project includes a set of standalone executable java classes, to consume re
 
 There is another consumer implemented as a Function in nodejs, see [the asset consumer funtcion project](../asset-consumer-function/README.md) which goal is to subscribe to new asset event: event occuring when a new pump is added somewhere.
 
+We are proposing some best practices and considerations in [this article](https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/docs/kafka/consumers.md)
+
 ## Asset Event print
 
 The class in src/main/java ibm.cte.esp.AssetEventSimplestConsumer gets the AssetEvent from the asset-topic as a Kafka consumer record and parses the json object from the value string and prints it to stdout. This code loops forever and gets all the events publish in the topic. This simple code uses [org.apache.kafka.clients.consumer.KafkaConsumer API](https://kafka.apache.org/10/javadoc/?org/apache/kafka/clients/consumer/KafkaConsumer.html).
@@ -38,9 +40,9 @@ For the BFF layer to Web browser real time push pattern see [the asset dashboard
 
 The `ibm.cte.esp.AssetInjector.java` is a POJO which uses Kafka consumer API and Cassandra persistence API. It does three things:
 
-1. read configuration from external properties file
-1. create a cassandra DAO to persist assets to cassandra
-1. start a kafka consumer to get new asset event. Loop for ever.
+1. Read configuration from external properties file
+1. Create a cassandra DAO to persist assets to cassandra
+1. Start a kafka consumer to get new asset event. Loop for ever.
 
 To externalize parameters, we use the `conf/config.properties` file which will be mapped to a ConfigMap when deployed to kubernetes cluster.
 
@@ -104,15 +106,6 @@ $ docker push greencluster.icp:8500/ibmcase/casset-consumer:v0.0.1
 $ kubectl apply -f deployments/assetconsumer.yml
 ```
 
-#### Offset management
-When dealing with heavy load storing offset in zookeeper is non advisable. To manage offset we use the [new consumer API](https://kafka.apache.org/090/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html).
-The code in `ibm.cte.esp.AssetInjector` class commits offset synchronously when a specified number of assets are read from the topic and the persistence to the back end succeed.
-
-When designing a consumer the following requirements need to be analyzed:
-* Do we need to have multiple consumers running in parallel to scale horizontally: this means having multiple partitions and use fine grained control over offset persistence. If there is not such need, the High Level Consumer approach can be used and it will commit offsets for all partitions.
-* Is it possible to loose message from topic? if so, when a consumer restarts it will start consuming the topic from the end of the queue.
-* Do the solution is fine with at-least-once delivery or exactly-once is a must have? As the operation to store a message and the storage of offsets are two separate operations, and in case of failure between them, it is possible to have stale offsets, which will introduce duplicate messages when consumers restart to process from last known committed offset. "exactly-once" means grouping record and offset persistence in an atomic operation.
-* What are the criteria to consider a message as "consumed"?  
 
 ## Accessing remote cassandra deployed in kubernetes
 
