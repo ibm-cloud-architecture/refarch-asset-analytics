@@ -26,7 +26,7 @@ We are presenting best practices around data management, real-time streaming, ca
 <li><a href="docs/analytics/README.md">Analytics model</a></li>
 <li>Future readings</li>
 <ul>
-<li><a href="https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/kafka">Kafka related</a></li>
+<li><a href="https://github.com/ibm-cloud-architecture/refarch-eda/tree/master/docs/kafka">Kafka related</a></li>
 <li><a href="docs/cassandra/readme.md">Cassandra</a></li>
 <li><a href="https://github.com/ibm-cloud-architecture/refarch-integration/tree/master/docs/service-mesh">Microservice mesh</a></li>
 </ul>
