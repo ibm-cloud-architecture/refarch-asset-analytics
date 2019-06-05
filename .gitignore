@@ -11,3 +11,5 @@ asset-consumer-function/bin/
 asset-consumer-function/node_modules/
 asset-consumer-function/.serverless/
 /.vscode
+/.vscode/launch.json
+/.DS_Store

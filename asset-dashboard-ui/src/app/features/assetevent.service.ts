@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Asset } from './assets/asset';
+
 import * as SockJS from 'sockjs-client';
 import * as Stomp from '@stomp/stompjs';
 import { Observable, Subject } from 'rxjs';
-import websocketConnect from 'rxjs-websockets';
+
 import { QueueingSubject } from 'queueing-subject';
-import { share} from 'rxjs/operators';
-import { Http } from '@angular/http';
+
 
 @Injectable({
   providedIn: 'root'
